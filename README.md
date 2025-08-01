@@ -70,7 +70,7 @@ venv\Scripts\activate.bat
 
 ### 4. Instale as dependências
 ```bash
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 ### 5. Execute o jogo
