@@ -18,9 +18,8 @@ class Game:
 
         self.background = Background()
 
-        self.players = pygame.sprite.Group()
-        self.players.add(Player(80, 48))
-        self.players.add(Player(200, 64))
+        self.player = pygame.sprite.GroupSingle()
+        self.player.add(Player(200, 64))
 
     def handle_events(self):
         """Processes all Pygame events."""
@@ -33,8 +32,8 @@ class Game:
         """Draws the current game state to the screen."""
 
         self.background.draw(self.screen)
-        self.players.draw(self.screen)
-        self.players.update()
+        self.player.draw(self.screen)
+        self.player.update()
 
     def run(self):
         """Runs the main game loop."""

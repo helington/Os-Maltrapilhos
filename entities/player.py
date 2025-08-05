@@ -3,13 +3,13 @@ import pygame
 from settings import *
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self):
         super().__init__()
 
-        image_path = path.join(PLAYER_PATH, "player.png")
+        image_path = path.join(PLAYER_PATH, "rambo.png")
         self.image = pygame.image.load(image_path).convert_alpha()
-        self.image = pygame.transform.scale(self.image, (y, y))
-        self.rect = self.image.get_rect(midbottom=(x, 625))
+        self.image = pygame.transform.scale(self.image, (64, 64))
+        self.rect = self.image.get_rect(midbottom=(80, 625))
         self.speed = 2
         self.moving_left = False
         self.moving_right = False
