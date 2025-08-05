@@ -1,11 +1,9 @@
 import pygame
+from os import path
 
-pygame.init()
-tela_comprimento = 800
-tela_largura = 200
-tela = pygame.display.set_mode((tela_comprimento,tela_largura))
+from settings import *
 
-class BACKGROUND:
+class Background:
     
     # Para a proporcao 800x200, 135p é a altura mínima do chao
 
@@ -13,28 +11,30 @@ class BACKGROUND:
     def __init__(self):
         self.scroll = 0
 
-        self.chao = pygame.image.load(fr'C:\Users\Nóbrega\Desktop\dev\PYGAME PROJETO\entities\bg\ground.png').convert_alpha()
-        self.chao_largura = self.chao.get_width()
-        self.chao_comprimento = self.chao.get_height()
-        self.imagens = []
+        ground_path = path.join(GROUND_PATH, "ground.png")
+        self.ground = pygame.image.load(ground_path).convert_alpha()
+        self.ground_width = self.ground.get_width()
+        self.ground_heigth = self.ground.get_height()
+        self.images = []
 
         for i in range(1,6):
-            imagem_atual = pygame.image.load(fr'C:\Users\Nóbrega\Desktop\dev\PYGAME PROJETO\entities\bg\Jungle Asset Pack\Jungle Asset Pack\parallax background\plx-{i}.png').convert_alpha()
-            self.imagens.append(imagem_atual)
+            current_image_path = path.join(BACKGROUND_PATH, f'plx-{i}.png')
+            current_image = pygame.image.load(current_image_path).convert_alpha()
+            self.images.append(current_image)
 
-        self.imagem_comprimento = imagem_atual.get_width()
+        self.image_width = current_image.get_width()
 
-    # faz o draw com blit, nn sei como vai funcionar com o draw numa funcao maior la no main
-    def draw_bg(self):
-
+    def draw_bg(self, screen):
         for x in range (5):
             speed = 1
-            for i in self.imagens:
-                tela.blit(i,((x*self.imagem_comprimento) - self.scroll*speed,0))
+            for i in self.images:
+                screen.blit(i,((x*self.image_width) - self.scroll*speed,0))
                 speed+=0.2
 
-    # msm coisa da ultima funcao nn sei como vai funcionar com o draw na main
-    def draw_ground(self):
-
+    def draw_ground(self, screen):
         for x in range(15):
-            tela.blit(self.chao, ((x* self.chao_largura) - self.scroll *2.5,tela_largura - self.chao_comprimento))
+            screen.blit(self.ground, ((x* self.ground_width) - self.scroll *2.5,SCREEN_HEIGHT - self.ground_heigth))
+
+    def draw(self, screen):
+        self.draw_bg(screen)
+        self.draw_ground(screen)

@@ -1,6 +1,7 @@
 import pygame
 
 from settings import *
+from entities.background import Background
 
 class Game:
     """Main class for the game."""
@@ -14,6 +15,8 @@ class Game:
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.running = True
 
+        self.background = Background()
+
     def handle_events(self):
         """Processes all Pygame events."""
 
@@ -23,8 +26,8 @@ class Game:
     
     def draw(self):
         """Draws the current game state to the screen."""
-        
-        pass
+
+        self.background.draw(self.screen)
 
     def run(self):
         """Runs the main game loop."""
