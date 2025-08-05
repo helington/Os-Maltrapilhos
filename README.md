@@ -6,12 +6,12 @@ Relátorio de Desenvolvimento do jogo Os Maltrapilhos, feito para a cadeira de I
 
 <table>
     <tr>
-        <td align="center"><a><br /><sub><b>Helington Willamy</b></sub></a><br/></td>
-        <td align="center"><a><br /><sub><b>Gabriel Nóbrega</b></sub></a><br/></td>
+        <td align="center"><a href="https://github.com/helington"><img src="https://avatars.githubusercontent.com/u/78865806?v=4" width="100px"/><br /><sub><b>Helington Willamy</b></sub></a><br/</td>
+        <td align="center"><a href="https://github.com/JeanValjeanRD"><img src="https://avatars.githubusercontent.com/u/154392376?v=4" width="100px"/><br /><sub><b>Gabriel Nóbrega</b></sub></a><br/></td>
         <td align="center"><a><br /><sub><b>Luis Miguel</b></sub></a><br/></td>
         <td align="center"><a><br /><sub><b>João Vitor</b></sub></a><br/></td>
-        <td align="center"><a><br /><sub><b>Aldus Daniel</b></sub></a><br/></td>
-        <td align="center"><a><br /><sub><b>Igor Soares</b></sub></a><br/></td>
+        <td align="center"><a href="https://github.com/Igor-a-Soares"><img src="https://avatars.githubusercontent.com/u/223944470?v=4" width="100px"/><br /><sub><b>Igor Soares</b></sub></a><br/></td>
+        <td align="center"><a href="https://github.com/AldusD"><img src="https://avatars.githubusercontent.com/u/98439753?v=4" width="100px"/><br /><sub><b>Aldus Daniel</b></sub></a><br/></td>
     </tr>
 </table>
 
@@ -25,7 +25,7 @@ Projeto-IP/
 │   ├── game.py              # Classe principal que gerencia o loop do jogo
 │   └── utils.py             # Funções auxiliares
 ├── scenes/                  # Cenas do jogo (tutorial, menu, gameplay, game over, etc.)
-├── entities/                # Entidades e 
+├── entities/                # Entidades e personagens do jogo
 ├── assets/                  # Recursos gráficos, sonoros e tipográficos
 │   ├── fonts/               # Fontes
 │   ├── graphics/            # Imagens dos Sprites e do mapa
