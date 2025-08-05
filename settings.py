@@ -1,6 +1,6 @@
 # Game settings
-SCREEN_HEIGHT = 800
-SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 1200
+SCREEN_WIDTH = 700
 GAME_NAME = "Os Maltrapilhos"
 FPS = 60
 
