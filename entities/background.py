@@ -12,14 +12,16 @@ class Background:
         self.scroll = 0
 
         ground_path = path.join(GROUND_PATH, "ground.png")
-        self.ground = pygame.image.load(ground_path).convert_alpha()
+        self.ground_v0 = pygame.image.load(ground_path).convert_alpha()
+        self.ground = pygame.transform.scale(self.ground_v0,(160,80))
         self.ground_width = self.ground.get_width()
         self.ground_heigth = self.ground.get_height()
         self.images = []
 
         for i in range(1,6):
             current_image_path = path.join(BACKGROUND_PATH, f'plx-{i}.png')
-            current_image = pygame.image.load(current_image_path).convert_alpha()
+            current_image_v0 = pygame.image.load(current_image_path).convert_alpha()
+            current_image = pygame.transform.scale(current_image_v0,(800,800))
             self.images.append(current_image)
 
         self.image_width = current_image.get_width()
