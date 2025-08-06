@@ -18,3 +18,5 @@ BACKGROUND_PATH = path.join(GRAPHICS_PATH, "background")
 PLAYER_PATH = path.join(GRAPHICS_PATH, "player")
 GROUND_PATH = path.join(GRAPHICS_PATH, "ground")
 SOUNDS_PATH = path.join(ASSETS_PATH, "sounds")
+
+FLOOR_Y = 640 - 32

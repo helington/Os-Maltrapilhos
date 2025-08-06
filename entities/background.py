@@ -35,18 +35,9 @@ class Background:
 
     def draw_ground(self, screen):
         
-        rect = pygame.Rect(550,200,200,100)
-        pygame.draw.rect(screen,(133,44,76),rect)
         for x in range(15):
             screen.blit(self.ground, ((x* self.ground_width) - self.scroll *2.5,SCREEN_HEIGHT - self.ground_heigth))
 
     def draw(self, screen):
         self.draw_bg(screen)
         self.draw_ground(screen)
-
-    def scrolling(self): 
-        key = pygame.key.get_pressed()
-        if (key[pygame.K_LEFT] or key[pygame.K_a]) and self.scroll >0:
-            self.scroll-=1.5
-        if (key[pygame.K_RIGHT]or key[pygame.K_d]) and self.scroll <600:
-            self.scroll+=1.5

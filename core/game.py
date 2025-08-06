@@ -19,7 +19,7 @@ class Game:
         self.background = Background()
 
         self.player = pygame.sprite.GroupSingle()
-        self.player.add(Player(200, 64))
+        self.player.add(Player())
 
     def handle_events(self):
         """Processes all Pygame events."""

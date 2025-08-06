@@ -6,10 +6,10 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
 
-        image_path = path.join(PLAYER_PATH, "rambo.png")
+        image_path = path.join(PLAYER_PATH, "player.png")
         self.image = pygame.image.load(image_path).convert_alpha()
         self.image = pygame.transform.scale(self.image, (64, 64))
-        self.rect = self.image.get_rect(midbottom=(80, 625))
+        self.rect = self.image.get_rect(midbottom=(80, FLOOR_Y))
         self.speed = 2
         self.moving_left = False
         self.moving_right = False
@@ -29,7 +29,7 @@ class Player(pygame.sprite.Sprite):
         else:
             self.moving_right = False
         
-        if keys[pygame.K_w] and self.rect.bottom >= 625 and not self.jumping:
+        if keys[pygame.K_w] and self.rect.bottom >= FLOOR_Y and not self.jumping:
             self.jumping = True
             self.gravity = -11
 
@@ -39,13 +39,13 @@ class Player(pygame.sprite.Sprite):
         elif self.moving_right:
             self.rect.x += self.speed
 
-        if self.rect.bottom >= 625:
+        if self.rect.bottom >= FLOOR_Y:
             self.jumping = False
 
     def apply_gravity(self):
         self.gravity += 0.75
         self.rect.y += self.gravity
-        self.rect.bottom = min(625, self.rect.bottom)
+        self.rect.bottom = min(FLOOR_Y, self.rect.bottom)
 
     def update(self):
         self.handle_input()
