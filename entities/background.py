@@ -9,7 +9,7 @@ class Background:
     # Para a proporcao 800x200, 135p é a altura mínima do chao
 
     # init com variaveis, percorre as imagens na pasta
-    def __init__(self):
+    def __init__(self, tiles_image_list):
         self.scroll = 0
         self.obstacle_list = list()
 
@@ -28,6 +28,8 @@ class Background:
 
         self.image_width = current_image.get_width()
         self.world_data = list()
+        self.process_world_csv()
+        self.process_data(tiles_image_list)
 
     def process_world_csv(self):
         for i in range(WOLRD_CSV_ROWS):
@@ -60,9 +62,7 @@ class Background:
                 screen.blit(i,((x*self.image_width) - self.scroll*speed,0))
                 speed+=0.2
 
-    def draw(self, screen, tiles_image_list):
-        self.process_world_csv()
-        self.process_data(tiles_image_list)
+    def draw(self, screen):
         self.draw_bg(screen)
         
         for tile in self.obstacle_list:

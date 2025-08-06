@@ -16,9 +16,12 @@ class Game:
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.running = True
 
-        self.background = Background()
-
         self.tiles_image_list = list()
+        self.get_tiles_images()
+
+        self.background = Background(self.tiles_image_list)
+        self.player = pygame.sprite.GroupSingle()
+        self.player.add(Player())
 
     def get_tiles_images(self):
         """Get all images of tiles and transform them in surfaces, and then put them into 'tiles_image_list' variable."""
@@ -26,13 +29,13 @@ class Game:
         for i in range(TILE_TYPES):
             current_image_path = path.join(TILES_PATH, f"{i}.png")
             current_image = pygame.image.load(current_image_path)
-            if i == 15 or i == 16:
+            if i == 15:
+                pass
+            elif i == 16:
                 current_image = pygame.transform.scale(current_image, (TILE_SIZE * 2, TILE_SIZE * 2))
             else:
                 current_image = pygame.transform.scale(current_image, (TILE_SIZE, TILE_SIZE))
             self.tiles_image_list.append(current_image)
-        self.player = pygame.sprite.GroupSingle()
-        self.player.add(Player())
 
     def handle_events(self):
         """Processes all Pygame events."""
@@ -44,13 +47,12 @@ class Game:
     def draw(self):
         """Draws the current game state to the screen."""
 
-        self.background.draw(self.screen, self.tiles_image_list)
+        self.background.draw(self.screen)
         self.player.draw(self.screen)
         self.player.update()
 
     def run(self):
         """Runs the main game loop."""
-        self.get_tiles_images()
 
         while self.running:
             self.handle_events()
