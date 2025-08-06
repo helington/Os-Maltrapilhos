@@ -2,8 +2,8 @@ from os import path
 from pathlib import Path
 
 # Game settings
-SCREEN_WIDTH = 1200
-SCREEN_HEIGHT = 700
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 640
 GAME_NAME = "Os Maltrapilhos"
 FPS = 60
 
