@@ -2,6 +2,7 @@ import pygame
 
 from settings import *
 from entities.background import Background
+from entities.player import Player
 
 class Game:
     """Main class for the game."""
@@ -30,6 +31,8 @@ class Game:
             else:
                 current_image = pygame.transform.scale(current_image, (TILE_SIZE, TILE_SIZE))
             self.tiles_image_list.append(current_image)
+        self.player = pygame.sprite.GroupSingle()
+        self.player.add(Player())
 
     def handle_events(self):
         """Processes all Pygame events."""
@@ -42,6 +45,8 @@ class Game:
         """Draws the current game state to the screen."""
 
         self.background.draw(self.screen, self.tiles_image_list)
+        self.player.draw(self.screen)
+        self.player.update()
 
     def run(self):
         """Runs the main game loop."""
