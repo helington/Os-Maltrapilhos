@@ -44,7 +44,7 @@ class Background:
         self.draw_bg(screen)
         self.draw_ground(screen)
 
-   def scrolling(self): 
+    def scrolling(self): 
         key = pygame.key.get_pressed()
         if (key[pygame.K_LEFT] or key[pygame.K_a]) and self.scroll >0:
             self.scroll-=1.5
