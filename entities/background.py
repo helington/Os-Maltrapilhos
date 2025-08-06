@@ -1,4 +1,5 @@
 import pygame
+import csv
 from os import path
 
 from settings import *
@@ -10,6 +11,7 @@ class Background:
     # init com variaveis, percorre as imagens na pasta
     def __init__(self):
         self.scroll = 0
+        self.obstacle_list = list()
 
         ground_path = path.join(GROUND_PATH, "ground.png")
         self.ground_v0 = pygame.image.load(ground_path).convert_alpha()
@@ -25,18 +27,43 @@ class Background:
             self.images.append(current_image)
 
         self.image_width = current_image.get_width()
+        self.world_data = list()
+
+    def process_world_csv(self):
+        for i in range(WOLRD_CSV_ROWS):
+            row = [-1] * WOLRD_CSV_COLLUNMS
+            self.world_data.append(row)
+
+        level0_path = path.join(LEVELS_PATH, "level0_data.csv")
+        with open(level0_path, newline="") as csvfile:
+            reader = csv.reader(csvfile, delimiter=",")
+            for i, row in enumerate(reader):
+                for j, tile in enumerate(row):
+                    self.world_data[i][j] = int(tile)
+
+    def process_data(self, tiles_image_list):
+        for i, row in enumerate(self.world_data):
+            for j, tile in enumerate(row):
+                if tile >= 0:
+                    image = tiles_image_list[tile]
+                    image_rectangle = image.get_rect()
+                    image_rectangle.x = j * TILE_SIZE
+                    image_rectangle.y = i * TILE_SIZE
+                    tile_data = (image, image_rectangle)
+
+                    self.obstacle_list.append(tile_data)
 
     def draw_bg(self, screen):
-        for x in range (5):
+        for x in range (10):
             speed = 1
             for i in self.images:
                 screen.blit(i,((x*self.image_width) - self.scroll*speed,0))
                 speed+=0.2
 
-    def draw_ground(self, screen):
-        for x in range(15):
-            screen.blit(self.ground, ((x* self.ground_width) - self.scroll *2.5,SCREEN_HEIGHT - self.ground_heigth))
-
-    def draw(self, screen):
+    def draw(self, screen, tiles_image_list):
+        self.process_world_csv()
+        self.process_data(tiles_image_list)
         self.draw_bg(screen)
-        self.draw_ground(screen)
+        
+        for tile in self.obstacle_list:
+            screen.blit(tile[0], tile[1])
