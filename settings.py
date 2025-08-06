@@ -8,6 +8,7 @@ GAME_NAME = "Os Maltrapilhos"
 FPS = 60
 
 # Colors
+DEBUG_BLUE = (20, 20, 150)
 
 # Paths
 ROOT_PATH = Path(__file__).resolve().parents[0]

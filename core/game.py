@@ -14,12 +14,11 @@ class Game:
         pygame.display.set_caption(GAME_NAME)
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
         self.running = True
 
-        self.background = Background()
-
-        self.player = pygame.sprite.GroupSingle()
-        self.player.add(Player())
+        # WIP shot system 
+        self.screen.fill(DEBUG_BLUE)
 
     def handle_events(self):
         """Processes all Pygame events."""
