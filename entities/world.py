@@ -24,14 +24,15 @@ class Background:
             current_image = pygame.transform.scale(current_image,(800,800))
             self.images.append(current_image)
 
-    def draw(self, screen):
+    def draw(self, screen, game_scren_scroll):
         """Draw background applying the scrolling."""
+        self.scroll -= game_scren_scroll
 
         for x in range (10):
-            speed = 1
+            speed = 0.5
             for i in self.images:
                 screen.blit(i,((x*SCREEN_WIDTH) - self.scroll*speed,0))
-                speed+=0.2
+                speed+=0.1
 
 class World:
     """World representation class."""
@@ -78,7 +79,7 @@ class World:
     def draw(self, screen, game):
         """Draw the world into game screen."""
 
-        self.background.draw(screen)
+        self.background.draw(screen, game.screen_scroll)
         
         for tile in self.obstacle_list:
             tile[1][0] += game.screen_scroll

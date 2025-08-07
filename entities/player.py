@@ -34,6 +34,7 @@ class Player(pygame.sprite.Sprite):
             self.gravity = -11
 
     def move(self, game):
+        game.screen_scroll = 0
         self.dx = 0
         self.dy = 0
 
