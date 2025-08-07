@@ -9,8 +9,8 @@ class Player(pygame.sprite.Sprite):
         image_path = path.join(PLAYER_PATH, "player.png")
         self.image = pygame.image.load(image_path).convert_alpha()
         self.image = pygame.transform.scale(self.image, (64, 64))
-        self.rect = self.image.get_rect(midbottom=(80, FLOOR_Y))
-        self.speed = 3
+        self.rect = self.image.get_rect(midbottom=(230, 600))
+        self.speed = 5
         self.moving_left = False
         self.moving_right = False
         self.jumping = True
@@ -39,7 +39,8 @@ class Player(pygame.sprite.Sprite):
             self.jumping = True
             self.gravity = -11
 
-    def move(self, obstacle_list):
+    def move(self, game, obstacle_list):
+        game.screen_scroll = 0
         self.dx = 0
         self.dy = 0
 
@@ -47,7 +48,7 @@ class Player(pygame.sprite.Sprite):
             self.dx -= self.speed
         elif self.moving_right:
             self.dx += self.speed
-
+            
         self.apply_gravity()
 
         for tile in obstacle_list:
@@ -75,6 +76,13 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.dx
         self.rect.y += self.dy
 
+        self.rect.x += self.dx
+        self.rect.y += self.dy
+
+        if self.rect.right > SCREEN_WIDTH - SCROLLING_THRESHOLD or self.rect.left < SCROLLING_THRESHOLD:
+            self.rect.x -= self.dx
+            game.screen_scroll = -self.dx
+
     def apply_gravity(self):
         self.gravity += 0.75
         if self.gravity > 10:
@@ -82,6 +90,6 @@ class Player(pygame.sprite.Sprite):
         self.dy = self.gravity
         # self.rect.bottom = min(FLOOR_Y, self.rect.bottom)
 
-    def update(self, obstacle_list):
+    def update(self, game):
         self.handle_input()
-        self.move(obstacle_list)
+        self.move(game, game.world.obstacle_list)
