@@ -34,6 +34,13 @@ class Background:
                 screen.blit(i,((x*SCREEN_WIDTH) - self.scroll*speed,0))
                 speed+=0.1
 
+class Water(pygame.sprite.Sprite):
+    def __init__(self, image, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.midtop = (x + TILE_SIZE // 2, y + (TILE_SIZE - self.image.get_height()))
+
 class World:
     """World representation class."""
 
@@ -42,6 +49,7 @@ class World:
 
         self.background = Background()
         self.obstacle_list = list()
+        self.water_group = pygame.sprite.Group()
         self.images = []
 
         self.world_data = list()
@@ -74,7 +82,12 @@ class World:
                     image_rectangle.y = i * TILE_SIZE
                     tile_data = (image, image_rectangle)
 
-                    self.obstacle_list.append(tile_data)
+                    if tile < 9:
+                        self.obstacle_list.append(tile_data)
+                    elif tile < 11:
+                        water = Water(image, i * TILE_SIZE, j * TILE_SIZE)
+                        self.water_group.add(water)
+
 
     def draw(self, screen, game):
         """Draw the world into game screen."""
