@@ -1,7 +1,7 @@
 import pygame
 
 from settings import *
-from entities.background import Background
+from entities.world import World
 from entities.player import Player
 
 class Game:
@@ -19,7 +19,7 @@ class Game:
         self.tiles_image_list = list()
         self.get_tiles_images()
 
-        self.background = Background(self.tiles_image_list)
+        self.world = World(self.tiles_image_list)
         self.player = pygame.sprite.GroupSingle()
         self.player.add(Player())
 
@@ -44,19 +44,25 @@ class Game:
             if event.type == pygame.QUIT:
                 self.running = False
     
+    def update(self):
+        """Updates all entities of the game."""
+
+        self.player.update()
+
     def draw(self):
         """Draws the current game state to the screen."""
 
-        self.background.draw(self.screen)
+        self.world.draw(self.screen)
         self.player.draw(self.screen)
-        self.player.update()
 
     def run(self):
         """Runs the main game loop."""
 
         while self.running:
             self.handle_events()
+            self.update()
             self.draw()
+            
             pygame.display.update()
             self.clock.tick(FPS)
         
