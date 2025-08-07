@@ -75,10 +75,11 @@ class World:
 
                     self.obstacle_list.append(tile_data)
 
-    def draw(self, screen):
+    def draw(self, screen, game):
         """Draw the world into game screen."""
 
         self.background.draw(screen)
         
         for tile in self.obstacle_list:
+            tile[1][0] += game.screen_scroll
             screen.blit(tile[0], tile[1])

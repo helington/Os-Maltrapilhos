@@ -23,6 +23,8 @@ class Game:
         self.player = pygame.sprite.GroupSingle()
         self.player.add(Player())
 
+        self.screen_scroll = 0
+
     def get_tiles_images(self):
         """Get all images of tiles and transform them in surfaces, and then put them into 'tiles_image_list' variable."""
 
@@ -47,12 +49,12 @@ class Game:
     def update(self):
         """Updates all entities of the game."""
 
-        self.player.update()
+        self.player.update(self)
 
     def draw(self):
         """Draws the current game state to the screen."""
 
-        self.world.draw(self.screen)
+        self.world.draw(self.screen, self)
         self.player.draw(self.screen)
 
     def run(self):
