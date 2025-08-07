@@ -37,7 +37,7 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_w] and not self.jumping:
             print("jump")
             self.jumping = True
-            self.gravity = -11
+            self.gravity = -12
 
     def move(self, game, obstacle_list):
         game.screen_scroll = 0
@@ -56,7 +56,6 @@ class Player(pygame.sprite.Sprite):
             modifyed_rect_1 = pygame.Rect(self.rect.x + self.dx, self.rect.y, self.width, self.height)
             #check collision in the x direction
             if tile[1].colliderect(modifyed_rect_1):
-                print(modifyed_rect_1, tile[1])
                 self.dx = 0
             
             modifyed_rect_2 = pygame.Rect(self.rect.x, self.rect.y + self.dy, self.width, self.height)
@@ -72,9 +71,6 @@ class Player(pygame.sprite.Sprite):
                     self.gravity = 0
                     self.jumping = False
                     self.dy = tile[1].top - self.rect.bottom
-
-        self.rect.x += self.dx
-        self.rect.y += self.dy
 
         self.rect.x += self.dx
         self.rect.y += self.dy
