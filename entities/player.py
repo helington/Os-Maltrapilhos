@@ -46,9 +46,7 @@ class Player(pygame.sprite.Sprite):
         if self.rect.bottom >= FLOOR_Y:
             self.jumping = False
 
-        print(self.rect.x)
         self.rect.x += self.dx
-        print(self.rect.x)
         self.rect.y += self.dy
 
         if self.rect.right > SCREEN_WIDTH - SCROLLING_THRESHOLD or self.rect.left < SCROLLING_THRESHOLD:
