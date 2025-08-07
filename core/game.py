@@ -47,7 +47,7 @@ class Game:
     def update(self):
         """Updates all entities of the game."""
 
-        self.player.update()
+        self.player.update(self.world.obstacle_list)
 
     def draw(self):
         """Draws the current game state to the screen."""
