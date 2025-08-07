@@ -7,6 +7,9 @@ SCREEN_HEIGHT = 640
 GAME_NAME = "Os Maltrapilhos"
 FPS = 60
 
+# Bullet
+DISTANCE_FROM_PLAYER = 40
+
 # Colors
 
 # Paths
@@ -16,6 +19,7 @@ FONTS_PATH = path.join(ASSETS_PATH, "fonts")
 GRAPHICS_PATH = path.join(ASSETS_PATH, "graphics")
 BACKGROUND_PATH = path.join(GRAPHICS_PATH, "background")
 PLAYER_PATH = path.join(GRAPHICS_PATH, "player")
+BULLET_PATH = path.join(GRAPHICS_PATH, "bullet")
 TILES_PATH = path.join(GRAPHICS_PATH, "tiles")
 GROUND_PATH = path.join(GRAPHICS_PATH, "ground")
 SOUNDS_PATH = path.join(ASSETS_PATH, "sounds")

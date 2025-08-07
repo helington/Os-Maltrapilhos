@@ -1,11 +1,13 @@
 import pygame
 
 from settings import *
+from .entities_enum import Direction
+from .bullet import Bullet
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-
+        self.direction = Direction.RIGHT
         image_path = path.join(PLAYER_PATH, "player.png")
         self.image = pygame.image.load(image_path).convert_alpha()
         self.image = pygame.transform.scale(self.image, (64, 64))
@@ -14,6 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.moving_left = False
         self.moving_right = False
         self.jumping = True
+        self.has_shot = False
         self.gravity = 0
         self.dy = 0
         self.dx = 0
@@ -39,6 +42,9 @@ class Player(pygame.sprite.Sprite):
             self.jumping = True
             self.gravity = -12
 
+        if keys[pygame.K_c]:
+            self.has_shot = True
+
     def move(self, game, obstacle_list):
         game.screen_scroll = 0
         self.dx = 0
@@ -46,7 +52,9 @@ class Player(pygame.sprite.Sprite):
 
         if self.moving_left:
             self.dx -= self.speed
+            self.direction = Direction.LEFT
         elif self.moving_right:
+            self.direction = Direction.RIGHT
             self.dx += self.speed
             
         self.apply_gravity()
@@ -79,6 +87,13 @@ class Player(pygame.sprite.Sprite):
             self.rect.x -= self.dx
             game.screen_scroll = -self.dx
 
+    def shoot(self, game, obstacle_list):
+        if self.has_shot:
+            self.has_shot = False
+            bullet_dx = DISTANCE_FROM_PLAYER if self.direction == Direction.RIGHT else -DISTANCE_FROM_PLAYER
+            bullet = Bullet(self.rect.centerx + bullet_dx, self.rect.centery, 10, 5, 500, self.direction)
+            game.bullets.add(bullet)
+
     def apply_gravity(self):
         self.gravity += 0.75
         if self.gravity > 10:
@@ -86,6 +101,17 @@ class Player(pygame.sprite.Sprite):
         self.dy = self.gravity
         # self.rect.bottom = min(FLOOR_Y, self.rect.bottom)
 
+    def handle_direction(self):
+        sprite = pygame.image.load(path.join(PLAYER_PATH, "player.png")).convert_alpha()
+        if self.direction == Direction.LEFT:
+            self.image = pygame.transform.flip(sprite, True, False)
+            self.image = pygame.transform.scale(self.image, (64, 64))
+        else:
+            self.image = pygame.transform.scale(sprite, (64, 64))
+
     def update(self, game):
         self.handle_input()
+        handle_direction = self.handle_direction()
         self.move(game, game.world.obstacle_list)
+        self.shoot(game, game.world.obstacle_list)
+
