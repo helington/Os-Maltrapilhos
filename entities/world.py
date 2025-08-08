@@ -9,7 +9,7 @@ class Background:
 
     def __init__(self):
         """Initializates background attributes"""
-    
+
         self.scroll = 0
         
         self.images = list()
@@ -73,6 +73,8 @@ class World:
 
     def process_data(self, tiles_image_list):
         """Process the data matriz containing information about the wolrd creation of the current level."""
+
+        self.level_length = len(self.world_data[0])
 
         for i, row in enumerate(self.world_data):
             for j, tile in enumerate(row):
