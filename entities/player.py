@@ -47,7 +47,7 @@ class Player(pygame.sprite.Sprite):
             self.jumping = True
             self.gravity = -12       
 
-    def move(self, game, obstacle_list):
+    def move(self, game, world):
         game.screen_scroll = 0
         self.dx = 0
         self.dy = 0
@@ -61,7 +61,7 @@ class Player(pygame.sprite.Sprite):
             
         self.apply_gravity()
 
-        for tile in obstacle_list:
+        for tile in world.obstacle_list:
 
             modifyed_rect_1 = pygame.Rect(self.rect.x + self.dx, self.rect.y, self.width, self.height)
             #check collision in the x direction
@@ -82,12 +82,18 @@ class Player(pygame.sprite.Sprite):
                     self.jumping = False
                     self.dy = tile[1].top - self.rect.bottom
 
+
+        if self.rect.left + self.dx < 0 or self.rect.right + self.dx > SCREEN_WIDTH:
+            self.dx = 0
+        
         self.rect.x += self.dx
         self.rect.y += self.dy
 
-        should_scroll = ( 
-            self.rect.right > SCREEN_WIDTH - SCROLLING_THRESHOLD and self.direction == Direction.RIGHT or 
-            self.rect.left < SCROLLING_THRESHOLD and self.direction == Direction.LEFT
+        should_scroll = (
+            (self.rect.right > SCREEN_WIDTH - SCROLLING_THRESHOLD and self.direction == Direction.RIGHT and
+            world.background.scroll < (world.level_length * TILE_SIZE) - SCREEN_WIDTH) or 
+            self.rect.left < SCROLLING_THRESHOLD and self.direction == Direction.LEFT and
+            world.background.scroll > abs(self.dx)
         )
         if should_scroll:
             self.rect.x -= self.dx
@@ -131,7 +137,7 @@ class Player(pygame.sprite.Sprite):
     def update(self, game):
         self.handle_input()
         handle_direction = self.handle_direction()
-        self.move(game, game.world.obstacle_list)
+        self.move(game, game.world)
         self.shoot(game)
         self.check_hurt(game)
 
