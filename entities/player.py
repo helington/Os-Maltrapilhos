@@ -8,9 +8,40 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.direction = Direction.RIGHT
-        image_path = path.join(PLAYER_PATH, "player.png")
-        self.image = pygame.image.load(image_path).convert_alpha()
-        self.image = pygame.transform.scale(self.image, (64, 64))
+        
+        self.animation_list = []
+        self.index = 0
+        self.update_time = pygame.time.get_ticks()
+        self.action = 0 #  0: idle, 1: run, 2: jump, 3: death
+        temp_list = []
+        for i in range(5):
+            image_path = path.join(IDLE_PATH, f"{i}.png")
+            image = pygame.image.load(image_path).convert_alpha()
+            image = pygame.transform.scale(image, (64, 64))
+            temp_list.append(image)
+        self.animation_list.append(temp_list)
+        temp_list = []
+        for i in range(10):
+            image_path = path.join(RUN_PATH, f"{i}.png")
+            image = pygame.image.load(image_path).convert_alpha()
+            image = pygame.transform.scale(image, (64, 64))
+            temp_list.append(image)
+        self.animation_list.append(temp_list)
+        temp_list = []
+        for i in range(9):
+            image_path = path.join(JUMP_PATH, f"{i}.png")
+            image = pygame.image.load(image_path).convert_alpha()
+            image = pygame.transform.scale(image, (64, 64))
+            temp_list.append(image)
+        self.animation_list.append(temp_list)
+        temp_list = []
+        for i in range(10):
+            image_path = path.join(DEATH_PATH, f"{i}.png")
+            image = pygame.image.load(image_path).convert_alpha()
+            image = pygame.transform.scale(image, (64, 64))
+            temp_list.append(image)
+        self.animation_list.append(temp_list)
+        self.image = self.animation_list[self.index]
         self.rect = self.image.get_rect(midbottom=(230, 600))
         self.speed = 5
         self.hp = 6 # todo verificar
@@ -22,7 +53,7 @@ class Player(pygame.sprite.Sprite):
         self.dy = 0
         self.dx = 0
         self.last_time_shot = 0
-        self.weapon = Weapon.RIFLE.value
+        self.weapon = Weapon.REGULAR.value
 
         self.width = self.image.get_width()
         self.height = self.image.get_height()
@@ -47,6 +78,26 @@ class Player(pygame.sprite.Sprite):
             self.jumping = True
             self.gravity = -12       
 
+    def update_animation(self):
+        
+        animation_cooldown = 150
+        #update image depending on current frame
+        self.image = self.animation_list[self.index]
+        
+        #check if enough time has passed since the last update
+        if pygame.time.get_ticks() - self.update_time > animation_cooldown:
+            self.update_time = pygame.time.get_ticks()
+            self.index += 1
+            if self.index >= len(self.animation_list):
+                self.index = 0
+        
+        if self.direction == Direction.LEFT:
+            self.image = pygame.transform.flip(self.image, True, False)
+            self.image = pygame.transform.scale(self.image, (64, 64))
+        else:
+            self.image = pygame.transform.scale(self.image, (64, 64))
+    
+    
     def move(self, game, obstacle_list):
         game.screen_scroll = 0
         self.dx = 0
@@ -112,13 +163,6 @@ class Player(pygame.sprite.Sprite):
         self.dy = self.gravity
         # self.rect.bottom = min(FLOOR_Y, self.rect.bottom)
 
-    def handle_direction(self):
-        sprite = pygame.image.load(path.join(PLAYER_PATH, "player.png")).convert_alpha()
-        if self.direction == Direction.LEFT:
-            self.image = pygame.transform.flip(sprite, True, False)
-            self.image = pygame.transform.scale(self.image, (64, 64))
-        else:
-            self.image = pygame.transform.scale(sprite, (64, 64))
 
     def check_hurt(self, game):
         for bullet in game.bullets:
@@ -130,8 +174,7 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, game):
         self.handle_input()
-        handle_direction = self.handle_direction()
-        self.move(game, game.world.obstacle_list)
+        self.update_animation()
         self.shoot(game)
         self.check_hurt(game)
-
+        self.move(game, game.world.obstacle_list)
