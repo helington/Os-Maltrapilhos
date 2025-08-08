@@ -15,7 +15,7 @@ class Character(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (64, 64))
         self.rect = self.image.get_rect(midbottom=(630, 600))
         self.speed = 5
-        self.hp = 3 # todo verificar
+        self.hp = 6 # todo verificar
         self.moving_left = False
         self.moving_right = False
         self.jumping = True
@@ -126,7 +126,7 @@ class Character(pygame.sprite.Sprite):
         for bullet in game.bullets:
             if self.rect.colliderect(bullet.rect):
                 game.bullets.remove(bullet)
-                self.hp -= 1
+                self.hp -= bullet.damage
                 if self.hp <= 0:
                     game.john.remove(self)
 
