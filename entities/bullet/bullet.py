@@ -2,22 +2,23 @@ import pygame
 from os import path
 from entities.entities_enum import Direction
 from settings import BULLET_PATH
+from .bullet_props import Bullet_props
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x: int, y: int, speed: int, damage: int, bullet_range: int, direction: int):
+    def __init__(self, props: Bullet_props):
         super().__init__()
-        self.direction = direction
+        self.direction = props.direction
+        
         image_path = path.join(BULLET_PATH, "bullet.png")
         self.image = pygame.image.load(image_path).convert_alpha()
         self.image = pygame.transform.scale(self.image, (20, 20))
         if self.direction == Direction.LEFT:
             self.image = pygame.transform.flip(self.image, True, False)
-        self.rect = self.image.get_rect(center=(x, y))
-        self.x = x
-        self.y = y
-        self.speed = speed
-        self.damage = damage
-        self.range = int
+        
+        self.rect = self.image.get_rect(center=(props.x, props.y))
+        self.speed = props.speed
+        self.damage = props.damage
+        self.bullet_range = props.bullet_range
         self.last_move_time = 0
 
     def render_image(self):
@@ -28,10 +29,20 @@ class Bullet(pygame.sprite.Sprite):
             return pygame.transform.flip(sprite, True, False)
         return sprite
 
-    def move(self):
-        dx = self.speed
-        self.range -= 1
-        self.x += dx
-        if self.x > self.range:
-            self.x = 0
-        self.draw(pygame.display.get_surface())
+    def check_collision(self, game):
+        for tile in game.world.obstacle_list:
+            if tile[1].colliderect(self.rect):
+                self.kill()
+
+        # todo collision with characters
+
+    def move(self, game):
+        dx = self.speed if self.direction == Direction.RIGHT else -self.speed
+        self.bullet_range -= 18
+        self.rect.x += dx
+        if self.bullet_range <= 0:
+            self.kill()
+        self.check_collision(game)
+
+    def update(self, game):
+        self.move(game)

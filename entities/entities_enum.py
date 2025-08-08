@@ -6,4 +6,6 @@ class Direction(Enum):
 
 
 class Weapon(Enum):
-    REGULAR = 0
+    REGULAR = {"damage": 1, "speed": 10, "bullet_range": 900, "cooldown": 300}
+    RIFLE = {"damage": 3, "speed": 12, "bullet_range": 1200, "cooldown": 450}
+    MINIGUN = {"damage": 1, "speed": 14, "bullet_range": 900, "cooldown": 100}

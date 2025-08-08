@@ -3,7 +3,7 @@ import pygame
 from settings import *
 from entities import World
 from entities import Player
-from entities import Bullet
+from entities.character import Character
 
 class Game:
     """Main class for the game."""
@@ -23,6 +23,9 @@ class Game:
         self.world = World(self.tiles_image_list)
         self.player = pygame.sprite.GroupSingle()
         self.player.add(Player())
+
+        self.john = pygame.sprite.GroupSingle()
+        self.john.add(Character())
 
         self.bullets = pygame.sprite.Group()
 
@@ -54,12 +57,16 @@ class Game:
         """Updates all entities of the game."""
         self.bullets.update(self)
         self.player.update(self)
+        # todo remover
+        self.john.update(self)
 
     def draw(self):
         """Draws the current game state to the screen."""
         self.world.draw(self.screen, self)
         self.player.draw(self.screen)
         self.bullets.draw(self.screen)
+        # todo remover
+        self.john.draw(self.screen)
 
     def run(self):
         """Runs the main game loop."""

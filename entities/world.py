@@ -21,12 +21,13 @@ class Background:
         for i in range(5):
             current_image_path = path.join(BACKGROUND_PATH, f'plx-{i + 1}.png')
             current_image = pygame.image.load(current_image_path).convert_alpha()
-            current_image = pygame.transform.scale(current_image,(800,800))
+            current_image = pygame.transform.scale(current_image,(SCREEN_WIDTH, SCREEN_HEIGHT))
             self.images.append(current_image)
 
-    def draw(self, screen, game_scren_scroll):
+    def draw(self, screen, game_screen_scroll):
+
         """Draw background applying the scrolling."""
-        self.scroll -= game_scren_scroll
+        self.scroll -= game_screen_scroll
 
         for x in range (10):
             speed = 0.5

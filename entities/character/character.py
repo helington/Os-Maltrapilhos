@@ -1,18 +1,21 @@
+
+
 import pygame
 
 from settings import *
-from .entities_enum import Direction, Weapon
-from .bullet import Bullet_props, Bullet
+from ..entities_enum import Direction, Weapon
+from ..bullet import Bullet_props, Bullet
 
-class Player(pygame.sprite.Sprite):
+class Character(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.direction = Direction.RIGHT
+        self.direction = Direction.LEFT
         image_path = path.join(PLAYER_PATH, "player.png")
         self.image = pygame.image.load(image_path).convert_alpha()
         self.image = pygame.transform.scale(self.image, (64, 64))
-        self.rect = self.image.get_rect(midbottom=(230, 600))
+        self.rect = self.image.get_rect(midbottom=(630, 600))
         self.speed = 5
+        self.hp = 3 # todo verificar
         self.moving_left = False
         self.moving_right = False
         self.jumping = True
@@ -21,7 +24,7 @@ class Player(pygame.sprite.Sprite):
         self.dy = 0
         self.dx = 0
         self.last_time_shot = 0
-        self.weapon = Weapon.MINIGUN.value
+        self.weapon = Weapon.REGULAR.value
 
         self.width = self.image.get_width()
         self.height = self.image.get_height()
@@ -123,11 +126,14 @@ class Player(pygame.sprite.Sprite):
         for bullet in game.bullets:
             if self.rect.colliderect(bullet.rect):
                 game.bullets.remove(bullet)
+                self.hp -= 1
+                if self.hp <= 0:
+                    game.john.remove(self)
 
     def update(self, game):
-        self.handle_input()
+        # self.handle_input()
         handle_direction = self.handle_direction()
-        self.move(game, game.world.obstacle_list)
-        self.shoot(game)
         self.check_hurt(game)
+        # self.move(game, game.world.obstacle_list)
+        # self.shoot(game)
 
