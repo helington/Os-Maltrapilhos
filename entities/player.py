@@ -41,7 +41,7 @@ class Player(pygame.sprite.Sprite):
             image = pygame.transform.scale(image, (64, 64))
             temp_list.append(image)
         self.animation_list.append(temp_list)
-        self.image = self.animation_list[self.index]
+        self.image = self.animation_list[self.action][self.index]
         self.rect = self.image.get_rect(midbottom=(230, 600))
         self.speed = 5
         self.hp = 6 # todo verificar
@@ -65,24 +65,30 @@ class Player(pygame.sprite.Sprite):
             self.has_shot = True
 
         if keys[pygame.K_a]:
+            self.action = 1
             self.moving_left = True
         else:
+            self.action = 0
             self.moving_left = False
 
         if keys[pygame.K_d]:
+            self.action = 1
             self.moving_right = True
         else:
+            self.action = 0
             self.moving_right = False
         
         if keys[pygame.K_w] and not self.jumping:
+            self.action = 2
             self.jumping = True
             self.gravity = -12       
 
     def update_animation(self):
         
-        animation_cooldown = 150
+        animation_cooldown = 150 if self.action != 2 else 50 # Shrink cooldown if it is jumping
+
         #update image depending on current frame
-        self.image = self.animation_list[self.index]
+        self.image = self.animation_list[self.action][self.index]
         
         #check if enough time has passed since the last update
         if pygame.time.get_ticks() - self.update_time > animation_cooldown:
@@ -130,6 +136,7 @@ class Player(pygame.sprite.Sprite):
                 #check if above the ground, i.e. falling
                 elif self.gravity >= 0:
                     self.gravity = 0
+                    self.action = 0
                     self.jumping = False
                     self.dy = tile[1].top - self.rect.bottom
 
@@ -158,7 +165,7 @@ class Player(pygame.sprite.Sprite):
 
     def apply_gravity(self):
         self.gravity += 0.75
-        if self.gravity > 10:
+        if self.gravity > 10: 
             self.gravity
         self.dy = self.gravity
         # self.rect.bottom = min(FLOOR_Y, self.rect.bottom)
