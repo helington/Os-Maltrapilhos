@@ -45,10 +45,11 @@ Projeto-IP/
 
 ## Como instalar e rodar o jogo
 
-### 1. Clone o repositório
+### 1. Clone o repositório e entre no mesmo
 
 ```bash
 git clone https://github.com/helington/Projeto-IP.git
+cd Projeto-IP
 ```
 
 ### 2. Crie o ambiente virtual
