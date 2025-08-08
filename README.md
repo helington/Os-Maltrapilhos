@@ -1,4 +1,4 @@
-# Os Maltrapilhos
+# Rambinho: O Último Soldado
 
 Relátorio de Desenvolvimento do jogo Os Maltrapilhos, feito para a cadeira de Introdução a Programação do curso de Sistemas de Informação do CIn-UFPE no semestre 2025-01.
 
