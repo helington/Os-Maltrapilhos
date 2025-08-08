@@ -42,6 +42,9 @@ class Water(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.midtop = (x + TILE_SIZE // 2, y + (TILE_SIZE - self.image.get_height()))
 
+    def update(self, game_screen_scroll):
+        self.rect.x += game_screen_scroll
+
 class World:
     """World representation class."""
 
@@ -88,7 +91,7 @@ class World:
                     if tile < 9:
                         self.obstacle_list.append(tile_data)
                     elif tile < 11:
-                        water = Water(image, i * TILE_SIZE, j * TILE_SIZE)
+                        water = Water(image, j * TILE_SIZE, i * TILE_SIZE)
                         self.water_group.add(water)
 
 
@@ -96,6 +99,7 @@ class World:
         """Draw the world into game screen."""
 
         self.background.draw(screen, game.screen_scroll)
+        self.water_group.draw(screen)
         
         for tile in self.obstacle_list:
             tile[1][0] += game.screen_scroll

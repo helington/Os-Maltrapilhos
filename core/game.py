@@ -57,6 +57,7 @@ class Game:
         """Updates all entities of the game."""
         self.bullets.update(self)
         self.player.update(self)
+        self.world.water_group.update(self.screen_scroll)
         # todo remover
         self.john.update(self)
 
