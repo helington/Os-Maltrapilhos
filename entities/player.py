@@ -59,6 +59,9 @@ class Player(pygame.sprite.Sprite):
         self.height = self.image.get_height()
 
     def handle_input(self):
+        self.moving_right = False
+        self.moving_left = False
+
         keys = pygame.key.get_pressed()
         
         if keys[pygame.K_c]:
@@ -67,17 +70,11 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_a]:
             self.action = 1
             self.moving_left = True
-        else:
-            self.action = 0
-            self.moving_left = False
 
         if keys[pygame.K_d]:
             self.action = 1
             self.moving_right = True
-        else:
-            self.action = 0
-            self.moving_right = False
-        
+         
         if keys[pygame.K_w] and not self.jumping:
             self.action = 2
             self.jumping = True
