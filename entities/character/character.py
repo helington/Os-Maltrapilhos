@@ -89,8 +89,25 @@ class Character(pygame.sprite.Sprite):
                     self.jumping = False
                     self.dy = tile[1].top - self.rect.bottom
 
+        # Check for player going to world limit
+        if self.type == "player":
+            if self.rect.left + self.dx < 0 or self.rect.right + self.dx > SCREEN_WIDTH:
+                self.dx = 0
+        
         self.rect.x += self.dx
         self.rect.y += self.dy
+
+        # Check if it's time to scrolling the world
+        if self.type == "player":
+            should_scroll = (
+                (self.rect.right > SCREEN_WIDTH - SCROLLING_THRESHOLD and self.direction == Direction.RIGHT and
+                world.background.scroll < (world.level_length * TILE_SIZE) - SCREEN_WIDTH) or 
+                self.rect.left < SCROLLING_THRESHOLD and self.direction == Direction.LEFT and
+                world.background.scroll > abs(self.dx)
+            )
+            if should_scroll:
+                self.rect.x -= self.dx
+                game.screen_scroll = -self.dx
 
     def shoot(self, game):
         time_last_shot = pygame.time.get_ticks() - self.last_time_shot

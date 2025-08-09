@@ -45,20 +45,21 @@ class Character_images_info(Enum):
 class Character_type_info():
     def __init__(self, 
             images_info: Character_images_info, direction: Direction, 
-            weapon: Weapon, speed: int, hp: int, ai_move_duration: int):
+            weapon: Weapon, speed: int, hp: int, ai_move_duration: int, type: str):
         self.images_info = images_info
         self.direction = direction
         self.weapon = weapon
         self.speed = speed
         self.hp = hp
         self.ai_move_duration = ai_move_duration
+        self.type = type
 
 class Character_type(Enum):
     PLAYER_1 = Character_type_info(
         Character_images_info.PLAYER_1, Direction.RIGHT, Weapon.REGULAR.value,
-        PLAYER_SPEED, PLAYER_HP, 0)
+        PLAYER_SPEED, PLAYER_HP, 0, "player")
     ENEMY = Character_type_info(
         Character_images_info.ENEMY, Direction.LEFT, Weapon.REGULAR.value,
-        ENEMY_SPEED, ENEMY_HP, AI_DECISION_COOLDOWN)
+        ENEMY_SPEED, ENEMY_HP, AI_DECISION_COOLDOWN, "enemy")
 
 ##### CHARACTER ######
