@@ -4,7 +4,7 @@ import random
 import pygame
 
 from settings import *
-from ..entities_enum import Direction, Weapon, Character_action, Images_info, Character_type
+from ..entities_enum import Direction, Character_action, Images_info, Team
 from ..bullet import Bullet_props, Bullet
 from .character_props import Character_Props
 
@@ -90,7 +90,7 @@ class Character(pygame.sprite.Sprite):
                     self.dy = tile[1].top - self.rect.bottom
 
         # Check for player going to world limit
-        if self.type == "player":
+        if self.team == Team.ALLIES:
             if self.rect.left + self.dx < 0 or self.rect.right + self.dx > SCREEN_WIDTH:
                 print("limit")
                 self.dx = 0
@@ -99,7 +99,7 @@ class Character(pygame.sprite.Sprite):
         self.rect.y += self.dy
 
         # Check if it's time to scrolling the world
-        if self.type == "player":
+        if self.team == Team.ALLIES:
             game.screen_scroll = 0
             should_scroll = (
                 (self.rect.right > SCREEN_WIDTH - SCROLLING_THRESHOLD and self.direction == Direction.RIGHT and
@@ -119,7 +119,7 @@ class Character(pygame.sprite.Sprite):
         if previous_shot and cooldown_passed:
             self.last_time_shot = pygame.time.get_ticks()
             bullet_dx = DISTANCE_FROM_PLAYER if self.direction == Direction.RIGHT else -DISTANCE_FROM_PLAYER
-            props = Bullet_props(self.weapon, self.rect.centerx + bullet_dx, self.rect.centery, self.direction)
+            props = Bullet_props(self.weapon, self.rect.centerx + bullet_dx, self.rect.centery, self.direction, self.team)
             bullet = Bullet(props)
             game.bullets.add(bullet)
 
@@ -132,7 +132,11 @@ class Character(pygame.sprite.Sprite):
 
     def check_hurt(self, game):
         for bullet in game.bullets:
-            if self.rect.colliderect(bullet.rect):
+            is_hit = (
+                self.rect.colliderect(bullet.rect) and
+                bullet.team != self.team
+            )
+            if is_hit:
                 game.bullets.remove(bullet)
                 self.hp -= bullet.damage
                 if self.hp <= 0:

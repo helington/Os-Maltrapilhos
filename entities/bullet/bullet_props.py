@@ -2,14 +2,14 @@ from os import path
 import pygame
 
 from settings import BULLET_PATH
-from ..entities_enum import Weapon
-from ..entities_enum import Direction
+from ..entities_enum import Weapon, Direction, Team
 
 class Bullet_props():
-    def __init__(self, weapon: Weapon,  x: int, y: int, direction: Direction):
+    def __init__(self, weapon: Weapon,  x: int, y: int, direction: Direction, team: Team):
         self.x = x
         self.y = y
         self.direction = direction
+        self.team = team
         self.__dict__.update(weapon)
 
     @classmethod

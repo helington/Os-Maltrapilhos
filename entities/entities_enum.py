@@ -5,6 +5,10 @@ class Direction(Enum):
     LEFT = 0
     RIGHT = 1
 
+class Team(Enum):
+    ALLIES = 0
+    ENEMY = 1
+
 class Weapon(Enum):
     REGULAR = {"damage": 2, "speed": 10, "bullet_range": 900, "cooldown": 300, 'gun_type': 0}
     RIFLE = {"damage": 6, "speed": 12, "bullet_range": 1200, "cooldown": 450, 'gun_type': 1}
@@ -44,22 +48,22 @@ class Character_images_info(Enum):
 
 class Character_type_info():
     def __init__(self, 
-            images_info: Character_images_info, direction: Direction, 
-            weapon: Weapon, speed: int, hp: int, ai_move_duration: int, type: str):
+            images_info: Character_images_info, direction: Direction, weapon: Weapon, 
+            speed: int, hp: int, ai_move_duration: int, team: Team):
         self.images_info = images_info
         self.direction = direction
         self.weapon = weapon
         self.speed = speed
         self.hp = hp
         self.ai_move_duration = ai_move_duration
-        self.type = type
+        self.team = team
 
 class Character_type(Enum):
     PLAYER_1 = Character_type_info(
         Character_images_info.PLAYER_1, Direction.RIGHT, Weapon.REGULAR.value,
-        PLAYER_SPEED, PLAYER_HP, 0, "player")
+        PLAYER_SPEED, PLAYER_HP, 0, Team.ALLIES)
     ENEMY = Character_type_info(
         Character_images_info.ENEMY, Direction.LEFT, Weapon.REGULAR.value,
-        ENEMY_SPEED, ENEMY_HP, AI_DECISION_COOLDOWN, "enemy")
+        ENEMY_SPEED, ENEMY_HP, AI_DECISION_COOLDOWN, Team.ENEMY)
 
 ##### CHARACTER ######
