@@ -1,5 +1,6 @@
 
 
+import random
 import pygame
 
 from settings import *
@@ -10,10 +11,33 @@ class Character(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.direction = Direction.LEFT
-        image_path = path.join(PLAYER_PATH, "player.png")
-        self.image = pygame.image.load(image_path).convert_alpha()
-        self.image = pygame.transform.scale(self.image, (64, 64))
-        self.rect = self.image.get_rect(midbottom=(630, 600))
+        self.animation_list = []
+        self.index = 0
+        self.update_time = pygame.time.get_ticks()
+        self.action = 0 #  0: idle, 1: run, 2: death
+        temp_list = []
+        for i in range(2):
+            image_path = path.join(ENEMY_IDLE_PATH, f"{i}.png")
+            image = pygame.image.load(image_path).convert_alpha()
+            image = pygame.transform.scale(image, (64, 64))
+            temp_list.append(image)
+        self.animation_list.append(temp_list)
+        temp_list = []
+        for i in range(10):
+            image_path = path.join(ENEMY_RUN_PATH, f"{i}.png")
+            image = pygame.image.load(image_path).convert_alpha()
+            image = pygame.transform.scale(image, (64, 64))
+            temp_list.append(image)
+        self.animation_list.append(temp_list)
+        temp_list = []
+        for i in range(12):
+            image_path = path.join(ENEMY_DEATH_PATH, f"{i}.png")
+            image = pygame.image.load(image_path).convert_alpha()
+            image = pygame.transform.scale(image, (64, 64))
+            temp_list.append(image)
+        self.animation_list.append(temp_list)
+        self.image = self.animation_list[self.index]
+        self.rect = self.image[0].get_rect(midbottom=(630, 600))
         self.speed = 5
         self.hp = 6 # todo verificar
         self.moving_left = False
@@ -24,42 +48,64 @@ class Character(pygame.sprite.Sprite):
         self.dy = 0
         self.dx = 0
         self.last_time_shot = 0
+        self.ai_update_time = pygame.time.get_ticks()
+        self.ai_move_duration = 500  # Change direction every 1000 milliseconds
         self.weapon = Weapon.REGULAR.value
 
-        self.width = self.image.get_width()
-        self.height = self.image.get_height()
+        self.width = self.image[0].get_width()
+        self.height = self.image[0].get_height()
 
-    def handle_input(self):
-        keys = pygame.key.get_pressed()
+    def update_animation(self):
         
-        if keys[pygame.K_c]:
-            self.has_shot = True
-
-        if keys[pygame.K_a]:
-            self.moving_left = True
-        else:
-            self.moving_left = False
-
-        if keys[pygame.K_d]:
-            self.moving_right = True
-        else:
-            self.moving_right = False
+        animation_cooldown = 150
+        #update image depending on current frame
+        current_animation = self.animation_list[self.action]
         
-        if keys[pygame.K_w] and not self.jumping:
-            self.jumping = True
-            self.gravity = -12       
+        #check if enough time has passed since the last update
+        if pygame.time.get_ticks() - self.update_time > animation_cooldown:
+            self.update_time = pygame.time.get_ticks()
+            self.index += 1
+            if self.index >= len(current_animation):
+                self.index = 0
+        
+        self.image = current_animation[self.index]
+        if self.direction == Direction.LEFT:
+            self.image = pygame.transform.flip(self.image, True, False)
+            self.image = pygame.transform.scale(self.image, (64, 64))
+        else:
+            self.image = pygame.transform.scale(self.image, (64, 64))
+    
+    
+    def ai_behavior(self):
+        # Change movement every ai_move_duration milliseconds
+        current_time = pygame.time.get_ticks()
+        if current_time - self.ai_update_time > self.ai_move_duration:
+            self.ai_update_time = current_time
+            # Random movement choice
+            choice = random.randint(0, 2)
+            if choice == 0:
+                self.moving_left = True
+                self.moving_right = False
+            elif choice == 1:
+                self.moving_right = True
+                self.moving_left = False
+            else:
+                self.moving_left = False
+                self.moving_right = False      
 
     def move(self, game, obstacle_list):
-        game.screen_scroll = 0
         self.dx = 0
         self.dy = 0
 
         if self.moving_left:
+            self.action = 1  # Running
             self.dx -= self.speed
             self.direction = Direction.LEFT
         elif self.moving_right:
+            self.action = 1  # Running
             self.direction = Direction.RIGHT
             self.dx += self.speed
+        
             
         self.apply_gravity()
 
@@ -87,14 +133,6 @@ class Character(pygame.sprite.Sprite):
         self.rect.x += self.dx
         self.rect.y += self.dy
 
-        should_scroll = ( 
-            self.rect.right > SCREEN_WIDTH - SCROLLING_THRESHOLD and self.direction == Direction.RIGHT or 
-            self.rect.left < SCROLLING_THRESHOLD and self.direction == Direction.LEFT
-        )
-        if should_scroll:
-            self.rect.x -= self.dx
-            game.screen_scroll = -self.dx
-
     def shoot(self, game):
         time_last_shot = pygame.time.get_ticks() - self.last_time_shot
         cooldown_passed = time_last_shot > self.weapon["cooldown"]
@@ -114,26 +152,20 @@ class Character(pygame.sprite.Sprite):
         self.dy = self.gravity
         # self.rect.bottom = min(FLOOR_Y, self.rect.bottom)
 
-    def handle_direction(self):
-        sprite = pygame.image.load(path.join(PLAYER_PATH, "player.png")).convert_alpha()
-        if self.direction == Direction.LEFT:
-            self.image = pygame.transform.flip(sprite, True, False)
-            self.image = pygame.transform.scale(self.image, (64, 64))
-        else:
-            self.image = pygame.transform.scale(sprite, (64, 64))
-
     def check_hurt(self, game):
         for bullet in game.bullets:
             if self.rect.colliderect(bullet.rect):
                 game.bullets.remove(bullet)
                 self.hp -= bullet.damage
                 if self.hp <= 0:
+                    self.action = 2  # Death
                     game.john.remove(self)
 
     def update(self, game):
         # self.handle_input()
-        handle_direction = self.handle_direction()
+        self.ai_behavior()
         self.check_hurt(game)
-        # self.move(game, game.world.obstacle_list)
+        self.update_animation()
+        self.move(game, game.world.obstacle_list)
         # self.shoot(game)
 
