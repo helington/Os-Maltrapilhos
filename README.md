@@ -1,15 +1,15 @@
-# Os Maltrapilhos
+# Rambinho: O Último Soldado
 
-Relátorio de Desenvolvimento do jogo Os Maltrapilhos, feito para a cadeira de Introdução a Programação do curso de Sistemas de Informação do CIn-UFPE no semestre 2025-01.
+Relátorio de Desenvolvimento do jogo **Rambinho: O Último Soldado**, feito para a cadeira de Introdução a Programação do curso de Sistemas de Informação do CIn-UFPE no semestre 2025-01.
 
 ## Equipe
 
 <table>
     <tr>
         <td align="center"><a href="https://github.com/helington"><img src="https://avatars.githubusercontent.com/u/78865806?v=4" width="100px"/><br /><sub><b>Helington Willamy</b></sub></a><br/</td>
-        <td align="center"><a href="https://github.com/JeanValjeanRD"><img src="https://avatars.githubusercontent.com/u/154392376?v=4" width="100px"/><br /><sub><b>Gabriel Nóbrega</b></sub></a><br/></td>
-        <td align="center"><a><br /><sub><b>Luis Miguel</b></sub></a><br/></td>
-        <td align="center"><a><br /><sub><b>João Vitor</b></sub></a><br/></td>
+        <td align="center"><a href="https://github.com/GabrielNSB007"><img src="https://avatars.githubusercontent.com/u/154392376?v=4" width="100px"/><br /><sub><b>Gabriel Nóbrega</b></sub></a><br/></td>
+        <td align="center"><a href="https://github.com/luismiguuel"><img src="https://avatars.githubusercontent.com/u/224866738?v=4" width="100px"/><br /><sub><b>Luis Miguel</b></sub></a><br/></td>
+        <td align="center"><a href="https://github.com/vitorlins0"><img src="https://avatars.githubusercontent.com/u/224650528?v=4" width="100px"/><br /><sub><b>João Vitor</b></sub></a><br/></td>
         <td align="center"><a href="https://github.com/Igor-a-Soares"><img src="https://avatars.githubusercontent.com/u/223944470?v=4" width="100px"/><br /><sub><b>Igor Soares</b></sub></a><br/></td>
         <td align="center"><a href="https://github.com/AldusD"><img src="https://avatars.githubusercontent.com/u/98439753?v=4" width="100px"/><br /><sub><b>Aldus Daniel</b></sub></a><br/></td>
     </tr>
@@ -45,10 +45,11 @@ Projeto-IP/
 
 ## Como instalar e rodar o jogo
 
-### 1. Clone o repositório
+### 1. Clone o repositório e entre no mesmo
 
 ```bash
 git clone https://github.com/helington/Projeto-IP.git
+cd Projeto-IP
 ```
 
 ### 2. Crie o ambiente virtual

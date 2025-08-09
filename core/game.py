@@ -1,8 +1,9 @@
 import pygame
 
 from settings import *
-from entities.background import Background
-from entities.player import Player
+from entities import World
+from entities import Player
+from entities.character import Character
 
 class Game:
     """Main class for the game."""
@@ -16,10 +17,34 @@ class Game:
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.running = True
 
-        self.background = Background()
+        self.tiles_image_list = list()
+        self.get_tiles_images()
 
+        self.world = World(self.tiles_image_list)
         self.player = pygame.sprite.GroupSingle()
-        self.player.add(Player(200, 64))
+        self.player.add(Player())
+
+        self.john = pygame.sprite.GroupSingle()
+        self.john.add(Character())
+
+        self.bullets = pygame.sprite.Group()
+
+        self.screen_scroll = 0
+
+
+    def get_tiles_images(self):
+        """Get all images of tiles and transform them in surfaces, and then put them into 'tiles_image_list' variable."""
+
+        for i in range(TILE_TYPES):
+            current_image_path = path.join(TILES_PATH, f"{i}.png")
+            current_image = pygame.image.load(current_image_path)
+            if i == 15:
+                pass
+            elif i == 16:
+                current_image = pygame.transform.scale(current_image, (TILE_SIZE * 2, TILE_SIZE * 2))
+            else:
+                current_image = pygame.transform.scale(current_image, (TILE_SIZE, TILE_SIZE))
+            self.tiles_image_list.append(current_image)
 
     def handle_events(self):
         """Processes all Pygame events."""
@@ -28,19 +53,30 @@ class Game:
             if event.type == pygame.QUIT:
                 self.running = False
     
+    def update(self):
+        """Updates all entities of the game."""
+        self.bullets.update(self)
+        self.player.update(self)
+        self.world.water_group.update(self.screen_scroll)
+        # todo remover
+        self.john.update(self)
+
     def draw(self):
         """Draws the current game state to the screen."""
-
-        self.background.draw(self.screen)
+        self.world.draw(self.screen, self)
         self.player.draw(self.screen)
-        self.player.update()
+        self.bullets.draw(self.screen)
+        # todo remover
+        self.john.draw(self.screen)
 
     def run(self):
         """Runs the main game loop."""
 
         while self.running:
             self.handle_events()
+            self.update()
             self.draw()
+            
             pygame.display.update()
             self.clock.tick(FPS)
         
