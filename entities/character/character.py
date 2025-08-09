@@ -66,7 +66,10 @@ class Character(pygame.sprite.Sprite):
             self.update_time = pygame.time.get_ticks()
             self.index += 1
             if self.index >= len(current_animation):
-                self.index = 0
+                if self.action == 2:  # If death animation, stay on last frame
+                    self.index = len(current_animation) - 1
+                else:
+                    self.index = 0
         
         self.image = current_animation[self.index]
         if self.direction == Direction.LEFT:
@@ -102,9 +105,13 @@ class Character(pygame.sprite.Sprite):
             self.dx -= self.speed
             self.direction = Direction.LEFT
         elif self.moving_right:
-            self.action = 1  # Running
+            self.action = 1 # Running 
             self.direction = Direction.RIGHT
             self.dx += self.speed
+        
+        if self.dx ==0 and self.dy == 0:
+            self.action = 0  # Idle
+            self.index = 0
         
             
         self.apply_gravity()
@@ -159,13 +166,22 @@ class Character(pygame.sprite.Sprite):
                 self.hp -= bullet.damage
                 if self.hp <= 0:
                     self.action = 2  # Death
-                    game.john.remove(self)
+                    self.index = 0
+                    self.update_time = pygame.time.get_ticks()
+
 
     def update(self, game):
         # self.handle_input()
+        if self.action == 2:
+            self.update_animation()
+            if self.index == len(self.animation_list[self.action]) - 1:
+                game.john.remove(self)
+            return
+
         self.ai_behavior()
         self.check_hurt(game)
         self.update_animation()
-        self.move(game, game.world.obstacle_list)
+        if self.action != 2:
+            self.move(game, game.world.obstacle_list)
         # self.shoot(game)
 
