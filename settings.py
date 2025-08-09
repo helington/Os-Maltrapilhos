@@ -11,8 +11,16 @@ SCROLLING_THRESHOLD = 500
 
 # Bullet
 DISTANCE_FROM_PLAYER = 48
+Y_AXIS_BULLET = 16
 
-# Colors
+# Player
+PLAYER_SPEED = 5
+PLAYER_HP = 6
+
+# ENEMY
+ENEMY_HP = 6
+ENEMY_SPEED = 5
+AI_DECISION_COOLDOWN = 500 # ms
 
 # Paths
 ROOT_PATH = Path(__file__).resolve().parents[0]

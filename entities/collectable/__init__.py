@@ -1,0 +1,1 @@
+from .collectable_props import Collectable_props

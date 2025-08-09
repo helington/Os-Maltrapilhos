@@ -1,16 +1,15 @@
 import pygame
 
 from settings import *
-from entities import World
-from entities import Player
-from entities.character import Character
+from entities import World, Player
+from entities.entities_enum import Character_type
+from entities.character import Enemy
 
 class Game:
     """Main class for the game."""
 
     def __init__(self):
         """Initializates pygame and the game attributes."""
-
         pygame.init()
         pygame.display.set_caption(GAME_NAME)
         self.clock = pygame.time.Clock()
@@ -22,11 +21,10 @@ class Game:
 
         self.world = World(self.tiles_image_list)
         self.player = pygame.sprite.GroupSingle()
-        self.player.add(Player())
+        self.player.add(Player(Character_type.PLAYER_1.value, 230, 600))
 
-        self.john = pygame.sprite.GroupSingle()
-        self.john.add(Character())
-
+        self.enemies = pygame.sprite.Group()
+        self.enemies.add(Enemy(Character_type.ENEMY.value, 630, 600))
         self.bullets = pygame.sprite.Group()
 
         self.screen_scroll = 0
@@ -48,10 +46,13 @@ class Game:
 
     def handle_events(self):
         """Processes all Pygame events."""
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.running = False
+        
     
     def update(self):
         """Updates all entities of the game."""
@@ -59,7 +60,7 @@ class Game:
         self.player.update(self)
         self.world.water_group.update(self.screen_scroll)
         # todo remover
-        self.john.update(self)
+        self.enemies.update(self)
 
     def draw(self):
         """Draws the current game state to the screen."""
@@ -67,7 +68,7 @@ class Game:
         self.player.draw(self.screen)
         self.bullets.draw(self.screen)
         # todo remover
-        self.john.draw(self.screen)
+        self.enemies.draw(self.screen)
 
     def run(self):
         """Runs the main game loop."""

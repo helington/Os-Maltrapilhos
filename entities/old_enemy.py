@@ -1,7 +1,8 @@
-import pygame
-import player
+import pygame 
 from settings import *
 
+
+#### ta como old, para não perder esse código, implementação secundaria dele em enemy.py em character
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
@@ -25,9 +26,9 @@ class Enemy(pygame.sprite.Sprite):
             self.speed *= -1  # Reverse direction if at screen edge
             
 
-    def ai(self):
+    def ai(self, game):
         """Simple AI to control enemy movement."""
-        if self.alive and player.alive:
+        if self.alive and game.player:
             if self.direction == 1:
                 ai_moving_right = True
             else:  
@@ -42,7 +43,7 @@ class Enemy(pygame.sprite.Sprite):
 
             
     
-    def update(self):
+    def update(self, game):
         """Updates the enemy's position."""
         self.ai
         self.move()
