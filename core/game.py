@@ -19,14 +19,13 @@ class Game:
         self.tiles_image_list = list()
         self.get_tiles_images()
 
-        self.world = World(self.tiles_image_list)
-        self.player = pygame.sprite.GroupSingle()
-        self.player.add(Player(Character_type.PLAYER_1.value, 230, 600))
-
         self.enemies = pygame.sprite.Group()
-        self.enemies.add(Enemy(Character_type.ENEMY.value, 630, 600))
         self.bullets = pygame.sprite.Group()
 
+        self.world = World(self)
+        self.player = pygame.sprite.GroupSingle()
+        self.player.add(Player(Character_type.PLAYER_1.value, 230, 600))
+        
         self.screen_scroll = 0
 
 
@@ -57,18 +56,18 @@ class Game:
     def update(self):
         """Updates all entities of the game."""
         self.bullets.update(self)
+        self.enemies.update(self)
         self.player.update(self)
         self.world.water_group.update(self.screen_scroll)
         # todo remover
-        self.enemies.update(self)
 
     def draw(self):
         """Draws the current game state to the screen."""
         self.world.draw(self.screen, self)
         self.player.draw(self.screen)
         self.bullets.draw(self.screen)
-        # todo remover
         self.enemies.draw(self.screen)
+        # todo remover
 
     def run(self):
         """Runs the main game loop."""
@@ -77,7 +76,8 @@ class Game:
             self.handle_events()
             self.update()
             self.draw()
-            
+
+
             pygame.display.update()
             self.clock.tick(FPS)
         

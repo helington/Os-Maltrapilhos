@@ -92,6 +92,7 @@ class Character(pygame.sprite.Sprite):
         # Check for player going to world limit
         if self.type == "player":
             if self.rect.left + self.dx < 0 or self.rect.right + self.dx > SCREEN_WIDTH:
+                print("limit")
                 self.dx = 0
         
         self.rect.x += self.dx
@@ -99,6 +100,7 @@ class Character(pygame.sprite.Sprite):
 
         # Check if it's time to scrolling the world
         if self.type == "player":
+            game.screen_scroll = 0
             should_scroll = (
                 (self.rect.right > SCREEN_WIDTH - SCROLLING_THRESHOLD and self.direction == Direction.RIGHT and
                 world.background.scroll < (world.level_length * TILE_SIZE) - SCREEN_WIDTH) or 

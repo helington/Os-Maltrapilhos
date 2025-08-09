@@ -5,12 +5,15 @@ from os import path
 from .background import Background
 from .water import Water
 
+from ..character.enemy import Enemy
+from ..entities_enum import Character_type
+
 from settings import *
 
 class World:
     """World representation class."""
 
-    def __init__(self, tiles_image_list):
+    def __init__(self, game):
         """Initilizates world attributes."""
 
         self.background = Background()
@@ -20,7 +23,7 @@ class World:
 
         self.world_data = list()
         self.process_world_csv()
-        self.process_data(tiles_image_list)
+        self.process_data(game)
 
     def process_world_csv(self):
         """Process the csv data containing information about the world creation of the current level."""
@@ -36,7 +39,7 @@ class World:
                 for j, tile in enumerate(row):
                     self.world_data[i][j] = int(tile)
 
-    def process_data(self, tiles_image_list):
+    def process_data(self, game):
         """Process the data matriz containing information about the wolrd creation of the current level."""
 
         self.level_length = len(self.world_data[0])
@@ -44,7 +47,7 @@ class World:
         for i, row in enumerate(self.world_data):
             for j, tile in enumerate(row):
                 if tile >= 0:
-                    image = tiles_image_list[tile]
+                    image = game.tiles_image_list[tile]
                     image_rectangle = image.get_rect()
                     image_rectangle.x = j * TILE_SIZE
                     image_rectangle.y = i * TILE_SIZE
@@ -55,6 +58,9 @@ class World:
                     elif tile < 11:
                         water = Water(image, j * TILE_SIZE, i * TILE_SIZE)
                         self.water_group.add(water)
+                    elif tile == 16:
+                        enemy = Enemy(Character_type.ENEMY.value, j * TILE_SIZE, i * TILE_SIZE)
+                        game.enemies.add(enemy)
 
 
     def draw(self, screen, game):
