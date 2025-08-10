@@ -64,6 +64,14 @@ class World:
                         enemy = Enemy(Character_type.ENEMY.value, j * TILE_SIZE, i * TILE_SIZE)
                         game.enemies.add(enemy)
 
+    def is_ground(self, x, y):
+        point_rect = pygame.Rect(x, y, 1, 1)
+
+        for tile in self.obstacle_list:
+            if point_rect.colliderect(tile[1]):
+                return True
+            
+        return False
 
     def draw(self, screen, game):
         """Draw the world into game screen."""

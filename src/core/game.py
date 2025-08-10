@@ -86,7 +86,6 @@ class Game:
         self.collectables.draw(self.screen)
         self.bullets.draw(self.screen)
         self.enemies.draw(self.screen)
-        # todo remover
 
     def run(self):
         """Runs the main game loop."""
@@ -104,8 +103,6 @@ class Game:
                 self.draw()
             
             self.handle_events()
-            
-
 
             pygame.display.update()
             self.clock.tick(FPS)

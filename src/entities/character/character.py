@@ -117,6 +117,7 @@ class Character(pygame.sprite.Sprite):
                     self.gravity = 0
                     self.jumping = False
                     self.dy = tile[1].top - self.rect.bottom
+        
 
         # Check for player going to world limit
         if self.team == Team.ALLIES:

@@ -10,27 +10,56 @@ class Enemy(Character):
         super().__init__(character_info, x, y)
         self.world_x = x
         self.world_y = y
+        self.vision = pygame.Rect(0, 0, 150, 20)
 
-    def ai_behavior(self, game_screen_scroll):
+    def update_moving(self, left, right):
+        self.moving_left = left
+        self.moving_right = right
+
+    def check_danger(self, world):
+        direction_to_consider = 1 if self.direction == Direction.RIGHT else -1
+
+        test_x = self.rect.x + (self.width / 2) + (self.width / 2) * direction_to_consider
+        test_y = self.rect.bottom + 1
+
+        if not world.is_ground(test_x, test_y):
+            return True
+        else:
+            return False
+
+    def ai_behavior(self, player, world):
         # Change movement every ai_move_duration milliseconds
         current_time = pygame.time.get_ticks()
-        if current_time - self.ai_update_time > (self.ai_move_duration): 
-            self.has_shot = random.random() < 0.35
 
+        # if player is in enemy field of view
+        if player.alive:
+            if self.vision.colliderect(player):
+                self.update_action(Character_action.IDLE.value)
+                self.has_shot = True
+            else:
+                direction_vision = -75 if self.direction == Direction.LEFT else 75
+                self.vision.center = (self.rect.centerx + direction_vision, self.rect.centery)
+                self.has_shot = False
+        else:
+            self.has_shot = False
 
-        if current_time - self.ai_update_time > self.ai_move_duration:
+        # if enemy is in a danger place
+        if self.check_danger(world):
+            if self.direction == Direction.RIGHT:
+                self.update_moving(True, False)
+            else:
+                self.update_moving(False, True)
+
+        elif current_time - self.ai_update_time > self.ai_move_duration:
             self.ai_update_time = current_time
             # Random movement choice
             choice = random.randint(0, 2)
             if choice == 0:
-                self.moving_left = True
-                self.moving_right = False
+                self.update_moving(True, False)
             elif choice == 1:
-                self.moving_right = True
-                self.moving_left = False
+                self.update_moving(False, True)
             else:
-                self.moving_left = False
-                self.moving_right = False
+                self.update_moving(False, False)
     
     def update(self, game):
         self.rect.x += game.screen_scroll
@@ -43,5 +72,5 @@ class Enemy(Character):
 
         super().update(game)
 
-        self.ai_behavior(game.screen_scroll)
+        self.ai_behavior(game.player.sprite, game.world)
         self.update_animation()
