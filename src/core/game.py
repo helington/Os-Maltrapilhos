@@ -30,10 +30,9 @@ class Game:
 
         self.main_menu_img = pygame.image.load(path.join(MENUS_PATH, 'Main_Menu.jpeg'))
         self.main_menu_img = pygame.transform.scale(self.main_menu_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.start_button = Button(SCREEN_WIDTH //2 - 100, 300, pygame.image.load(path.join(BUTTONS_PATH, 'start_button.jpeg')))
+        self.start_button = Button(SCREEN_WIDTH //2 - 100, 500, pygame.image.load(path.join(BUTTONS_PATH, 'Play_Teste.png')))
         self.start_button.image = pygame.transform.scale(self.start_button.image, (200, 100))
-        self.exit_button = Button(SCREEN_WIDTH //2 - 100, 500, pygame.image.load(path.join(BUTTONS_PATH, 'exit_button.jpg')))
-        self.exit_button.image = pygame.transform.scale(self.exit_button.image, (200, 100))
+        
 
         self.world = World(self)
         self.player = pygame.sprite.GroupSingle()
@@ -103,8 +102,7 @@ class Game:
                 self.screen.blit(self.main_menu_img, (0,0))
                 if self.start_button.draw(self.screen, selected=True):
                     self.start_game = True
-                if self.exit_button.draw(self.screen, selected=False):
-                    self.running = False
+                
             else:
                 self.update()
                 self.draw()
