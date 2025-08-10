@@ -4,7 +4,7 @@ from os import path
 from ..config.settings import *
 from ..config.paths import TILES_PATH, MENUS_PATH, BUTTONS_PATH
 from ..entities import World, Player
-from ..entities.entities_enum import Character_type, Collectable_item
+from ..entities.entities_enum import Character_type, Collectable_item, Character_action
 from ..entities.collectable.collectable import Collectable, Collectable_Props
 from ..entities.world import TILES_TYPE
 from ..off_game_screens.button import Button
@@ -109,9 +109,14 @@ class Game:
             
             self.handle_events()
             
-            
+            if self.player.sprite.has_fallen and self.player.sprite.alive:
+                    self.player.sprite.action = Character_action.DEATH.value
+                    self.player.sprite.moving_left = False
+                    self.player.sprite.moving_right = False
+                    self.player.sprite.update_time = pygame.time.get_ticks()
 
             if (not self.player.sprite.alive or self.player.sprite.has_fallen) and self.player.sprite.finished_action:
+                        
                 game_over_screen = pygame.image.load(path.join(MENUS_PATH, 'Game_Over.jpeg'))
                 game_over_screen = pygame.transform.scale(game_over_screen, (SCREEN_WIDTH, SCREEN_HEIGHT))
                 self.screen.blit(game_over_screen, (0, 0))

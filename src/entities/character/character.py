@@ -145,8 +145,9 @@ class Character(pygame.sprite.Sprite):
                 game.screen_scroll = -self.dx
         
         if self.rect.bottom > SCREEN_HEIGHT:
-             self.has_fallen = True
-             self.finished_action = True
+            self.dy = 0
+            self.has_fallen = True
+
 
     def shoot(self, game):
         time_last_shot = pygame.time.get_ticks() - self.last_time_shot
