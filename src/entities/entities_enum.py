@@ -1,5 +1,6 @@
 from enum import Enum
-from settings import *
+from ..config.settings import *
+from ..config.paths import *
 
 class Direction(Enum):
     LEFT = 0
@@ -14,8 +15,9 @@ class Weapon(Enum):
     RIFLE = {"damage": 6, "speed": 12, "bullet_range": 1200, "cooldown": 450, 'gun_type': 1}
     MINIGUN = {"damage": 2, "speed": 14, "bullet_range": 900, "cooldown": 100, 'gun_type': 2}
 
-class Collectables(Enum):
-    RIFLE_ITEM = {"image": "rifle_item.png", "value": 1}
+class Collectable_item(Enum):
+    RIFLE_ITEM = {"image": "rifle_item.png", "value": 30}
+    MINIGUN_ITEM = {"image": "minigun_item.png", "value": 140}
 
 
 ##### CHARACTER ######

@@ -1,7 +1,5 @@
-from os import path
 import pygame
-from settings import PLAYER_PATH
-from ..entities_enum import Direction, Character_type, Weapon
+from ..entities_enum import Character_type
 
 
 class Character_Props:

@@ -1,9 +1,10 @@
 import pygame
+from os import path
 
-from settings import *
-from entities import World, Player
-from entities.entities_enum import Character_type
-from entities.character import Enemy
+from ..config.settings import *
+from ..config.paths import TILES_PATH
+from ..entities import World, Player
+from ..entities.entities_enum import Character_type
 
 class Game:
     """Main class for the game."""

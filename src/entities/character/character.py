@@ -1,9 +1,7 @@
-
-
-import random
 import pygame
+from os import path
 
-from settings import *
+from ...config.settings import *
 from ..entities_enum import Direction, Character_action, Images_info, Team
 from ..bullet import Bullet_props, Bullet
 from .character_props import Character_Props
@@ -128,7 +126,6 @@ class Character(pygame.sprite.Sprite):
         if self.gravity > 10:
             self.gravity
         self.dy = self.gravity
-        # self.rect.bottom = min(FLOOR_Y, self.rect.bottom)
 
     def check_hurt(self, game):
         for bullet in game.bullets:

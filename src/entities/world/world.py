@@ -8,7 +8,8 @@ from .water import Water
 from ..character.enemy import Enemy
 from ..entities_enum import Character_type
 
-from settings import *
+from ...config.settings import *
+from ...config.paths import *
 
 class World:
     """World representation class."""

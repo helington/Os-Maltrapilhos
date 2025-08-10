@@ -1,6 +1,7 @@
 import pygame
 
-from settings import *
+from ...config.settings import *
+from ...config.paths import *
 
 class Background:
     """Background representation class."""

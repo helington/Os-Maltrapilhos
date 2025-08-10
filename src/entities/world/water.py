@@ -1,6 +1,6 @@
 import pygame
 
-from settings import *
+from ...config.settings import *
 
 class Water(pygame.sprite.Sprite):
     def __init__(self, image, x, y):

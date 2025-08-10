@@ -1,7 +1,6 @@
 import pygame
 from os import path
-from entities.entities_enum import Direction
-from settings import BULLET_PATH
+from ..entities_enum import Direction
 from .bullet_props import Bullet_props
 
 class Bullet(pygame.sprite.Sprite):

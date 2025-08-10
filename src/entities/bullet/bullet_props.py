@@ -1,7 +1,7 @@
 from os import path
 import pygame
 
-from settings import BULLET_PATH
+from ...config.paths import BULLET_PATH
 from ..entities_enum import Weapon, Direction, Team
 
 class Bullet_props():
