@@ -2,7 +2,7 @@ import pygame
 from os import path
 
 from ...config.settings import *
-from ..entities_enum import Direction, Character_action, Images_info, Team
+from ..entities_enum import Direction, Character_action, Images_info, Team, Weapon
 from ..bullet import Bullet_props, Bullet
 from .character_props import Character_Props
 
@@ -12,7 +12,8 @@ class Character(pygame.sprite.Sprite):
         self.__dict__.update(props.__dict__)
         self.update_time = pygame.time.get_ticks()
         self.action = Character_action.IDLE.value
-        
+        self.ammo = float('inf')
+
         # render sprites
         self.index = 0
         temp_list = []
@@ -25,6 +26,7 @@ class Character(pygame.sprite.Sprite):
         self.moving_right = False
         self.jumping = True
         self.has_shot = False
+        self.is_swimming = False
         self.gravity = 0
         self.dy = 0
         self.dx = 0
@@ -89,7 +91,7 @@ class Character(pygame.sprite.Sprite):
             self.update_action(Character_action.RUN.value)
             self.direction = Direction.RIGHT
             self.dx += self.speed
-        
+
         if self.dx ==0 and self.dy == 0:
             self.update_action(Character_action.IDLE.value)
             
@@ -119,7 +121,6 @@ class Character(pygame.sprite.Sprite):
         # Check for player going to world limit
         if self.team == Team.ALLIES:
             if self.rect.left + self.dx < 0 or self.rect.right + self.dx > SCREEN_WIDTH:
-                print("limit")
                 self.dx = 0
         
         self.rect.x += self.dx
@@ -144,17 +145,35 @@ class Character(pygame.sprite.Sprite):
         previous_shot = self.has_shot
         self.has_shot = False
         if previous_shot and cooldown_passed:
+            self.handle_ammo()
+            
             self.last_time_shot = pygame.time.get_ticks()
             bullet_dx = DISTANCE_FROM_PLAYER if self.direction == Direction.RIGHT else -DISTANCE_FROM_PLAYER
             props = Bullet_props(self.weapon, self.rect.centerx + bullet_dx, self.rect.centery, self.direction, self.team)
             bullet = Bullet(props)
             game.bullets.add(bullet)
 
+    def handle_ammo(self):
+        self.ammo -= 1
+        if self.ammo < 1:
+            self.weapon = Weapon.REGULAR.value
+            self.ammo = float('inf')
+
+    def swim(self, game):
+        water_tiles = game.world.water_group
+        for water_tile in water_tiles:
+            if self.rect.colliderect(water_tile.rect):
+                self.is_swimming = True
+                self.jumping = False
+                self.gravity = min(0, self.gravity - 0.25)
+                return
+        self.is_swimming = False
+
+    
     def apply_gravity(self):
         self.gravity += 0.75
-        if self.gravity > 10:
-            self.gravity
         self.dy = self.gravity
+
 
     def check_hurt(self, game):
         for bullet in game.bullets:
@@ -167,6 +186,8 @@ class Character(pygame.sprite.Sprite):
                 self.hp -= bullet.damage
                 if self.hp <= 0:
                     self.action = Character_action.DEATH.value
+                    self.moving_left = False
+                    self.moving_right = False
                     self.index = 0
                     self.update_time = pygame.time.get_ticks()
 
@@ -176,4 +197,4 @@ class Character(pygame.sprite.Sprite):
         self.update_animation()
         if self.action != Character_action.DEATH.value:
             self.move(game, game.world)
-            
+            self.swim(game)

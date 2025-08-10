@@ -4,7 +4,9 @@ from os import path
 from ..config.settings import *
 from ..config.paths import TILES_PATH
 from ..entities import World, Player
-from ..entities.entities_enum import Character_type
+from ..entities.entities_enum import Character_type, Collectable_item
+from ..entities.collectable.collectable import Collectable, Collectable_Props
+from ..entities.world import TILES_TYPE
 
 class Game:
     """Main class for the game."""
@@ -26,6 +28,12 @@ class Game:
         self.world = World(self)
         self.player = pygame.sprite.GroupSingle()
         self.player.add(Player(Character_type.PLAYER_1.value, 230, 600))
+
+        self.collectables = pygame.sprite.Group()
+        rifle_props = Collectable_Props(640, 330, Collectable_item.RIFLE_ITEM)
+        minigun_props = Collectable_Props(100, 535, Collectable_item.MINIGUN_ITEM)
+        self.collectables.add(Collectable(rifle_props))
+        self.collectables.add(Collectable(minigun_props))
         
         self.screen_scroll = 0
 
@@ -36,9 +44,9 @@ class Game:
         for i in range(TILE_TYPES):
             current_image_path = path.join(TILES_PATH, f"{i}.png")
             current_image = pygame.image.load(current_image_path)
-            if i == 15:
+            if i == TILES_TYPE.PLAYER:
                 pass
-            elif i == 16:
+            elif i == TILES_TYPE.ENEMY:
                 current_image = pygame.transform.scale(current_image, (TILE_SIZE * 2, TILE_SIZE * 2))
             else:
                 current_image = pygame.transform.scale(current_image, (TILE_SIZE, TILE_SIZE))
@@ -59,6 +67,7 @@ class Game:
         self.bullets.update(self)
         self.enemies.update(self)
         self.player.update(self)
+        self.collectables.update(self)
         self.world.water_group.update(self.screen_scroll)
         # todo remover
 
@@ -66,6 +75,7 @@ class Game:
         """Draws the current game state to the screen."""
         self.world.draw(self.screen, self)
         self.player.draw(self.screen)
+        self.collectables.draw(self.screen)
         self.bullets.draw(self.screen)
         self.enemies.draw(self.screen)
         # todo remover

@@ -10,6 +10,7 @@ from ..entities_enum import Character_type
 
 from ...config.settings import *
 from ...config.paths import *
+from .world_enum import TILES_TYPE
 
 class World:
     """World representation class."""
@@ -47,19 +48,19 @@ class World:
 
         for i, row in enumerate(self.world_data):
             for j, tile in enumerate(row):
-                if tile >= 0:
+                if tile >= TILES_TYPE.FLOOR_GRASS.value: # = 0
                     image = game.tiles_image_list[tile]
                     image_rectangle = image.get_rect()
                     image_rectangle.x = j * TILE_SIZE
                     image_rectangle.y = i * TILE_SIZE
                     tile_data = (image, image_rectangle)
 
-                    if tile < 9:
+                    if tile in [TILES_TYPE.FLOOR_GRASS.value, TILES_TYPE.FLOOR_DIRT.value]:
                         self.obstacle_list.append(tile_data)
-                    elif tile < 11:
+                    elif tile in [TILES_TYPE.WATER_DEEP.value, TILES_TYPE.WATER_SURFACE.value]:
                         water = Water(image, j * TILE_SIZE, i * TILE_SIZE)
                         self.water_group.add(water)
-                    elif tile == 16:
+                    elif tile == TILES_TYPE.ENEMY.value:
                         enemy = Enemy(Character_type.ENEMY.value, j * TILE_SIZE, i * TILE_SIZE)
                         game.enemies.add(enemy)
 
