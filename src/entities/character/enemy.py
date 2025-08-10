@@ -14,8 +14,9 @@ class Enemy(Character):
     def ai_behavior(self, game_screen_scroll):
         # Change movement every ai_move_duration milliseconds
         current_time = pygame.time.get_ticks()
-        if current_time - self.ai_update_time > (self.ai_move_duration / 2):
-            self.has_shot = True
+        if current_time - self.ai_update_time > (self.ai_move_duration): 
+            self.has_shot = random.random() < 0.35
+
 
         if current_time - self.ai_update_time > self.ai_move_duration:
             self.ai_update_time = current_time
