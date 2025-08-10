@@ -12,7 +12,8 @@ class Character(pygame.sprite.Sprite):
         self.__dict__.update(props.__dict__)
         self.update_time = pygame.time.get_ticks()
         self.action = Character_action.IDLE.value
-        
+        self.ammo = float('inf')
+
         # render sprites
         self.index = 0
         temp_list = []
@@ -25,11 +26,11 @@ class Character(pygame.sprite.Sprite):
         self.moving_right = False
         self.jumping = True
         self.has_shot = False
+        self.is_swimming = False
         self.gravity = 0
         self.dy = 0
         self.dx = 0
         self.last_time_shot = 0
-        self.ammo = float('inf')
         
         self.ai_update_time = pygame.time.get_ticks()
 
@@ -90,7 +91,7 @@ class Character(pygame.sprite.Sprite):
             self.update_action(Character_action.RUN.value)
             self.direction = Direction.RIGHT
             self.dx += self.speed
-        
+
         if self.dx ==0 and self.dy == 0:
             self.update_action(Character_action.IDLE.value)
             
@@ -157,12 +158,22 @@ class Character(pygame.sprite.Sprite):
         if self.ammo < 1:
             self.weapon = Weapon.REGULAR.value
             self.ammo = float('inf')
-            
+
+    def swim(self, game):
+        water_tiles = game.world.water_group
+        for water_tile in water_tiles:
+            if self.rect.colliderect(water_tile.rect):
+                self.is_swimming = True
+                self.jumping = False
+                self.gravity = min(0, self.gravity - 0.25)
+                return
+        self.is_swimming = False
+
+    
     def apply_gravity(self):
         self.gravity += 0.75
-        if self.gravity > 10:
-            self.gravity
         self.dy = self.gravity
+
 
     def check_hurt(self, game):
         for bullet in game.bullets:
@@ -186,4 +197,4 @@ class Character(pygame.sprite.Sprite):
         self.update_animation()
         if self.action != Character_action.DEATH.value:
             self.move(game, game.world)
-            
+            self.swim(game)

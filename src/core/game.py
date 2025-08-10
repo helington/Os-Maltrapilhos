@@ -6,6 +6,7 @@ from ..config.paths import TILES_PATH
 from ..entities import World, Player
 from ..entities.entities_enum import Character_type, Collectable_item
 from ..entities.collectable.collectable import Collectable, Collectable_Props
+from ..entities.world import TILES_TYPE
 
 class Game:
     """Main class for the game."""
@@ -43,9 +44,9 @@ class Game:
         for i in range(TILE_TYPES):
             current_image_path = path.join(TILES_PATH, f"{i}.png")
             current_image = pygame.image.load(current_image_path)
-            if i == 15:
+            if i == TILES_TYPE.PLAYER:
                 pass
-            elif i == 16:
+            elif i == TILES_TYPE.ENEMY:
                 current_image = pygame.transform.scale(current_image, (TILE_SIZE * 2, TILE_SIZE * 2))
             else:
                 current_image = pygame.transform.scale(current_image, (TILE_SIZE, TILE_SIZE))
