@@ -18,20 +18,25 @@ Relátorio de Desenvolvimento do jogo **Rambinho: O Último Soldado**, feito par
 ## Estrutura do projeto
 
 ```
-Projeto-IP/
-├── main.py                  # Arquivo principal que inicia o jogo
-├── settings.py              # Configurações globais (tamanho da tela, FPS, cores, etc.)
-├── core/                    # Lógica central do jogo
-│   ├── game.py              # Classe principal que gerencia o loop do jogo
-│   └── utils.py             # Funções auxiliares
-├── scenes/                  # Cenas do jogo (tutorial, menu, gameplay, game over, etc.)
-├── entities/                # Entidades e personagens do jogo
-├── assets/                  # Recursos gráficos, sonoros e tipográficos
-│   ├── fonts/               # Fontes
-│   ├── graphics/            # Imagens dos Sprites e do mapa
-│   └── sounds/              # Efeitos sonoros
-├── requirements.txt         # Dependências do projeto (bibliotecas usadas)
-└── README.md                # Documentação e instruções do projeto
+Rambinho/
+├── assets/                # Recursos do jogo
+│ ├── graphics/            # Imagens dos sprites e do mapa
+│ └── levels/              # Arquivos de nível
+├── src/                   # Código-fonte do jogo
+│ ├── config/              # Arquivos de configuração
+│ ├── core/                # Lógica central do jogo
+│ ├── entities/            # Entidades e personagens do jogo
+│ │ ├── bullet/            # Representação das balas
+│ │ ├── character/         # Representação dos personagens (Inimigos e o jogador)
+│ │ ├── collectable/       # Representação dos coletáveis
+│ │ └── world/             # Representação do mundo de gameplay e seus elementos (Obstáculos, Background e etc)
+│ ├── off_game_screens/    # Telas de menu, game over, etc.
+│ ├── __init__.py          # Módulo de inicialização
+│ └── entities_enum.py     # Enumeração de entidades
+├── .gitignore             # Arquivos e diretórios a serem ignorados pelo Git
+├── README.md              # Relatório do projeto
+├── main.py                # Arquivo principal que inicia o jogo
+└── requirements.txt       # Dependências do projeto (bibliotecas usadas)
 ```
 
 ## Bibliotecas e ferramentas utilizadas
