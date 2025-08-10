@@ -26,21 +26,22 @@ class Player(Character):
 
         keys = pygame.key.get_pressed()
         
-        if keys[pygame.K_c]:
-            self.has_shot = True
+        if self.action != Character_action.DEATH.value:
+            if keys[pygame.K_c]:
+                self.has_shot = True
 
-        if keys[pygame.K_a]:
-            self.update_action(Character_action.RUN.value)
-            self.moving_left = True
+            if keys[pygame.K_a]:
+                self.update_action(Character_action.RUN.value)
+                self.moving_left = True
 
-        if keys[pygame.K_d]:
-            self.update_action(Character_action.RUN.value)
-            self.moving_right = True
-         
-        if keys[pygame.K_w] and not self.jumping:
-            self.update_action(Character_action.JUMP.value)
-            self.jumping = True
-            self.gravity = -12       
+            if keys[pygame.K_d]:
+                self.update_action(Character_action.RUN.value)
+                self.moving_right = True
+            
+            if keys[pygame.K_w] and not self.jumping:
+                self.update_action(Character_action.JUMP.value)
+                self.jumping = True
+                self.gravity = -12       
 
     def check_collect_item(self, game):
         for collectable in game.collectables:

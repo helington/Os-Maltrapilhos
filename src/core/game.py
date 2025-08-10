@@ -110,8 +110,19 @@ class Game:
                 self.draw()
             
             self.handle_events()
+            
+            
+
+            if (not self.player.sprite.alive or self.player.sprite.has_fallen) and self.player.sprite.finished_action:
+                game_over_screen = pygame.image.load(path.join(MENUS_PATH, 'Game_Over.jpeg'))
+                game_over_screen = pygame.transform.scale(game_over_screen, (SCREEN_WIDTH, SCREEN_HEIGHT))
+                self.screen.blit(game_over_screen, (0, 0))
+                key = pygame.key.get_pressed()
+                if key[pygame.K_RETURN]:
+                    self.running = False
+
 
             pygame.display.update()
             self.clock.tick(FPS)
-        
+
         pygame.quit()

@@ -13,6 +13,7 @@ class Character(pygame.sprite.Sprite):
         self.update_time = pygame.time.get_ticks()
         self.action = Character_action.IDLE.value
         self.ammo = float('inf')
+        self.finished_action = False
 
         # render sprites
         self.index = 0
@@ -31,6 +32,7 @@ class Character(pygame.sprite.Sprite):
         self.dy = 0
         self.dx = 0
         self.last_time_shot = 0
+        self.has_fallen = False
         
         self.invincible = False
         self.ai_update_time = pygame.time.get_ticks()
@@ -62,6 +64,7 @@ class Character(pygame.sprite.Sprite):
             if self.index >= len(current_animation):
                 if self.action == Character_action.DEATH.value:  # If death animation, stay on last frame
                     self.index = len(current_animation) - 1
+                    self.finished_action = True
                 else:
                     self.index = 0
         
@@ -140,6 +143,10 @@ class Character(pygame.sprite.Sprite):
             if should_scroll:
                 self.rect.x -= self.dx
                 game.screen_scroll = -self.dx
+        
+        if self.rect.bottom > SCREEN_HEIGHT:
+             self.has_fallen = True
+             self.finished_action = True
 
     def shoot(self, game):
         time_last_shot = pygame.time.get_ticks() - self.last_time_shot
