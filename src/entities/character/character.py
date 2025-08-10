@@ -46,23 +46,52 @@ class Character(pygame.sprite.Sprite):
                 temp_list.append(image)
                 self.animation_list[image_info.animation_type] = temp_list
 
+    def update_animation(self):
+        
+        animation_cooldown = 150
+        #update image depending on current frame
+        current_animation = self.animation_list[self.action]
+        
+        #check if enough time has passed since the last update
+        if pygame.time.get_ticks() - self.update_time > animation_cooldown:
+            self.update_time = pygame.time.get_ticks()
+            self.index += 1
+            if self.index >= len(current_animation):
+                if self.action == Character_action.DEATH.value:  # If death animation, stay on last frame
+                    self.index = len(current_animation) - 1
+                else:
+                    self.index = 0
+        
+        self.image = current_animation[self.index]
+        if self.direction == Direction.LEFT:
+            self.image = pygame.transform.flip(self.image, True, False)
+            self.image = pygame.transform.scale(self.image, (64, 64))
+        else:
+            self.image = pygame.transform.scale(self.image, (64, 64))
+
+    def update_action(self, new_action):
+        """ Update self.action based on action and reset the index if the new action is replaced """
+
+        if new_action != self.action:
+            self.action = new_action
+            self.index = 0
+            self.update_time = pygame.time.get_ticks()
+
     def move(self, game, world):
         self.dx = 0
         self.dy = 0
 
         if self.moving_left:
-            self.action = Character_action.RUN.value
+            self.update_action(Character_action.RUN.value)
             self.dx -= self.speed
             self.direction = Direction.LEFT
         elif self.moving_right:
-            self.action = Character_action.RUN.value
+            self.update_action(Character_action.RUN.value)
             self.direction = Direction.RIGHT
             self.dx += self.speed
         
         if self.dx ==0 and self.dy == 0:
-            self.action = Character_action.IDLE.value
-            self.index = 0
-        
+            self.update_action(Character_action.IDLE.value)
             
         self.apply_gravity()
 
@@ -144,6 +173,7 @@ class Character(pygame.sprite.Sprite):
     def update(self, game):
         self.check_hurt(game)
         self.shoot(game)
+        self.update_animation()
         if self.action != Character_action.DEATH.value:
             self.move(game, game.world)
             

@@ -30,29 +30,6 @@ class Enemy(Character):
             else:
                 self.moving_left = False
                 self.moving_right = False
-
-    def update_animation(self):
-        
-        animation_cooldown = 150
-        #update image depending on current frame
-        current_animation = self.animation_list[self.action]
-        
-        #check if enough time has passed since the last update
-        if pygame.time.get_ticks() - self.update_time > animation_cooldown:
-            self.update_time = pygame.time.get_ticks()
-            self.index += 1
-            if self.index >= len(current_animation):
-                if self.action == Character_action.DEATH.value:  # If death animation, stay on last frame
-                    self.index = len(current_animation) - 1
-                else:
-                    self.index = 0
-        
-        self.image = current_animation[self.index]
-        if self.direction == Direction.LEFT:
-            self.image = pygame.transform.flip(self.image, True, False)
-            self.image = pygame.transform.scale(self.image, (64, 64))
-        else:
-            self.image = pygame.transform.scale(self.image, (64, 64))
     
     def update(self, game):
         self.rect.x += game.screen_scroll

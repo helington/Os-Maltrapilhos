@@ -86,26 +86,6 @@ class Player(Character):
             self.jumping = True
             self.gravity = -12       
 
-    def update_animation(self):
-        
-        animation_cooldown = 150 if self.action != Character_action.JUMP.value else 50 # Shrink cooldown if it is jumping
-
-        #update image depending on current frame
-        self.image = self.animation_list[self.action][self.index]
-        
-        #check if enough time has passed since the last update
-        if pygame.time.get_ticks() - self.update_time > animation_cooldown:
-            self.update_time = pygame.time.get_ticks()
-            self.index += 1
-            if self.index >= len(self.animation_list):
-                self.index = 0
-        
-        if self.direction == Direction.LEFT:
-            self.image = pygame.transform.flip(self.image, True, False)
-            self.image = pygame.transform.scale(self.image, (64, 64))
-        else:
-            self.image = pygame.transform.scale(self.image, (64, 64))
-
     def update(self, game):
         super().update(game)
         if self.action == Character_action.DEATH.value:
