@@ -27,15 +27,15 @@ class Player(Character):
             self.has_shot = True
 
         if keys[pygame.K_a]:
-            self.action = Character_action.RUN.value
+            self.update_action(Character_action.RUN.value)
             self.moving_left = True
 
         if keys[pygame.K_d]:
-            self.action = Character_action.RUN.value
+            self.update_action(Character_action.RUN.value)
             self.moving_right = True
          
         if keys[pygame.K_w] and not self.jumping:
-            self.action = Character_action.JUMP.value
+            self.update_action(Character_action.JUMP.value)
             self.jumping = True
             self.gravity = -12       
 
