@@ -1,7 +1,7 @@
 # Game settings
 SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 640
-GAME_NAME = "Os Maltrapilhos"
+GAME_NAME = "Rambinho: O Último Soldado"
 FPS = 60
 
 SCROLLING_THRESHOLD = 500
