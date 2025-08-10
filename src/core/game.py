@@ -2,11 +2,12 @@ import pygame
 from os import path
 
 from ..config.settings import *
-from ..config.paths import TILES_PATH
+from ..config.paths import TILES_PATH, MENUS_PATH, BUTTONS_PATH
 from ..entities import World, Player
 from ..entities.entities_enum import Character_type, Collectable_item
 from ..entities.collectable.collectable import Collectable, Collectable_Props
 from ..entities.world import TILES_TYPE
+from ..off_game_screens.button import Button
 
 class Game:
     """Main class for the game."""
@@ -18,12 +19,19 @@ class Game:
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.running = True
+        self.start_game = False
 
         self.tiles_image_list = list()
         self.get_tiles_images()
 
         self.enemies = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
+        self.main_menu_img = pygame.image.load(path.join(MENUS_PATH, 'Main_Menu.jpeg'))
+        self.main_menu_img = pygame.transform.scale(self.main_menu_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.start_button = Button(SCREEN_WIDTH //2 - 100, 300, pygame.image.load(path.join(BUTTONS_PATH, 'start_button.jpeg')))
+        self.start_button.image = pygame.transform.scale(self.start_button.image, (200, 100))
+        self.exit_button = Button(SCREEN_WIDTH //2 - 100, 500, pygame.image.load(path.join(BUTTONS_PATH, 'exit_button.jpg')))
+        self.exit_button.image = pygame.transform.scale(self.exit_button.image, (200, 100))
 
         self.world = World(self)
         self.player = pygame.sprite.GroupSingle()
@@ -84,9 +92,19 @@ class Game:
         """Runs the main game loop."""
 
         while self.running:
+            
+            if not self.start_game:
+                self.screen.blit(self.main_menu_img, (0,0))
+                if self.start_button.draw(self.screen, selected=True):
+                    self.start_game = True
+                if self.exit_button.draw(self.screen, selected=False):
+                    self.running = False
+            else:
+                self.update()
+                self.draw()
+            
             self.handle_events()
-            self.update()
-            self.draw()
+            
 
 
             pygame.display.update()
