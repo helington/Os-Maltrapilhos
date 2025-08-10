@@ -7,9 +7,10 @@ class Bullet(pygame.sprite.Sprite):
     def __init__(self, props: Bullet_props):
         super().__init__()
         self.direction = props.direction
+        self.gun_type = props.gun_type
 
         # 1) carregar frames e inicializar animação
-        self.frames = Bullet_props.get_frames(self.direction)
+        self.frames = Bullet_props.get_frames(self.direction, self.gun_type)
         self.current_frame = 0
         self.animation_fps = props.animation_fps
         self.frame_duration = 1000 // self.animation_fps  # ms por frame
