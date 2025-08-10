@@ -32,6 +32,7 @@ class Character(pygame.sprite.Sprite):
         self.dx = 0
         self.last_time_shot = 0
         
+        self.invincible = False
         self.ai_update_time = pygame.time.get_ticks()
 
         self.width = self.image[0].get_width()
@@ -184,7 +185,8 @@ class Character(pygame.sprite.Sprite):
             )
             if is_hit:
                 game.bullets.remove(bullet)
-                self.hp -= bullet.damage
+                if self.invincible == False:
+                    self.hp -= bullet.damage
                 if self.hp <= 0:
                     self.action = Character_action.DEATH.value
                     self.moving_left = False

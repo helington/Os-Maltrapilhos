@@ -15,14 +15,18 @@ class Weapon(Enum):
     RIFLE = {"damage": 6, "speed": 12, "bullet_range": 1200, "cooldown": 450, 'gun_type': 1}
     MINIGUN = {"damage": 2, "speed": 14, "bullet_range": 900, "cooldown": 100, 'gun_type': 2}
 
+class Power_up(Enum):
+    BUBBLE = {"damage": 2, "speed": 10, "bullet_range": 900, "cooldown": 300, 'gun_type': 0}
+
 class Collectable_types(Enum):
     WEAPON = 0
-    POWER_UP = 1
+    POWER_UP = 1 # please make the healing kit one of those, I know the name sucks but if you make another one of those types it will create clutter. and I am NOT fond of clutter
     COIN = 2
 
 class Collectable_item(Enum):
     RIFLE_ITEM = { "image": "rifle.png", "value": 15, "type": Collectable_types.WEAPON, "item": Weapon.RIFLE }
     MINIGUN_ITEM = { "image": "minigun.png", "value": 100, "type": Collectable_types.WEAPON, "item": Weapon.MINIGUN }
+    BUBBLE_ITEM = { "image": "bubble.png", "type": Collectable_types.POWER_UP, "item": Power_up.BUBBLE}
 
 
 ##### CHARACTER ######

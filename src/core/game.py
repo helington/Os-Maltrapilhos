@@ -26,6 +26,8 @@ class Game:
 
         self.enemies = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
+        self.effects = pygame.sprite.Group() # this group currently exists for the bubble effect
+
         self.main_menu_img = pygame.image.load(path.join(MENUS_PATH, 'Main_Menu.jpeg'))
         self.main_menu_img = pygame.transform.scale(self.main_menu_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
         self.start_button = Button(SCREEN_WIDTH //2 - 100, 300, pygame.image.load(path.join(BUTTONS_PATH, 'start_button.jpeg')))
@@ -43,6 +45,9 @@ class Game:
         self.collectables.add(Collectable(rifle_props))
         self.collectables.add(Collectable(minigun_props))
         
+        bubble_props = Collectable_Props(40, 535, Collectable_item.BUBBLE_ITEM)
+        self.collectables.add(Collectable(bubble_props))
+
         self.screen_scroll = 0
 
 
@@ -76,6 +81,7 @@ class Game:
         self.enemies.update(self)
         self.player.update(self)
         self.collectables.update(self)
+        self.effects.update(self)
         self.world.water_group.update(self.screen_scroll)
         # todo remover
 
@@ -86,6 +92,7 @@ class Game:
         self.collectables.draw(self.screen)
         self.bullets.draw(self.screen)
         self.enemies.draw(self.screen)
+        self.effects.draw(self.screen)
 
     def run(self):
         """Runs the main game loop."""
