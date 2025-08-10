@@ -30,7 +30,7 @@ class Game:
 
         self.main_menu_img = pygame.image.load(path.join(MENUS_PATH, 'Main_Menu.jpeg'))
         self.main_menu_img = pygame.transform.scale(self.main_menu_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.start_button = Button(SCREEN_WIDTH //2 - 100, 500, pygame.image.load(path.join(BUTTONS_PATH, 'Play_Teste.png')))
+        self.start_button = Button(SCREEN_WIDTH //2 - 100, 500, pygame.image.load(path.join(BUTTONS_PATH, 'Default.png')))
         self.start_button.image = pygame.transform.scale(self.start_button.image, (200, 100))
         
 
