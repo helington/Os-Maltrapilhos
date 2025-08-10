@@ -4,6 +4,6 @@ class Collectable_Props:
     def __init__(self, x, y, item: Collectable_item):
         self.x = x
         self.y = y
-        self.__dict__.update(item.__dict__)
+        self.__dict__.update(item.value)
 
 

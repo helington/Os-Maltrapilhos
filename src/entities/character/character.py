@@ -2,7 +2,7 @@ import pygame
 from os import path
 
 from ...config.settings import *
-from ..entities_enum import Direction, Character_action, Images_info, Team
+from ..entities_enum import Direction, Character_action, Images_info, Team, Weapon
 from ..bullet import Bullet_props, Bullet
 from .character_props import Character_Props
 
@@ -29,6 +29,7 @@ class Character(pygame.sprite.Sprite):
         self.dy = 0
         self.dx = 0
         self.last_time_shot = 0
+        self.ammo = float('inf')
         
         self.ai_update_time = pygame.time.get_ticks()
 
@@ -119,7 +120,6 @@ class Character(pygame.sprite.Sprite):
         # Check for player going to world limit
         if self.team == Team.ALLIES:
             if self.rect.left + self.dx < 0 or self.rect.right + self.dx > SCREEN_WIDTH:
-                print("limit")
                 self.dx = 0
         
         self.rect.x += self.dx
@@ -144,11 +144,20 @@ class Character(pygame.sprite.Sprite):
         previous_shot = self.has_shot
         self.has_shot = False
         if previous_shot and cooldown_passed:
+            self.handle_ammo()
+            
             self.last_time_shot = pygame.time.get_ticks()
             bullet_dx = DISTANCE_FROM_PLAYER if self.direction == Direction.RIGHT else -DISTANCE_FROM_PLAYER
             props = Bullet_props(self.weapon, self.rect.centerx + bullet_dx, self.rect.centery, self.direction, self.team)
             bullet = Bullet(props)
             game.bullets.add(bullet)
+
+    def handle_ammo(self):
+        self.ammo -= 1
+        if self.ammo < 1:
+            self.weapon = Weapon.REGULAR.value
+            self.ammo = float('inf')
+
 
     def apply_gravity(self):
         self.gravity += 0.75
@@ -167,6 +176,8 @@ class Character(pygame.sprite.Sprite):
                 self.hp -= bullet.damage
                 if self.hp <= 0:
                     self.action = Character_action.DEATH.value
+                    self.moving_left = False
+                    self.moving_right = False
                     self.index = 0
                     self.update_time = pygame.time.get_ticks()
 
