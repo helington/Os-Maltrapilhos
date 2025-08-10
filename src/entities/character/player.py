@@ -1,9 +1,9 @@
 import pygame
 
-from ..entities.character import Character
-from ..config.settings import *
-from ..config.paths import *
-from .entities_enum import Direction, Weapon, Character_action, Character_type
+from .character import Character
+from ...config.settings import *
+from ...config.paths import *
+from ..entities_enum import Direction, Weapon, Character_action, Character_type
 
 class Player(Character):
     def __init__(self, character_info: Character_type, x, y):
