@@ -15,9 +15,14 @@ class Weapon(Enum):
     RIFLE = {"damage": 6, "speed": 12, "bullet_range": 1200, "cooldown": 450, 'gun_type': 1}
     MINIGUN = {"damage": 2, "speed": 14, "bullet_range": 900, "cooldown": 100, 'gun_type': 2}
 
+class Collectable_types(Enum):
+    WEAPON = 0
+    POWER_UP = 1
+    COIN = 2
+
 class Collectable_item(Enum):
-    RIFLE_ITEM = {"image": "rifle.png", "value": 30}
-    MINIGUN_ITEM = {"image": "minigun.png", "value": 140}
+    RIFLE_ITEM = { "image": "rifle.png", "value": 15, "type": Collectable_types.WEAPON, "item": Weapon.RIFLE }
+    MINIGUN_ITEM = { "image": "minigun.png", "value": 100, "type": Collectable_types.WEAPON, "item": Weapon.MINIGUN }
 
 
 ##### CHARACTER ######

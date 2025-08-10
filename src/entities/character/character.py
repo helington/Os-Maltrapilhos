@@ -157,8 +157,7 @@ class Character(pygame.sprite.Sprite):
         if self.ammo < 1:
             self.weapon = Weapon.REGULAR.value
             self.ammo = float('inf')
-
-
+            
     def apply_gravity(self):
         self.gravity += 0.75
         if self.gravity > 10:

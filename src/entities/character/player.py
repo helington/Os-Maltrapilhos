@@ -3,7 +3,7 @@ import pygame
 from .character import Character
 from ...config.settings import *
 from ...config.paths import *
-from ..entities_enum import Direction, Weapon, Character_action, Character_type
+from ..entities_enum import Direction, Weapon, Character_action, Character_type, Collectable_types
 
 class Player(Character):
     def __init__(self, character_info: Character_type, x, y):
@@ -63,15 +63,10 @@ class Player(Character):
         for collectable in game.collectables:
             if self.rect.colliderect(collectable.rect):
                 game.collectables.remove(collectable)
-                self
-                if self.hp <= 0:
-                    self.action = Character_action.DEATH.value
-                    self.index = 0
-                    self.update_time = pygame.time.get_ticks()
-
-
+                if collectable.type == Collectable_types.WEAPON:
+                    self.weapon = collectable.item.value
+                    self.ammo = collectable.value
         
-
     def update(self, game):
         super().update(game)
         if self.action == Character_action.DEATH.value:
@@ -79,3 +74,4 @@ class Player(Character):
             self.kill()
         self.handle_input()
         self.update_animation()
+        self.check_collect_item(game)
