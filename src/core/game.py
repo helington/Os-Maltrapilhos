@@ -44,12 +44,12 @@ class Game:
         
 
         self.world = World(self)
-        self.player = pygame.sprite.GroupSingle()
-        self.player2 = pygame.sprite.GroupSingle()
-        self.player.add(Player(Character_type.PLAYER_1.value, 230, 600, False))
+        self.players = pygame.sprite.Group()
+        player1 = Player(Character_type.PLAYER_1.value, 230, 600, False)
+        self.players.add(player1)
 
         self.health_bar = pygame.sprite.Group()
-        self.health_bar.add(Healthbar(10, 10, False))
+        self.health_bar.add(Healthbar(80, 100, False, player1))
 
 
         self.collectables = pygame.sprite.Group()
@@ -89,33 +89,37 @@ class Game:
                     # todo block respawn
                     if not self.multiplayer_active: 
                         self.multiplayer_active = True
-                        self.player2.add(Player(Character_type.PLAYER_2.value, 230, 400, True))
-                        self.health_bar.add(Healthbar(10, 90, True))
-
-        
-    
+                        player2 = Player(Character_type.PLAYER_2.value, 230, 400, True)
+                        self.players.add(player2)
+                        self.health_bar.add(Healthbar(80, 180, True, player2))
+         
     def update(self):
         """Updates all entities of the game."""
         self.bullets.update(self)
         self.enemies.update(self)
-        self.player.update(self)
-        self.player2.update(self)
+        self.players.update(self)
         self.health_bar.update(self)
         self.collectables.update(self)
         self.effects.update(self)
         self.world.water_group.update(self.screen_scroll)
-        # todo remover
 
     def draw(self):
         """Draws the current game state to the screen."""
         self.world.draw(self.screen, self)
-        self.player.draw(self.screen)
-        self.player2.draw(self.screen)
+        self.players.draw(self.screen)
         self.health_bar.draw(self.screen)
         self.collectables.draw(self.screen)
         self.bullets.draw(self.screen)
         self.enemies.draw(self.screen)
         self.effects.draw(self.screen)
+
+    def are_all_players_died(self):
+        """Check if all players in game are died."""
+
+        for player in self.players.sprites():
+            if player.alive == True:
+                return False
+        return True
 
     def run(self):
         """Runs the main game loop."""
@@ -132,16 +136,8 @@ class Game:
                 self.draw()
             
             self.handle_events()
-            
-            if self.player.sprite.has_fallen and self.player.sprite.alive:
-                    self.player.sprite.action = Character_action.DEATH.value
-                    self.player.sprite.moving_left = False
-                    self.player.sprite.moving_right = False
-                    self.player.sprite.update_time = pygame.time.get_ticks()
-                    self.player.sprite.death_fx.play()
 
-            if (not self.player.sprite.alive or self.player.sprite.has_fallen) and self.player.sprite.finished_action:
-                        
+            if self.are_all_players_died():
                 game_over_screen = pygame.image.load(path.join(MENUS_PATH, 'Game_Over.jpeg'))
                 game_over_screen = pygame.transform.scale(game_over_screen, (SCREEN_WIDTH, SCREEN_HEIGHT))
                 self.screen.blit(game_over_screen, (0, 0))

@@ -16,7 +16,6 @@ class Player(Character):
         self.update_time = pygame.time.get_ticks()
         self.action = 0 
         self.coins = 0
-        self.alive = True
         temp_list = []
         self.is_player2 = is_player2
         
@@ -80,8 +79,6 @@ class Player(Character):
 
     def update(self, game):
         super().update(game)
-        if self.action == Character_action.DEATH.value:
-            self.alive = False
         self.handle_input()
         self.check_collect_item(game)
         self.invincibility_track()

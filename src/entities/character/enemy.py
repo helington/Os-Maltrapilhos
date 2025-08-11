@@ -29,23 +29,24 @@ class Enemy(Character):
         else:
             return False
 
-    def ai_behavior(self, player, player2, world):
+    def ai_behavior(self, players, world):
         # Change movement every ai_move_duration milliseconds
         current_time = pygame.time.get_ticks()
 
-        # if player is in enemy field of view
-        if player.alive:
-            player1_target = self.vision.colliderect(player)
-            player2_target = False
-            if player2:
-                player2_target = self.vision.colliderect(player2)
-            if  player1_target or player2_target:
-                self.update_action(Character_action.IDLE.value)
-                self.has_shot = True
-            else:
-                direction_vision = -75 if self.direction == Direction.LEFT else 75
-                self.vision.center = (self.rect.centerx + direction_vision, self.rect.centery)
-                self.has_shot = False
+        some_target_in_vision = False
+
+        for player in players:
+            # if player is in enemy field of view
+            if player.alive and not some_target_in_vision:
+                if self.vision.colliderect(player):
+                    self.update_action(Character_action.IDLE.value)
+                    some_target_in_vision = True
+                else:
+                    direction_vision = -75 if self.direction == Direction.LEFT else 75
+                    self.vision.center = (self.rect.centerx + direction_vision, self.rect.centery)
+            
+        if some_target_in_vision:
+            self.has_shot = True
         else:
             self.has_shot = False
 
@@ -80,7 +81,7 @@ class Enemy(Character):
 
         super().update(game)
 
-        self.ai_behavior(game.player.sprite, game.player2.sprite, game.world)
+        self.ai_behavior(game.players.sprites(), game.world)
         self.update_animation()
 
     def drop_loot(self):
