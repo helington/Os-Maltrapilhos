@@ -68,7 +68,7 @@ class Enemy(Character):
             else:
                 self.update_moving(False, False)
     
-    def update(self, game):
+    def update(self, game, follow_player):
         self.game = game # i believe this is needed for dropping loot
         self.rect.x += game.screen_scroll
 
@@ -79,7 +79,7 @@ class Enemy(Character):
                 game.enemies.remove(self)
             return
 
-        super().update(game)
+        super().update(game, follow_player)
 
         self.ai_behavior(game.players.sprites(), game.world)
         self.update_animation()

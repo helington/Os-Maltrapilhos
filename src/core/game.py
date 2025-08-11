@@ -63,6 +63,14 @@ class Game:
 
         self.screen_scroll = 0
 
+    def get_follow_player(self): 
+        for player in self.players:
+            if player.hp > 0:
+                self.follow_player = player
+                #self.screen_scroll = self.follow_player.rect.centerx - SCREEN_WIDTH // 2
+                return 
+        self.follow_player = None
+
     def get_tiles_images(self):
         """Get all images of tiles and transform them in surfaces, and then put them into 'tiles_image_list' variable."""
 
@@ -95,9 +103,10 @@ class Game:
          
     def update(self):
         """Updates all entities of the game."""
+        self.get_follow_player()
         self.bullets.update(self)
-        self.enemies.update(self)
-        self.players.update(self)
+        for enemy in self.enemies: enemy.update(self, None)
+        for player in self.players: player.update(self, self.follow_player)
         self.health_bar.update(self)
         self.collectables.update(self)
         self.effects.update(self)
@@ -114,13 +123,21 @@ class Game:
         self.effects.draw(self.screen)
 
     def are_all_players_died(self):
-        """Check if all players in game are died."""
+        return not any(player.hp > 0 for player in self.players)
+        someone_alive = False
+        follow_player = self.get_follow_player()
 
-        for player in self.players.sprites():
-            if player.alive == True:
-                return False
-        return True
-
+        for player in self.players:
+            if player.hp > 0:
+                someone_alive = True
+                if player == follow_player:
+                    player.is_player2 = False
+                else:
+                    player.is_player2 = True
+            else:
+                player.is_player2 = True
+        
+        return not someone_alive
     def run(self):
         """Runs the main game loop."""
 
@@ -138,6 +155,7 @@ class Game:
             self.handle_events()
 
             if self.are_all_players_died():
+                for player in self.players: player.kill()
                 game_over_screen = pygame.image.load(path.join(MENUS_PATH, 'Game_Over.jpeg'))
                 game_over_screen = pygame.transform.scale(game_over_screen, (SCREEN_WIDTH, SCREEN_HEIGHT))
                 self.screen.blit(game_over_screen, (0, 0))

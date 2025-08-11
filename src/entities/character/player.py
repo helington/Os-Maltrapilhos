@@ -39,7 +39,6 @@ class Player(Character):
         
         if self.action != Character_action.DEATH.value:
             if keys[self.controll.shoot]:
-                self.gunshot_fx.play()
                 self.has_shot = True
 
             if keys[self.controll.left]:
@@ -77,11 +76,17 @@ class Player(Character):
             if pygame.time.get_ticks() >= self.expiration_date_bubble: 
                 self.invincible = False
 
-    def update(self, game):
-        super().update(game)
+    def update(self, game, follow_player):
+        super().update(game, follow_player)
         self.handle_input()
         self.check_collect_item(game)
         self.invincibility_track()
 
-        if self.controll.up != pygame.K_w:
+
+        is_on_border = self.rect.left < 0 or self.rect.right > SCREEN_WIDTH
+        should_be_dragged_by_scroll = (
+            self.hp > 0 and
+            is_on_border
+        )
+        if not should_be_dragged_by_scroll and self is not follow_player:
             self.rect.x += game.screen_scroll

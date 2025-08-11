@@ -91,7 +91,7 @@ class Character(pygame.sprite.Sprite):
             self.index = 0
             self.update_time = pygame.time.get_ticks()
 
-    def move(self, game, world):
+    def move(self, game, world, follow_player):
         self.dx = 0
         self.dy = 0
 
@@ -140,7 +140,7 @@ class Character(pygame.sprite.Sprite):
         self.rect.y += self.dy
 
         # Check if it's time to scrolling the world
-        if self.team == Team.ALLIES and not self.is_player2:
+        if self is follow_player:
             game.screen_scroll = 0
             should_scroll = (
                 (self.rect.right > SCREEN_WIDTH - SCROLLING_THRESHOLD and self.direction == Direction.RIGHT and
@@ -155,6 +155,7 @@ class Character(pygame.sprite.Sprite):
         if self.rect.bottom > SCREEN_HEIGHT:
             self.dy = 0
             self.has_fallen = True
+            self.hp = 0
 
 
     def shoot(self, game):
@@ -164,7 +165,8 @@ class Character(pygame.sprite.Sprite):
         self.has_shot = False
         if previous_shot and cooldown_passed:
             self.handle_ammo()
-            
+            if hasattr(self, 'gunshot_fx'): 
+                self.gunshot_fx.play()
             self.last_time_shot = pygame.time.get_ticks()
             bullet_dx = DISTANCE_FROM_PLAYER if self.direction == Direction.RIGHT else -DISTANCE_FROM_PLAYER
             props = Bullet_props(self.weapon, self.rect.centerx + bullet_dx, self.rect.centery, self.direction, self.team)
@@ -211,12 +213,12 @@ class Character(pygame.sprite.Sprite):
                     else:
                         self.enemy_death_fx.play()
 
-    def update(self, game):
+    def update(self, game, follow_player):
         self.check_hurt(game)
         self.shoot(game)
         self.update_animation()
         if self.action != Character_action.DEATH.value:
-            self.move(game, game.world)
+            self.move(game, game.world, follow_player)
             self.swim(game)
         else:
             self.hp = 0
