@@ -31,7 +31,7 @@ class Healthbar(pygame.sprite.Sprite):
         for i in range(9):
             image_path = path.join(HEALTH_PATH, f'heart{i}.png')
             image = pygame.image.load(image_path).convert_alpha()
-            image = pygame.transform.scale(image, (100, 50))
+            image = pygame.transform.scale(image, (150, 50))
             images_list.append(image)
 
         self.images = images_list

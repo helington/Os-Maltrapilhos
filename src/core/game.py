@@ -1,10 +1,11 @@
 import pygame
+from pygame import mixer
 from os import path
 
 from ..config.settings import *
-from ..config.paths import TILES_PATH, MENUS_PATH, BUTTONS_PATH
+from ..config.paths import TILES_PATH, MENUS_PATH, BUTTONS_PATH, SOUNDS_PATH
 from ..entities import World, Player
-from ..entities.entities_enum import Character_type, Collectable_item
+from ..entities.entities_enum import Character_type, Collectable_item, Character_action
 from ..entities.collectable.collectable import Collectable, Collectable_Props
 from ..entities.world import TILES_TYPE
 from ..off_game_screens.button import Button
@@ -16,6 +17,7 @@ class Game:
     def __init__(self):
         """Initializates pygame and the game attributes."""
         pygame.init()
+        mixer.init()
         pygame.display.set_caption(GAME_NAME)
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -25,6 +27,11 @@ class Game:
 
         self.tiles_image_list = list()
         self.get_tiles_images()
+
+        # load background music
+        mixer.music.load(path.join(SOUNDS_PATH, 'bgm.mp3'))
+        mixer.music.set_volume(0.10)
+        mixer.music.play(-1,0.0,5000)  # -1 means loop indefinitely
 
         self.enemies = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
@@ -42,7 +49,7 @@ class Game:
         self.player.add(Player(Character_type.PLAYER_1.value, 230, 600, False))
 
         self.health_bar = pygame.sprite.Group()
-        self.health_bar.add(Healthbar(80, 100, False))
+        self.health_bar.add(Healthbar(10, 10, False))
 
 
         self.collectables = pygame.sprite.Group()
@@ -83,7 +90,7 @@ class Game:
                     if not self.multiplayer_active: 
                         self.multiplayer_active = True
                         self.player2.add(Player(Character_type.PLAYER_2.value, 230, 400, True))
-                        self.health_bar.add(Healthbar(80, 180, True))
+                        self.health_bar.add(Healthbar(10, 90, True))
 
         
     
@@ -125,7 +132,16 @@ class Game:
                 self.draw()
             
             self.handle_events()
+            
+            if self.player.sprite.has_fallen and self.player.sprite.alive:
+                    self.player.sprite.action = Character_action.DEATH.value
+                    self.player.sprite.moving_left = False
+                    self.player.sprite.moving_right = False
+                    self.player.sprite.update_time = pygame.time.get_ticks()
+                    self.player.sprite.death_fx.play()
+
             if (not self.player.sprite.alive or self.player.sprite.has_fallen) and self.player.sprite.finished_action:
+                        
                 game_over_screen = pygame.image.load(path.join(MENUS_PATH, 'Game_Over.jpeg'))
                 game_over_screen = pygame.transform.scale(game_over_screen, (SCREEN_WIDTH, SCREEN_HEIGHT))
                 self.screen.blit(game_over_screen, (0, 0))
