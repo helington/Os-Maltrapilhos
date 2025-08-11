@@ -41,7 +41,6 @@ class Game:
         self.main_menu_img = pygame.transform.scale(self.main_menu_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
         self.start_button = Button(SCREEN_WIDTH //2 - 100, 500, pygame.image.load(path.join(BUTTONS_PATH, 'Default.png')))
         self.start_button.image = pygame.transform.scale(self.start_button.image, (200, 100))
-        
 
         self.world = World(self)
         self.players = pygame.sprite.Group()
@@ -50,7 +49,6 @@ class Game:
 
         self.health_bar = pygame.sprite.Group()
         self.health_bar.add(Healthbar(80, 100, False, player1))
-
 
         self.collectables = pygame.sprite.Group()
         rifle_props = Collectable_Props(640, 330, Collectable_item.RIFLE_ITEM)
@@ -123,7 +121,7 @@ class Game:
         self.effects.draw(self.screen)
 
     def are_all_players_died(self):
-        return not any(player.hp > 0 for player in self.players)
+        return not any(player.alive for player in self.players)
         someone_alive = False
         follow_player = self.get_follow_player()
 
