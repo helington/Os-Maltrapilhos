@@ -21,7 +21,7 @@ class Character(pygame.sprite.Sprite):
         self.death_fx = pygame.mixer.Sound(path.join(SOUNDS_PATH, 'death.mp3'))
         self.death_fx.set_volume(1.5)
         self.enemy_death_fx = pygame.mixer.Sound(path.join(SOUNDS_PATH, 'enemy_death.mp3'))
-        self.enemy_death_fx.set_volume(0.15)
+        self.enemy_death_fx.set_volume(0.05)
         
         # render sprites
         self.index = 0
