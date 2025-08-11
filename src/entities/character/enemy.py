@@ -2,7 +2,7 @@
 import random
 import pygame
 
-from ..entities_enum import Character_action, Direction, Character_type, Collectable_item
+from ..entities_enum import Character_action, Direction, Character_type, Collectable_item, Item_code
 from .character import Character
 
 from ..collectable.collectable import Collectable, Collectable_Props
@@ -29,13 +29,17 @@ class Enemy(Character):
         else:
             return False
 
-    def ai_behavior(self, player, world):
+    def ai_behavior(self, player, player2, world):
         # Change movement every ai_move_duration milliseconds
         current_time = pygame.time.get_ticks()
 
         # if player is in enemy field of view
         if player.alive:
-            if self.vision.colliderect(player):
+            player1_target = self.vision.colliderect(player)
+            player2_target = False
+            if player2:
+                player2_target = self.vision.colliderect(player2)
+            if  player1_target or player2_target:
                 self.update_action(Character_action.IDLE.value)
                 self.has_shot = True
             else:
@@ -76,19 +80,19 @@ class Enemy(Character):
 
         super().update(game)
 
-        self.ai_behavior(game.player.sprite, game.world)
+        self.ai_behavior(game.player.sprite, game.player2.sprite, game.world)
         self.update_animation()
 
     def drop_loot(self):
         # this function is full of magic numbers, here is how it works, 80% something drops, 50% its health kit, 50% its bubble
         # this function can also be simplified in the future
-        n_loot_presence = random.randint(1,5)
-        has_loot = n_loot_presence != 5
-        if has_loot:
-            n_loot_type = random.randint(1,2) # 1 is healthkit, 2 is bubble
-            loot_is_healthkit = n_loot_type == 1
-            loot_is_bubble = n_loot_type == 2
-        
-            if loot_is_bubble:
-                bubble_props = Collectable_Props(self.rect.centerx, self.rect.centery, Collectable_item.BUBBLE_ITEM)
-                self.game.collectables.add(Collectable(bubble_props))
+        drop_options = [Item_code.BUBBLE_CODE, Item_code.HEALTH_KIT_CODE, Item_code.COIN_CODE]
+        drop_weights = [0.25, 0.25, 0.50]
+        drop_choice = random.choices(drop_options, drop_weights, k=1)[0]
+        if drop_choice == Item_code.BUBBLE_CODE:
+            bubble_props = Collectable_Props(self.rect.centerx, self.rect.centery - 20, Collectable_item.BUBBLE_ITEM)
+            self.game.collectables.add(Collectable(bubble_props))
+        elif drop_choice == Item_code.COIN_CODE:
+            coin_props = Collectable_Props(self.rect.centerx, self.rect.centery - 20, Collectable_item.COIN_ITEM)
+            self.game.collectables.add(Collectable(coin_props))
+                

@@ -11,7 +11,8 @@ class Collectable(pygame.sprite.Sprite):
         
         image_path = path.join(COLLECTABLES_PATH, self.image)
         image = pygame.image.load(image_path).convert_alpha()
-        image = pygame.transform.scale(image, (64, 64))
+        scale = (64, 64) if self.image != "coin.png" else (40, 40)
+        image = pygame.transform.scale(image, scale)
         self.image = image
         self.rect = self.image.get_rect(center=(self.x, self.y))
         self.direction_handler = 0
