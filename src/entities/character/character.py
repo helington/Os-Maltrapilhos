@@ -209,4 +209,3 @@ class Character(pygame.sprite.Sprite):
             self.swim(game)
         else:
             self.hp = 0
-            print('aaa')
