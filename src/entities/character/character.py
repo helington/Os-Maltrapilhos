@@ -13,7 +13,7 @@ class Character(pygame.sprite.Sprite):
         self.update_time = pygame.time.get_ticks()
         self.action = Character_action.IDLE.value
         self.ammo = float('inf')
-        self.finished_action = False
+        self.alive = True
 
         # render sprites
         self.index = 0
@@ -64,7 +64,7 @@ class Character(pygame.sprite.Sprite):
             if self.index >= len(current_animation):
                 if self.action == Character_action.DEATH.value:  # If death animation, stay on last frame
                     self.index = len(current_animation) - 1
-                    self.finished_action = True
+                    self.alive = False
                 else:
                     self.index = 0
         
@@ -197,7 +197,6 @@ class Character(pygame.sprite.Sprite):
                     self.action = Character_action.DEATH.value
                     self.moving_left = False
                     self.moving_right = False
-                    self.index = 0
                     self.update_time = pygame.time.get_ticks()
 
     def update(self, game):
@@ -209,4 +208,3 @@ class Character(pygame.sprite.Sprite):
             self.swim(game)
         else:
             self.hp = 0
-            print('aaa')
