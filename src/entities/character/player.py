@@ -1,5 +1,6 @@
 import pygame
-
+from pygame import mixer
+from os import path
 from .character import Character
 from ...config.settings import *
 from ...config.paths import *
@@ -18,6 +19,15 @@ class Player(Character):
         self.alive = True
         temp_list = []
         self.is_player2 = is_player2
+        
+        #sound effects
+        pygame.mixer.set_num_channels(800)  # Add two channels for player sounds
+        self.gunshot_fx = pygame.mixer.Sound(path.join(SOUNDS_PATH, 'shot2.mp3'))
+        self.gunshot_fx.set_volume(0.2)
+        self.jump_fx = pygame.mixer.Sound(path.join(SOUNDS_PATH, 'jump.mp3'))
+        self.jump_fx.set_volume(0.15)
+        self.collect_fx = pygame.mixer.Sound(path.join(SOUNDS_PATH, 'collect.mp3'))
+        self.collect_fx.set_volume(0.3)
 
         self.invincible = False 
         self.expiration_date_bubble = 0 #this is the time the last bubble was obtained in, in miliseconds
@@ -30,6 +40,7 @@ class Player(Character):
         
         if self.action != Character_action.DEATH.value:
             if keys[self.controll.shoot]:
+                self.gunshot_fx.play()
                 self.has_shot = True
 
             if keys[self.controll.left]:
@@ -41,6 +52,7 @@ class Player(Character):
                 self.moving_right = True
             
             if keys[self.controll.up] and not self.jumping:
+                self.jump_fx.play()
                 self.update_action(Character_action.JUMP.value)
                 self.jumping = True
                 self.gravity = -12       
@@ -48,6 +60,7 @@ class Player(Character):
     def check_collect_item(self, game):
         for collectable in game.collectables:
             if self.rect.colliderect(collectable.rect):
+                self.collect_fx.play()
                 game.collectables.remove(collectable)
                 if collectable.type == Collectable_types.WEAPON:
                     self.weapon = collectable.item.value

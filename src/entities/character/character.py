@@ -1,7 +1,9 @@
 import pygame
+from pygame import mixer
 from os import path
 
 from ...config.settings import *
+from ...config.paths import SOUNDS_PATH
 from ..entities_enum import Direction, Character_action, Images_info, Team, Weapon, Character_type
 from ..bullet import Bullet_props, Bullet
 from .character_props import Character_Props
@@ -15,6 +17,12 @@ class Character(pygame.sprite.Sprite):
         self.ammo = float('inf')
         self.finished_action = False
 
+        #death soundfx
+        self.death_fx = pygame.mixer.Sound(path.join(SOUNDS_PATH, 'death.mp3'))
+        self.death_fx.set_volume(1.5)
+        self.enemy_death_fx = pygame.mixer.Sound(path.join(SOUNDS_PATH, 'enemy_death.mp3'))
+        self.enemy_death_fx.set_volume(0.15)
+        
         # render sprites
         self.index = 0
         temp_list = []
@@ -199,6 +207,10 @@ class Character(pygame.sprite.Sprite):
                     self.moving_right = False
                     self.index = 0
                     self.update_time = pygame.time.get_ticks()
+                    if self.team == Team.ALLIES:
+                        self.death_fx.play()
+                    else:
+                        self.enemy_death_fx.play()
 
     def update(self, game):
         self.check_hurt(game)
@@ -209,4 +221,3 @@ class Character(pygame.sprite.Sprite):
             self.swim(game)
         else:
             self.hp = 0
-            print('aaa')
