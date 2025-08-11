@@ -8,6 +8,7 @@ from ..entities.entities_enum import Character_type, Collectable_item
 from ..entities.collectable.collectable import Collectable, Collectable_Props
 from ..entities.world import TILES_TYPE
 from ..off_game_screens.button import Button
+from ..entities.character.health_bar import Healthbar
 
 class Game:
     """Main class for the game."""
@@ -37,6 +38,10 @@ class Game:
         self.world = World(self)
         self.player = pygame.sprite.GroupSingle()
         self.player.add(Player(Character_type.PLAYER_1.value, 230, 600))
+
+        self.health_bar = pygame.sprite.Group()
+        self.health_bar.add(Healthbar(100, 100))
+
 
         self.collectables = pygame.sprite.Group()
         rifle_props = Collectable_Props(640, 330, Collectable_item.RIFLE_ITEM)
@@ -79,6 +84,7 @@ class Game:
         self.bullets.update(self)
         self.enemies.update(self)
         self.player.update(self)
+        self.health_bar.update(self)
         self.collectables.update(self)
         self.effects.update(self)
         self.world.water_group.update(self.screen_scroll)
@@ -88,6 +94,7 @@ class Game:
         """Draws the current game state to the screen."""
         self.world.draw(self.screen, self)
         self.player.draw(self.screen)
+        self.health_bar.draw(self.screen)
         self.collectables.draw(self.screen)
         self.bullets.draw(self.screen)
         self.enemies.draw(self.screen)
