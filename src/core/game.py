@@ -21,6 +21,7 @@ class Game:
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.running = True
         self.start_game = False
+        self.multiplayer_active = False
 
         self.tiles_image_list = list()
         self.get_tiles_images()
@@ -37,10 +38,11 @@ class Game:
 
         self.world = World(self)
         self.player = pygame.sprite.GroupSingle()
-        self.player.add(Player(Character_type.PLAYER_1.value, 230, 600))
+        self.player2 = pygame.sprite.GroupSingle()
+        self.player.add(Player(Character_type.PLAYER_1.value, 230, 600, False))
 
         self.health_bar = pygame.sprite.Group()
-        self.health_bar.add(Healthbar(100, 100))
+        self.health_bar.add(Healthbar(80, 100, False))
 
 
         self.collectables = pygame.sprite.Group()
@@ -53,7 +55,6 @@ class Game:
         self.collectables.add(Collectable(bubble_props))
 
         self.screen_scroll = 0
-
 
     def get_tiles_images(self):
         """Get all images of tiles and transform them in surfaces, and then put them into 'tiles_image_list' variable."""
@@ -77,6 +78,13 @@ class Game:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
+                if event.key == pygame.K_m:
+                    # todo block respawn
+                    if not self.multiplayer_active: 
+                        self.multiplayer_active = True
+                        self.player2.add(Player(Character_type.PLAYER_2.value, 230, 400, True))
+                        self.health_bar.add(Healthbar(80, 180, True))
+
         
     
     def update(self):
@@ -84,6 +92,7 @@ class Game:
         self.bullets.update(self)
         self.enemies.update(self)
         self.player.update(self)
+        self.player2.update(self)
         self.health_bar.update(self)
         self.collectables.update(self)
         self.effects.update(self)
@@ -94,6 +103,7 @@ class Game:
         """Draws the current game state to the screen."""
         self.world.draw(self.screen, self)
         self.player.draw(self.screen)
+        self.player2.draw(self.screen)
         self.health_bar.draw(self.screen)
         self.collectables.draw(self.screen)
         self.bullets.draw(self.screen)
@@ -115,9 +125,6 @@ class Game:
                 self.draw()
             
             self.handle_events()
-            
-            
-
             if (not self.player.sprite.alive or self.player.sprite.has_fallen) and self.player.sprite.finished_action:
                 game_over_screen = pygame.image.load(path.join(MENUS_PATH, 'Game_Over.jpeg'))
                 game_over_screen = pygame.transform.scale(game_over_screen, (SCREEN_WIDTH, SCREEN_HEIGHT))

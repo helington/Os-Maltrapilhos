@@ -16,8 +16,6 @@ class Bubble(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(self.player.rect.centerx, self.player.rect.centery))
 
     def update(self, game):
-        #self.x = self.player.x
-        #self.y = self.player.y
         self.rect.center = self.player.rect.center
 
         if self.player.invincible == False:

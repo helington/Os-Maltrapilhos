@@ -2,7 +2,7 @@ import pygame
 from os import path
 
 from ...config.settings import *
-from ..entities_enum import Direction, Character_action, Images_info, Team, Weapon
+from ..entities_enum import Direction, Character_action, Images_info, Team, Weapon, Character_type
 from ..bullet import Bullet_props, Bullet
 from .character_props import Character_Props
 
@@ -132,7 +132,7 @@ class Character(pygame.sprite.Sprite):
         self.rect.y += self.dy
 
         # Check if it's time to scrolling the world
-        if self.team == Team.ALLIES:
+        if self.team == Team.ALLIES and not self.is_player2:
             game.screen_scroll = 0
             should_scroll = (
                 (self.rect.right > SCREEN_WIDTH - SCROLLING_THRESHOLD and self.direction == Direction.RIGHT and
@@ -146,6 +146,7 @@ class Character(pygame.sprite.Sprite):
         
         if self.rect.bottom > SCREEN_HEIGHT:
              self.has_fallen = True
+             self.hp = 0
              self.finished_action = True
 
     def shoot(self, game):
@@ -177,12 +178,10 @@ class Character(pygame.sprite.Sprite):
                 self.gravity = min(0, self.gravity - 0.25)
                 return
         self.is_swimming = False
-
-    
+   
     def apply_gravity(self):
         self.gravity += 0.75
         self.dy = self.gravity
-
 
     def check_hurt(self, game):
         for bullet in game.bullets:
@@ -208,3 +207,6 @@ class Character(pygame.sprite.Sprite):
         if self.action != Character_action.DEATH.value:
             self.move(game, game.world)
             self.swim(game)
+        else:
+            self.hp = 0
+            print('aaa')
