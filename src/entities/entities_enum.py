@@ -102,6 +102,10 @@ class Character_type(Enum):
         Character_images_info.PLAYER_1, Direction.RIGHT, Weapon.REGULAR.value,
         PLAYER_SPEED, PLAYER_HP, 0, Team.ALLIES,
         Controll(pygame.K_KP8, pygame.K_KP5, pygame.K_KP4, pygame.K_KP6, pygame.K_KP1, pygame.K_KP2),(146, 31, 222, 255))
+    PLAYER_DEBUG = Character_type_info(
+        Character_images_info.PLAYER_1, Direction.RIGHT, Weapon.REGULAR.value,
+        PLAYER_SPEED, 10_000, 0, Team.ALLIES,
+        Controll(pygame.K_i, pygame.K_k, pygame.K_j, pygame.K_l, pygame.K_8, pygame.K_9),(255, 255, 255, 255))
     ENEMY = Character_type_info(
         Character_images_info.ENEMY, Direction.LEFT, Weapon.REGULAR.value,
         ENEMY_SPEED, ENEMY_HP, AI_DECISION_COOLDOWN, Team.ENEMY, Controll(pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_c, pygame.K_c), ())

@@ -24,6 +24,7 @@ class Game:
         self.running = True
         self.start_game = False
         self.multiplayer_count = 1
+        self.debug_count = 0
 
         self.tiles_image_list = list()
         self.get_tiles_images()
@@ -99,6 +100,12 @@ class Game:
                         new_player = Player(player_info, 230, 400, True)
                         self.players.add(new_player)
                         self.health_bar.add(Healthbar(10, -80 + self.multiplayer_count * 80, True, new_player))
+                if event.key == pygame.K_x:
+                    self.debug_count += 1
+                    if self.debug_count == 5:
+                        new_player = Player(Character_type.PLAYER_DEBUG.value, 230, 400, True)
+                        self.players.add(new_player)
+                        
          
     def select_player(self):
         if self.multiplayer_count == 2: return Character_type.PLAYER_2.value
