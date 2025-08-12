@@ -17,6 +17,8 @@ Relátorio de Desenvolvimento do jogo **Rambinho: O Último Soldado**, feito par
 
 ## Estrutura do projeto
 
+O projeto segue uma arquitetura modular, separando responsabilidades em diferentes pacotes:
+
 ```
 Rambinho/
 ├── assets/                # Recursos do jogo
@@ -41,6 +43,16 @@ Rambinho/
 
 ## Bibliotecas e ferramentas utilizadas
 - [ PyGame ]( https://www.pygame.org/news ): Biblioteca principal para o desenvolvimento do jogo.
+- OS: Biblioteca usada para acessar as sprites e artes do jogo.
+- Pathlib: Biblioteca usada como auxiliar para encontrar o diretório das sprites e artes do jogo.
+- Enum: Biblioteca usada para criar grupos de classes, facilitando a legibilidade e interpretação do código, evitando a criaçãod e números mágicos
+- CSV: Biblioteca usada para leitura do arquivo da fase atual.
+- Math: Biblioteca usada para criação do movimento de flutuação dos itens coletáveis.
+- Random: Biblioteca usada para definir a movimentação dos inimigos.
+- Piskel: Ferramenta usada para criação das sprites do jogo.
+- Itch.io: Ferramenta usada para arte do background do jogo.
+
+## Imagens do jogo
 
 ## Conceitos utilizados
 
