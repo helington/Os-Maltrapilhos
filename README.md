@@ -52,13 +52,21 @@ Rambinho/
 - Piskel: Ferramenta usada para criação das sprites do jogo.
 - Itch.io: Ferramenta usada para arte do background do jogo.
 
-## Imagens do jogo
-
 ## Conceitos utilizados
 
 ## Desafios e erros
 
 ## Capturas de tela
+
+<table>
+    <tr>
+        <td align="center"><img src="https://snipboard.io/YuPDxO.jpg" width="800px"/><br /><sub><b>Tela de Início</b></sub></a><br/</td>
+        <td align="center"><img src="https://snipboard.io/iZA83F.jpg" width="800px"/><br /><sub><b>Tela do Jogo em Andamento (Um Jogador)</b></sub></a><br/></td></tr>
+    <tr>
+        <td align="center"><img src="https://snipboard.io/h0RAzd.jpg" width="800px"/><br /><sub><b>Tela do Jogo em Andamento (Quatro Jogadores)</b></sub></a><br/></td>
+        <td align="center"><img src="https://snipboard.io/QNPYO4.jpg" width="800px"/><br /><sub><b>Tela do Jogo em Andamento (Jogador Nadando)</b></sub></a><br/></td>
+    </tr>
+</table>
 
 ## Como instalar e rodar o jogo
 
