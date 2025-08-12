@@ -36,6 +36,10 @@ class Collectable_item(Enum):
     COIN_ITEM = { "image": "coin.png", "type": Collectable_types.COIN, "item": {}, "code": Item_code.COIN_CODE}
     # guys im 99% percent sure our health kit breaks the geneva conventions
     HEALTH_KIT_ITEM = { "image": "health_kit.png", "type": Collectable_types.HEALTH_KIT, "item": {}, "code": Item_code.HEALTH_KIT_CODE}
+    
+
+#class Price(Enum): # the string is the number of players, the int is medkit price when the number is that
+#    PRICE_LIST = [1, 3, 2 ,1]
 
 ##### CHARACTER ######
 # era pra tá em um arquivo separaldus quem quiser arrumar os imports só fazer :)

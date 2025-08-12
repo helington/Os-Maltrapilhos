@@ -19,6 +19,7 @@ class Collectable(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(self.x, self.y))
         self.direction_handler = 0
 
+
     def load_image(self):
         if self.code == Item_code.COIN_CODE: self.image = "coin.png"
         if self.code == Item_code.BUBBLE_CODE: self.image = "bubble.png"
@@ -26,7 +27,7 @@ class Collectable(pygame.sprite.Sprite):
         if self.code == Item_code.RIFLE_CODE: self.image = "rifle.png"
         if self.code == Item_code.HEALTH_KIT_CODE: self.image = "health_kit.png"
 
-    def move(self):
+    def move(self, ):
         oscilation_slowness = 100
         self.direction_handler = (self.direction_handler + 1) % oscilation_slowness
         amplitude = 18  
@@ -36,3 +37,4 @@ class Collectable(pygame.sprite.Sprite):
     def update(self, game):
         self.rect.x += game.screen_scroll
         self.move()
+

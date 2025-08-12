@@ -23,7 +23,7 @@ class Game:
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.running = True
         self.start_game = False
-        self.multiplayer_count = 1
+        self.multiplayer_count = 1 # this is da number of players
 
         self.tiles_image_list = list()
         self.get_tiles_images()

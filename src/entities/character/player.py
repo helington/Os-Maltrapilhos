@@ -4,8 +4,9 @@ from os import path
 from .character import Character
 from ...config.settings import *
 from ...config.paths import *
-from ..entities_enum import Character_action, Character_type, Collectable_types, Item_code
+from ..entities_enum import Character_action, Character_type, Collectable_types, Item_code, Collectable_item, Item_code
 from .bubble import Bubble
+from ..collectable.collectable import Collectable, Collectable_Props
 
 class Player(Character):
     def __init__(self, character_info: Character_type, x, y, is_player2: bool):
@@ -54,6 +55,7 @@ class Player(Character):
                 self.update_action(Character_action.JUMP.value)
                 self.jumping = True
                 self.gravity = -12       
+            
 
     def check_collect_item(self, game):
         for collectable in game.collectables:
@@ -78,12 +80,20 @@ class Player(Character):
             if pygame.time.get_ticks() >= self.expiration_date_bubble: 
                 self.invincible = False
 
+    def purchase(self, game):
+        # O preço do medkit é 5 - o número de jogadores, um magic number
+        keys = pygame.key.get_pressed()
+        if keys[self.controll.buy] and self.coins >= 5 - game.multiplayer_count: 
+            self.coins -= 5 - game.multiplayer_count
+            health_kit_props = Collectable_Props(self.rect.centerx, self.rect.centery - 128, Collectable_item.HEALTH_KIT_ITEM) # 128 is an arbitrary amount by which the medikit spawns above the player!
+            game.collectables.add(Collectable(health_kit_props))
+
     def update(self, game, follow_player):
         super().update(game, follow_player)
         self.handle_input()
         self.check_collect_item(game)
         self.invincibility_track()
-
+        self.purchase(game)
 
         is_on_border = self.rect.left < 0 or self.rect.right > SCREEN_WIDTH
         should_be_dragged_by_scroll = (
