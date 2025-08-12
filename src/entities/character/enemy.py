@@ -12,7 +12,7 @@ class Enemy(Character):
         super().__init__(character_info, x, y)
         self.world_x = x
         self.world_y = y
-        self.vision = pygame.Rect(0, 0, 150, 20)
+        self.vision = pygame.Rect(0, 0, 400, 20)
 
     def update_moving(self, left, right):
         self.moving_left = left
@@ -86,7 +86,7 @@ class Enemy(Character):
 
     def drop_loot(self):
         drop_options = [Item_code.BUBBLE_CODE, Item_code.HEALTH_KIT_CODE, Item_code.COIN_CODE]
-        drop_weights = [0.25, 0.25, 0.50]
+        drop_weights = [0.20, 0.20, 0.60]
         drop_choice = random.choices(drop_options, drop_weights, k=1)[0]
         if drop_choice == Item_code.BUBBLE_CODE:
             bubble_props = Collectable_Props(self.rect.centerx, self.rect.centery - 20, Collectable_item.BUBBLE_ITEM)

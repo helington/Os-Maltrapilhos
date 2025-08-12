@@ -54,8 +54,7 @@ class Player(Character):
                 self.jump_fx.play()
                 self.update_action(Character_action.JUMP.value)
                 self.jumping = True
-                self.gravity = -12       
-            
+                self.gravity = -15   
 
     def check_collect_item(self, game):
         for collectable in game.collectables:

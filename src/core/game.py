@@ -26,7 +26,8 @@ class Game:
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.running = True
         self.start_game = False
-        self.multiplayer_count = 1 # this is da number of players
+        self.multiplayer_count = 1
+        self.debug_count = 0
 
         self.tiles_image_list = list()
         self.get_tiles_images()
@@ -45,27 +46,18 @@ class Game:
         self.start_button = Button(SCREEN_WIDTH //2 - 100, 500, pygame.image.load(path.join(BUTTONS_PATH, 'Default.png')))
         self.start_button.image = pygame.transform.scale(self.start_button.image, (200, 100))
 
-        self.world = World(self)
         self.players = pygame.sprite.Group()
         player1 = Player(Character_type.PLAYER_1.value, 230, 600, False)
         self.players.add(player1)
-
         self.health_bar = pygame.sprite.Group()
         self.health_bar.add(Healthbar(50, 0, False, player1))
         self.health_bar.add(Price_hud())
         self.health_bar.add(Faces_hud())
         self.health_bar.add(Money_hud(200, 0, player1))
 
-
         self.collectables = pygame.sprite.Group()
-        rifle_props = Collectable_Props(640, 330, Collectable_item.RIFLE_ITEM)
-        minigun_props = Collectable_Props(100, 535, Collectable_item.MINIGUN_ITEM)
-        self.collectables.add(Collectable(rifle_props))
-        self.collectables.add(Collectable(minigun_props))
         
-        # THESE NEXT 2 LINES INVOKE THE BUBBLE TO THE LEFT WHEN YOU START THE GAME. WE NEED THEM FOR TESTING. THEY SHOULD *NOT* BE IN THE FINAL VERSION thanks
-        bubble_props = Collectable_Props(40, 535, Collectable_item.BUBBLE_ITEM)
-        self.collectables.add(Collectable(bubble_props))
+        self.world = World(self)
 
         self.screen_scroll = 0
 
@@ -107,6 +99,12 @@ class Game:
                         new_player = Player(player_info, 230, 400, True)
                         self.players.add(new_player)
                         self.health_bar.add(Healthbar(50, -50 + self.multiplayer_count * 50, True, new_player))
+                if event.key == pygame.K_x:
+                    self.debug_count += 1
+                    if self.debug_count == 5:
+                        new_player = Player(Character_type.PLAYER_DEBUG.value, 230, 400, True)
+                        self.players.add(new_player)
+                        
                         self.health_bar.add(Money_hud(200, -50 + self.multiplayer_count * 50, new_player))
 
          
