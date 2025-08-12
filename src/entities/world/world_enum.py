@@ -10,4 +10,5 @@ class TILES_TYPE(Enum):
     RIFLE = 17
     MINIGUN = 2
     COIN = 5
+    FLOOR_BOSS_LEVEL = 3
     

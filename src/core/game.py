@@ -10,6 +10,7 @@ from ..entities.collectable.collectable import Collectable, Collectable_Props
 from ..entities.world import TILES_TYPE
 from ..off_game_screens.button import Button
 from ..entities.character.health_bar import Healthbar
+from ..entities.boss.boss import Boss
 
 class Game:
     """Main class for the game."""
@@ -19,12 +20,16 @@ class Game:
         pygame.init()
         mixer.init()
         pygame.display.set_caption(GAME_NAME)
+        self.actual_level = 1
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.running = True
         self.start_game = False
         self.multiplayer_count = 1
         self.debug_count = 0
+
+        self.boss = pygame.sprite.GroupSingle()
+        self.boss.add(Boss(0, 0))
 
         self.tiles_image_list = list()
         self.get_tiles_images()
@@ -118,6 +123,7 @@ class Game:
     def draw(self):
         """Draws the current game state to the screen."""
         self.world.draw(self.screen, self)
+        self.boss.draw(self.screen)
         self.players.draw(self.screen)
         self.health_bar.draw(self.screen)
         self.collectables.draw(self.screen)
@@ -137,7 +143,7 @@ class Game:
                 self.screen.blit(self.main_menu_img, (0,0))
                 if self.start_button.draw(self.screen, selected=True):
                     self.start_game = True
-                
+
             else:
                 self.update()
                 self.draw()
@@ -152,7 +158,6 @@ class Game:
                 key = pygame.key.get_pressed()
                 if key[pygame.K_RETURN]:
                     self.running = False
-
 
             pygame.display.update()
             self.clock.tick(FPS)

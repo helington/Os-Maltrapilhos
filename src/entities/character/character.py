@@ -11,6 +11,7 @@ from .character_props import Character_Props
 class Character(pygame.sprite.Sprite):    
     def __init__(self, props: Character_Props, x, y):
         super().__init__()
+        
         self.__dict__.update(props.__dict__)
         self.update_time = pygame.time.get_ticks()
         self.action = Character_action.IDLE.value
@@ -132,7 +133,7 @@ class Character(pygame.sprite.Sprite):
         self.rect.y += self.dy
 
         # Check if it's time to scrolling the world
-        if self is follow_player:
+        if self is follow_player and game.actual_level != 1:
             game.screen_scroll = 0
             should_scroll = (
                 (self.rect.right > SCREEN_WIDTH - SCROLLING_THRESHOLD and self.direction == Direction.RIGHT and

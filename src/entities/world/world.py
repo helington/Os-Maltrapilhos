@@ -19,23 +19,23 @@ class World:
     def __init__(self, game):
         """Initilizates world attributes."""
 
-        self.background = Background()
+        self.background = Background(game.actual_level)
         self.obstacle_list = list()
         self.water_group = pygame.sprite.Group()
         self.images = []
 
         self.world_data = list()
-        self.process_world_csv()
+        self.process_world_csv(game.actual_level)
         self.process_data(game)
 
-    def process_world_csv(self):
+    def process_world_csv(self, level):
         """Process the csv data containing information about the world creation of the current level."""
 
         for i in range(WOLRD_CSV_ROWS):
             row = [-1] * WOLRD_CSV_COLLUNMS
             self.world_data.append(row)
 
-        level0_path = path.join(LEVELS_PATH, "level0_data.csv")
+        level0_path = path.join(LEVELS_PATH, f"level{level}_data.csv")
         with open(level0_path, newline="") as csvfile:
             reader = csv.reader(csvfile, delimiter=",")
             for i, row in enumerate(reader):
@@ -56,7 +56,7 @@ class World:
                     image_rectangle.y = i * TILE_SIZE
                     tile_data = (image, image_rectangle)
 
-                    if tile in [TILES_TYPE.FLOOR_GRASS.value, TILES_TYPE.FLOOR_DIRT.value]:
+                    if tile in [TILES_TYPE.FLOOR_GRASS.value, TILES_TYPE.FLOOR_DIRT.value, TILES_TYPE.FLOOR_BOSS_LEVEL.value]:
                         self.obstacle_list.append(tile_data)
                     elif tile in [TILES_TYPE.WATER_DEEP.value, TILES_TYPE.WATER_SURFACE.value]:
                         water = Water(image, j * TILE_SIZE, i * TILE_SIZE)
