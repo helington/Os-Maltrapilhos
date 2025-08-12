@@ -56,8 +56,22 @@ class Character(pygame.sprite.Sprite):
                 image_path = path.join(image_info.path, f"{i}.png")
                 image = pygame.image.load(image_path).convert_alpha()
                 image = pygame.transform.scale(image, (64, 64))
+                image = self.convert_image_to_player(image)
                 temp_list.append(image)
                 self.animation_list[image_info.animation_type] = temp_list
+        
+    def convert_image_to_player(self, image):
+        old_color = (231, 0, 68, 255)
+        new_color = self.color
+        if old_color == new_color: return image
+        # Lock surface for pixel access
+        image.lock()
+        for y in range(image.get_height()):
+            for x in range(image.get_width()):
+                if self.team == Team.ALLIES and image.get_at((x, y)) == old_color:
+                    image.set_at((x, y), new_color)
+        image.unlock()
+        return image
 
     def update_animation(self):
         
@@ -155,6 +169,7 @@ class Character(pygame.sprite.Sprite):
         if self.rect.bottom > SCREEN_HEIGHT:
             self.dy = 0
             self.has_fallen = True
+            self.alive = False
             self.hp = 0
 
 

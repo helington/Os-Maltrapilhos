@@ -64,18 +64,19 @@ class Character_images_info(Enum):
     ]
 
 class Controll():
-    def __init__(self, up, down, left, right, shoot):
+    def __init__(self, up, down, left, right, shoot, buy):
         self.up = up
         self.down = down
         self.left = left
         self.right = right
         self.shoot = shoot
+        self.buy = buy
 
 
 class Character_type_info():
     def __init__(self, 
             images_info: Character_images_info, direction: Direction, weapon: Weapon, 
-            speed: int, hp: int, ai_move_duration: int, team: Team, controll: Controll):
+            speed: int, hp: int, ai_move_duration: int, team: Team, controll: Controll, color: tuple):
         self.images_info = images_info
         self.direction = direction
         self.weapon = weapon
@@ -84,16 +85,25 @@ class Character_type_info():
         self.ai_move_duration = ai_move_duration
         self.team = team
         self.controll = controll
+        self.color = color
 
 class Character_type(Enum):
     PLAYER_1 = Character_type_info(
         Character_images_info.PLAYER_1, Direction.RIGHT, Weapon.REGULAR.value,
-        PLAYER_SPEED, PLAYER_HP, 0, Team.ALLIES, Controll(pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_c))
+        PLAYER_SPEED, PLAYER_HP, 0, Team.ALLIES, Controll(pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_2, pygame.K_3), (231, 0, 68, 255))
     PLAYER_2 = Character_type_info(
         Character_images_info.PLAYER_1, Direction.RIGHT, Weapon.REGULAR.value,
-        PLAYER_SPEED, PLAYER_HP, 0, Team.ALLIES, Controll(pygame.K_i, pygame.K_k, pygame.K_j, pygame.K_l, pygame.K_n))
+        PLAYER_SPEED, PLAYER_HP, 0, Team.ALLIES, Controll(pygame.K_i, pygame.K_k, pygame.K_j, pygame.K_l, pygame.K_8, pygame.K_9), (35, 191, 194, 255))
+    PLAYER_3 = Character_type_info(
+        Character_images_info.PLAYER_1, Direction.RIGHT, Weapon.REGULAR.value,
+        PLAYER_SPEED, PLAYER_HP, 0, Team.ALLIES,
+        Controll(pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_DELETE, pygame.K_END),(222, 149, 31, 255))
+    PLAYER_4 = Character_type_info(
+        Character_images_info.PLAYER_1, Direction.RIGHT, Weapon.REGULAR.value,
+        PLAYER_SPEED, PLAYER_HP, 0, Team.ALLIES,
+        Controll(pygame.K_KP8, pygame.K_KP5, pygame.K_KP4, pygame.K_KP6, pygame.K_KP1, pygame.K_KP2),(146, 31, 222, 255))
     ENEMY = Character_type_info(
         Character_images_info.ENEMY, Direction.LEFT, Weapon.REGULAR.value,
-        ENEMY_SPEED, ENEMY_HP, AI_DECISION_COOLDOWN, Team.ENEMY, Controll(pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_c))
+        ENEMY_SPEED, ENEMY_HP, AI_DECISION_COOLDOWN, Team.ENEMY, Controll(pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_c, pygame.K_c), ())
 
 ##### CHARACTER ######

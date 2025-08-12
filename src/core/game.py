@@ -23,7 +23,7 @@ class Game:
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.running = True
         self.start_game = False
-        self.multiplayer_active = False
+        self.multiplayer_count = 1
 
         self.tiles_image_list = list()
         self.get_tiles_images()
@@ -48,7 +48,7 @@ class Game:
         self.players.add(player1)
 
         self.health_bar = pygame.sprite.Group()
-        self.health_bar.add(Healthbar(80, 100, False, player1))
+        self.health_bar.add(Healthbar(10, 0, False, player1))
 
         self.collectables = pygame.sprite.Group()
         rifle_props = Collectable_Props(640, 330, Collectable_item.RIFLE_ITEM)
@@ -93,12 +93,18 @@ class Game:
                     self.running = False
                 if event.key == pygame.K_m:
                     # todo block respawn
-                    if not self.multiplayer_active: 
-                        self.multiplayer_active = True
-                        player2 = Player(Character_type.PLAYER_2.value, 230, 400, True)
-                        self.players.add(player2)
-                        self.health_bar.add(Healthbar(80, 180, True, player2))
+                    if self.multiplayer_count < 4: 
+                        self.multiplayer_count += 1
+                        player_info = self.select_player()
+                        new_player = Player(player_info, 230, 400, True)
+                        self.players.add(new_player)
+                        self.health_bar.add(Healthbar(10, -80 + self.multiplayer_count * 80, True, new_player))
          
+    def select_player(self):
+        if self.multiplayer_count == 2: return Character_type.PLAYER_2.value
+        if self.multiplayer_count == 3: return Character_type.PLAYER_3.value
+        if self.multiplayer_count == 4: return Character_type.PLAYER_4.value
+
     def update(self):
         """Updates all entities of the game."""
         self.get_follow_player()
@@ -122,20 +128,7 @@ class Game:
 
     def are_all_players_died(self):
         return not any(player.alive for player in self.players)
-        someone_alive = False
-        follow_player = self.get_follow_player()
-
-        for player in self.players:
-            if player.hp > 0:
-                someone_alive = True
-                if player == follow_player:
-                    player.is_player2 = False
-                else:
-                    player.is_player2 = True
-            else:
-                player.is_player2 = True
         
-        return not someone_alive
     def run(self):
         """Runs the main game loop."""
 
