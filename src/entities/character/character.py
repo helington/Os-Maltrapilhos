@@ -120,30 +120,8 @@ class Character(pygame.sprite.Sprite):
 
         if self.dx ==0 and self.dy == 0:
             self.update_action(Character_action.IDLE.value)
-            
-        self.apply_gravity()
 
-        for tile in world.obstacle_list:
-
-            modifyed_rect_1 = pygame.Rect(self.rect.x + self.dx, self.rect.y, self.width, self.height)
-            #check collision in the x direction
-            if tile[1].colliderect(modifyed_rect_1):
-                self.dx = 0
-            
-            modifyed_rect_2 = pygame.Rect(self.rect.x, self.rect.y + self.dy, self.width, self.height)
-            #check for collision in the y direction
-            if tile[1].colliderect(modifyed_rect_2):
-                
-                #check if below the ground, i.e. jumping
-                if self.gravity < 0:
-                    self.gravity = 0
-                    self.dy = tile[1].bottom - self.rect.top
-                #check if above the ground, i.e. falling
-                elif self.gravity >= 0:
-                    self.gravity = 0
-                    self.jumping = False
-                    self.dy = tile[1].top - self.rect.bottom
-        
+        self.handle_fall(world)
 
         # Check for player going to world limit
         if self.team == Team.ALLIES:
@@ -173,6 +151,28 @@ class Character(pygame.sprite.Sprite):
             self.hp = 0
 
 
+    def handle_fall(self, world):
+        self.apply_gravity()
+        for tile in world.obstacle_list:
+            modifyed_rect_1 = pygame.Rect(self.rect.x + self.dx, self.rect.y, self.width, self.height)
+            #check collision in the x direction
+            if tile[1].colliderect(modifyed_rect_1):
+                self.dx = 0
+            
+            modifyed_rect_2 = pygame.Rect(self.rect.x, self.rect.y + self.dy, self.width, self.height)
+            #check for collision in the y direction
+            if tile[1].colliderect(modifyed_rect_2):
+                
+                #check if below the ground, i.e. jumping
+                if self.gravity < 0:
+                    self.gravity = 0
+                    self.dy = tile[1].bottom - self.rect.top
+                #check if above the ground, i.e. falling
+                elif self.gravity >= 0:
+                    self.gravity = 0
+                    self.jumping = False
+                    self.dy = tile[1].top - self.rect.bottom
+        
     def shoot(self, game):
         time_last_shot = pygame.time.get_ticks() - self.last_time_shot
         cooldown_passed = time_last_shot > self.weapon["cooldown"]
@@ -229,11 +229,13 @@ class Character(pygame.sprite.Sprite):
                         self.enemy_death_fx.play()
 
     def update(self, game, follow_player):
-        self.check_hurt(game)
         self.shoot(game)
         self.update_animation()
         if self.action != Character_action.DEATH.value:
             self.move(game, game.world, follow_player)
+            self.check_hurt(game)
             self.swim(game)
         else:
             self.hp = 0
+            self.handle_fall(game.world)
+            self.rect.y += self.dy

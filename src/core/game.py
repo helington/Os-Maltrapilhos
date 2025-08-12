@@ -5,7 +5,7 @@ from os import path
 from ..config.settings import *
 from ..config.paths import TILES_PATH, MENUS_PATH, BUTTONS_PATH, SOUNDS_PATH
 from ..entities import World, Player
-from ..entities.entities_enum import Character_type, Collectable_item, Character_action
+from ..entities.entities_enum import Character_type, Collectable_item
 from ..entities.collectable.collectable import Collectable, Collectable_Props
 from ..entities.world import TILES_TYPE
 from ..off_game_screens.button import Button
