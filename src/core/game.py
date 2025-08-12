@@ -43,22 +43,14 @@ class Game:
         self.start_button = Button(SCREEN_WIDTH //2 - 100, 500, pygame.image.load(path.join(BUTTONS_PATH, 'Default.png')))
         self.start_button.image = pygame.transform.scale(self.start_button.image, (200, 100))
 
-        self.world = World(self)
         self.players = pygame.sprite.Group()
         player1 = Player(Character_type.PLAYER_1.value, 230, 600, False)
         self.players.add(player1)
-
         self.health_bar = pygame.sprite.Group()
         self.health_bar.add(Healthbar(10, 0, False, player1))
-
         self.collectables = pygame.sprite.Group()
-        rifle_props = Collectable_Props(640, 330, Collectable_item.RIFLE_ITEM)
-        minigun_props = Collectable_Props(100, 535, Collectable_item.MINIGUN_ITEM)
-        self.collectables.add(Collectable(rifle_props))
-        self.collectables.add(Collectable(minigun_props))
         
-        bubble_props = Collectable_Props(40, 535, Collectable_item.BUBBLE_ITEM)
-        self.collectables.add(Collectable(bubble_props))
+        self.world = World(self)
 
         self.screen_scroll = 0
 

@@ -38,7 +38,7 @@ class Enemy(Character):
         for player in players:
             # if player is in enemy field of view
             if player.alive and not some_target_in_vision:
-                if self.vision.colliderect(player):
+                if self.vision.y == player.rect.y:
                     self.update_action(Character_action.IDLE.value)
                     some_target_in_vision = True
                 else:
@@ -88,7 +88,7 @@ class Enemy(Character):
         # this function is full of magic numbers, here is how it works, 80% something drops, 50% its health kit, 50% its bubble
         # this function can also be simplified in the future
         drop_options = [Item_code.BUBBLE_CODE, Item_code.HEALTH_KIT_CODE, Item_code.COIN_CODE]
-        drop_weights = [0.25, 0.25, 0.50]
+        drop_weights = [0.20, 0.20, 0.60]
         drop_choice = random.choices(drop_options, drop_weights, k=1)[0]
         if drop_choice == Item_code.BUBBLE_CODE:
             bubble_props = Collectable_Props(self.rect.centerx, self.rect.centery - 20, Collectable_item.BUBBLE_ITEM)

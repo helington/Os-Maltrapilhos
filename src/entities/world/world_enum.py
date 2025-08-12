@@ -7,4 +7,7 @@ class TILES_TYPE(Enum):
     WATER_DEEP = 10
     PLAYER = 15
     ENEMY = 16
+    RIFLE = 17
+    MINIGUN = 2
+    COIN = 5
     

@@ -184,7 +184,7 @@ class Character(pygame.sprite.Sprite):
                 self.gunshot_fx.play()
             self.last_time_shot = pygame.time.get_ticks()
             bullet_dx = DISTANCE_FROM_PLAYER if self.direction == Direction.RIGHT else -DISTANCE_FROM_PLAYER
-            props = Bullet_props(self.weapon, self.rect.centerx + bullet_dx, self.rect.centery, self.direction, self.team)
+            props = Bullet_props(self.weapon, self.rect.centerx + bullet_dx, self.rect.centery + 17, self.direction, self.team)
             bullet = Bullet(props)
             game.bullets.add(bullet)
 
