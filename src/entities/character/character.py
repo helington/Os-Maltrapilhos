@@ -56,8 +56,22 @@ class Character(pygame.sprite.Sprite):
                 image_path = path.join(image_info.path, f"{i}.png")
                 image = pygame.image.load(image_path).convert_alpha()
                 image = pygame.transform.scale(image, (64, 64))
+                image = self.convert_image_to_player(image)
                 temp_list.append(image)
                 self.animation_list[image_info.animation_type] = temp_list
+        
+    def convert_image_to_player(self, image):
+        old_color = (231, 0, 68, 255)
+        new_color = self.color
+        if old_color == new_color: return image
+        # Lock surface for pixel access
+        image.lock()
+        for y in range(image.get_height()):
+            for x in range(image.get_width()):
+                if self.team == Team.ALLIES and image.get_at((x, y)) == old_color:
+                    image.set_at((x, y), new_color)
+        image.unlock()
+        return image
 
     def update_animation(self):
         
@@ -106,30 +120,8 @@ class Character(pygame.sprite.Sprite):
 
         if self.dx ==0 and self.dy == 0:
             self.update_action(Character_action.IDLE.value)
-            
-        self.apply_gravity()
 
-        for tile in world.obstacle_list:
-
-            modifyed_rect_1 = pygame.Rect(self.rect.x + self.dx, self.rect.y, self.width, self.height)
-            #check collision in the x direction
-            if tile[1].colliderect(modifyed_rect_1):
-                self.dx = 0
-            
-            modifyed_rect_2 = pygame.Rect(self.rect.x, self.rect.y + self.dy, self.width, self.height)
-            #check for collision in the y direction
-            if tile[1].colliderect(modifyed_rect_2):
-                
-                #check if below the ground, i.e. jumping
-                if self.gravity < 0:
-                    self.gravity = 0
-                    self.dy = tile[1].bottom - self.rect.top
-                #check if above the ground, i.e. falling
-                elif self.gravity >= 0:
-                    self.gravity = 0
-                    self.jumping = False
-                    self.dy = tile[1].top - self.rect.bottom
-        
+        self.handle_fall(world)
 
         # Check for player going to world limit
         if self.team == Team.ALLIES:
@@ -155,9 +147,32 @@ class Character(pygame.sprite.Sprite):
         if self.rect.bottom > SCREEN_HEIGHT:
             self.dy = 0
             self.has_fallen = True
+            self.alive = False
             self.hp = 0
 
 
+    def handle_fall(self, world):
+        self.apply_gravity()
+        for tile in world.obstacle_list:
+            modifyed_rect_1 = pygame.Rect(self.rect.x + self.dx, self.rect.y, self.width, self.height)
+            #check collision in the x direction
+            if tile[1].colliderect(modifyed_rect_1):
+                self.dx = 0
+            
+            modifyed_rect_2 = pygame.Rect(self.rect.x, self.rect.y + self.dy, self.width, self.height)
+            #check for collision in the y direction
+            if tile[1].colliderect(modifyed_rect_2):
+                
+                #check if below the ground, i.e. jumping
+                if self.gravity < 0:
+                    self.gravity = 0
+                    self.dy = tile[1].bottom - self.rect.top
+                #check if above the ground, i.e. falling
+                elif self.gravity >= 0:
+                    self.gravity = 0
+                    self.jumping = False
+                    self.dy = tile[1].top - self.rect.bottom
+        
     def shoot(self, game):
         time_last_shot = pygame.time.get_ticks() - self.last_time_shot
         cooldown_passed = time_last_shot > self.weapon["cooldown"]
@@ -214,11 +229,13 @@ class Character(pygame.sprite.Sprite):
                         self.enemy_death_fx.play()
 
     def update(self, game, follow_player):
-        self.check_hurt(game)
         self.shoot(game)
         self.update_animation()
         if self.action != Character_action.DEATH.value:
             self.move(game, game.world, follow_player)
+            self.check_hurt(game)
             self.swim(game)
         else:
             self.hp = 0
+            self.handle_fall(game.world)
+            self.rect.y += self.dy
