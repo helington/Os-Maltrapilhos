@@ -19,11 +19,61 @@ class Game:
         pygame.init()
         mixer.init()
         pygame.display.set_caption(GAME_NAME)
+
+        self.initialize_config_vars()
+        self.initialize_assets()
+        self.initialize_groups_levels()
+
+
+    def initialize_config_vars(self):
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.running = True
         self.start_game = False
         self.multiplayer_count = 1
+        self.debug_count = 0
+        self.tiles_image_list = list()
+        self.get_tiles_images()
+
+    def initialize_assets(self):
+        self.main_menu_img = pygame.image.load(path.join(MENUS_PATH, 'Main_Menu.jpeg'))
+        self.main_menu_img = pygame.transform.scale(self.main_menu_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.start_button = Button(SCREEN_WIDTH //2 - 100, 500, pygame.image.load(path.join(BUTTONS_PATH, 'Default.png')))
+        self.start_button.image = pygame.transform.scale(self.start_button.image, (200, 100))
+        mixer.music.load(path.join(SOUNDS_PATH, 'bgm.mp3'))
+        mixer.music.set_volume(0.10)
+        mixer.music.play(-1,0.0,5000)  # -1 means loop indefinitely
+
+    def initialize_groups_levels(self):
+        self.enemies = pygame.sprite.Group()
+        self.enemies2 = pygame.sprite.Group()
+        self.enemies3 = pygame.sprite.Group()
+        self.bullets = pygame.sprite.Group()
+        self.bullets2 = pygame.sprite.Group()
+        self.bullets3 = pygame.sprite.Group()
+        self.effects = pygame.sprite.Group() # this group currently exists for the bubble effect
+        self.effects2 = pygame.sprite.Group() # this group currently exists for the bubble effect
+        self.effects3 = pygame.sprite.Group() # this group currently exists for the bubble effect
+        self.collectables = pygame.sprite.Group()
+        self.collectables2 = pygame.sprite.Group()
+        self.collectables3 = pygame.sprite.Group()
+        self.players = pygame.sprite.Group()
+        self.health_bar = pygame.sprite.Group()
+
+        player1 = Player(Character_type.PLAYER_1.value, 230, 600, False)
+        self.players.add(player1)
+        self.health_bar.add(Healthbar(10, 0, False, player1))
+        
+        # levels
+        self.world = World(self, 0)
+        self.world2 = World(self, 1)  # Example for a second level
+        self.world3 = World(self, 2)  # Example for a third level
+
+        self.screen_scroll = 0
+
+    def reload(self, previous_game):
+        """Initializates pygame and the game attributes."""
+        self.multiplayer_count = previous_game.multiplayer_count
         self.debug_count = 0
 
         self.tiles_image_list = list()
@@ -38,30 +88,20 @@ class Game:
         self.bullets = pygame.sprite.Group()
         self.effects = pygame.sprite.Group() # this group currently exists for the bubble effect
 
-        self.main_menu_img = pygame.image.load(path.join(MENUS_PATH, 'Main_Menu.jpeg'))
-        self.main_menu_img = pygame.transform.scale(self.main_menu_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.start_button = Button(SCREEN_WIDTH //2 - 100, 500, pygame.image.load(path.join(BUTTONS_PATH, 'Default.png')))
-        self.start_button.image = pygame.transform.scale(self.start_button.image, (200, 100))
-
-        self.world = World(self)
-        self.world2 = World(self, 1)  # Example for a second level
-        self.world3 = World(self, 2)  # Example for a third level
         self.players = pygame.sprite.Group()
-        player1 = Player(Character_type.PLAYER_1.value, 230, 600, False)
-        self.players.add(player1)
-
-        self.health_bar = pygame.sprite.Group()
-        self.health_bar.add(Healthbar(10, 0, False, player1))
+        count = 0
+        for player in previous_game.players:
+            count += 1
+            player_info = self.select_player(count)
+            to_add_player = Player(player_info, 00, 000, True)
+            to_add_player.is_player2 = player.is_player2
+            to_add_player.hp = player.hp
+            to_add_player.coins = player.coins
+            to_add_player.weapon = player.weapon
+            to_add_player.ammo = player.ammo
+            self.players.add(player)
 
         self.collectables = pygame.sprite.Group()
-        rifle_props = Collectable_Props(640, 330, Collectable_item.RIFLE_ITEM)
-        minigun_props = Collectable_Props(100, 535, Collectable_item.MINIGUN_ITEM)
-        self.collectables.add(Collectable(rifle_props))
-        self.collectables.add(Collectable(minigun_props))
-        
-        bubble_props = Collectable_Props(40, 535, Collectable_item.BUBBLE_ITEM)
-        self.collectables.add(Collectable(bubble_props))
-
         self.screen_scroll = 0
 
     def get_follow_player(self): 
@@ -98,7 +138,7 @@ class Game:
                     # todo block respawn
                     if self.multiplayer_count < 4: 
                         self.multiplayer_count += 1
-                        player_info = self.select_player()
+                        player_info = self.select_player(self.multiplayer_count)
                         new_player = Player(player_info, 230, 400, True)
                         self.players.add(new_player)
                         self.health_bar.add(Healthbar(10, -80 + self.multiplayer_count * 80, True, new_player))
@@ -108,11 +148,11 @@ class Game:
                         new_player = Player(Character_type.PLAYER_DEBUG.value, 230, 400, True)
                         self.players.add(new_player)
                         
-         
-    def select_player(self):
-        if self.multiplayer_count == 2: return Character_type.PLAYER_2.value
-        if self.multiplayer_count == 3: return Character_type.PLAYER_3.value
-        if self.multiplayer_count == 4: return Character_type.PLAYER_4.value
+    def select_player(self, player_i):
+        if player_i == 1: return Character_type.PLAYER_1.value
+        if player_i == 2: return Character_type.PLAYER_2.value
+        if player_i == 3: return Character_type.PLAYER_3.value
+        if player_i == 4: return Character_type.PLAYER_4.value
 
     def update(self):
         """Updates all entities of the game."""
@@ -154,7 +194,7 @@ class Game:
             
             self.handle_events()
 
-            if self.are_all_players_died():
+            if self.are_all_players_died() and False:
                 for player in self.players: player.kill()
                 game_over_screen = pygame.image.load(path.join(MENUS_PATH, 'Game_Over.jpeg'))
                 game_over_screen = pygame.transform.scale(game_over_screen, (SCREEN_WIDTH, SCREEN_HEIGHT))

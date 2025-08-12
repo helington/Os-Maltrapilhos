@@ -23,10 +23,19 @@ class World:
         self.water_group = pygame.sprite.Group()
         self.images = []
         self.level = level
-
+        self.initialize_by_level(game)
+        
         self.world_data = list()
         self.process_world_csv()
         self.process_data(game)
+
+    def initialize_by_level(self, game):
+        if self.level == 0:
+            self.enemies = game.enemies
+        if self.level == 1:
+            self.enemies = game.enemies2
+        if self.level == 2:
+            self.enemies = game.enemies3
 
     def process_world_csv(self):
         """Process the csv data containing information about the world creation of the current level."""
@@ -63,7 +72,7 @@ class World:
                         self.water_group.add(water)
                     elif tile == TILES_TYPE.ENEMY.value:
                         enemy = Enemy(Character_type.ENEMY.value, j * TILE_SIZE, i * TILE_SIZE)
-                        game.enemies.add(enemy)
+                        self.enemies.add(enemy)
         
 
     def restart_level(self, game):

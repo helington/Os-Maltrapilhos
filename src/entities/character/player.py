@@ -4,8 +4,9 @@ from os import path
 from .character import Character
 from ...config.settings import *
 from ...config.paths import *
-from ..entities_enum import Character_action, Character_type, Collectable_types, Item_code
+from ..entities_enum import Character_action, Character_type, Collectable_types, Item_code, Collectable_item, Item_code
 from .bubble import Bubble
+from ..collectable.collectable import Collectable, Collectable_Props
 
 class Player(Character):
     def __init__(self, character_info: Character_type, x, y, is_player2: bool):
@@ -18,7 +19,6 @@ class Player(Character):
         self.coins = 0
         temp_list = []
         self.is_player2 = is_player2
-        self.last_tile_x = (WOLRD_CSV_COLLUNMS) * TILE_SIZE
         
         #sound effects
         pygame.mixer.set_num_channels(800)  # Add two channels for player sounds
@@ -57,10 +57,6 @@ class Player(Character):
                 self.gravity = -15   
 
     def check_collect_item(self, game):
-        
-        if self.action == Character_action.DEATH.value:
-            return
-        
         for collectable in game.collectables:
             if self.rect.colliderect(collectable.rect):
                 self.collect_fx.play()
@@ -75,25 +71,37 @@ class Player(Character):
                     game.effects.add(my_bubble)
                 if collectable.code == Item_code.COIN_CODE:
                     self.coins += 1
+                if collectable.code == Item_code.HEALTH_KIT_CODE:
+                    self.hp += 1
     
     def invincibility_track(self):
         if self.invincible == True:
             if pygame.time.get_ticks() >= self.expiration_date_bubble: 
                 self.invincible = False
 
-    def handle_transition(self, game,follow_player):
-        
+    def handle_transition(self, game,follow_player):    
         if self.rect.x > 1130 and self is follow_player:
-            game.__init__()
+            # game.__init__()
             game.world = game.world3
+            game.enemies = game.enemies3
     
+
+
+    def purchase(self, game):
+        # O preço do medkit é 5 - o número de jogadores, um magic number
+        keys = pygame.key.get_pressed()
+        if keys[self.controll.buy] and self.coins >= 5 - game.multiplayer_count: 
+            self.coins -= 5 - game.multiplayer_count
+            health_kit_props = Collectable_Props(self.rect.centerx, self.rect.centery - 128, Collectable_item.HEALTH_KIT_ITEM) # 128 is an arbitrary amount by which the medikit spawns above the player!
+            game.collectables.add(Collectable(health_kit_props))
+
     def update(self, game, follow_player):
         super().update(game, follow_player)
         self.handle_input()
         self.handle_transition(game,follow_player)
         self.check_collect_item(game)
         self.invincibility_track()
-
+        self.purchase(game)
 
         is_on_border = self.rect.left < 0 or self.rect.right > SCREEN_WIDTH
         should_be_dragged_by_scroll = (
