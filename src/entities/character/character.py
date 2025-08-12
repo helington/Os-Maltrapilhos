@@ -205,7 +205,7 @@ class Character(pygame.sprite.Sprite):
         self.is_swimming = False
    
     def apply_gravity(self):
-        self.gravity += 0.75
+        self.gravity += 1
         self.dy = self.gravity
 
     def check_hurt(self, game):
