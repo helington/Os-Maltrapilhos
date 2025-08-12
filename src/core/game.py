@@ -10,6 +10,9 @@ from ..entities.collectable.collectable import Collectable, Collectable_Props
 from ..entities.world import TILES_TYPE
 from ..off_game_screens.button import Button
 from ..entities.character.health_bar import Healthbar
+from ..entities.character.price_hud import Price_hud
+from ..entities.character.faces_hud import Faces_hud
+from ..entities.character.money_hud import Money_hud
 
 class Game:
     """Main class for the game."""
@@ -48,7 +51,11 @@ class Game:
         self.players.add(player1)
 
         self.health_bar = pygame.sprite.Group()
-        self.health_bar.add(Healthbar(10, 0, False, player1))
+        self.health_bar.add(Healthbar(50, 0, False, player1))
+        self.health_bar.add(Price_hud())
+        self.health_bar.add(Faces_hud())
+        self.health_bar.add(Money_hud(200, 0, player1))
+
 
         self.collectables = pygame.sprite.Group()
         rifle_props = Collectable_Props(640, 330, Collectable_item.RIFLE_ITEM)
@@ -99,7 +106,9 @@ class Game:
                         player_info = self.select_player()
                         new_player = Player(player_info, 230, 400, True)
                         self.players.add(new_player)
-                        self.health_bar.add(Healthbar(10, -80 + self.multiplayer_count * 80, True, new_player))
+                        self.health_bar.add(Healthbar(50, -50 + self.multiplayer_count * 50, True, new_player))
+                        self.health_bar.add(Money_hud(200, -50 + self.multiplayer_count * 50, new_player))
+
          
     def select_player(self):
         if self.multiplayer_count == 2: return Character_type.PLAYER_2.value
@@ -116,6 +125,7 @@ class Game:
         self.collectables.update(self)
         self.effects.update(self)
         self.world.water_group.update(self.screen_scroll)
+        
 
     def draw(self):
         """Draws the current game state to the screen."""
