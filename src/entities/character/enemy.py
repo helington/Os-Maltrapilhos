@@ -85,8 +85,6 @@ class Enemy(Character):
         self.update_animation()
 
     def drop_loot(self):
-        # this function is full of magic numbers, here is how it works, 80% something drops, 50% its health kit, 50% its bubble
-        # this function can also be simplified in the future
         drop_options = [Item_code.BUBBLE_CODE, Item_code.HEALTH_KIT_CODE, Item_code.COIN_CODE]
         drop_weights = [0.25, 0.25, 0.50]
         drop_choice = random.choices(drop_options, drop_weights, k=1)[0]
@@ -96,4 +94,6 @@ class Enemy(Character):
         elif drop_choice == Item_code.COIN_CODE:
             coin_props = Collectable_Props(self.rect.centerx, self.rect.centery - 20, Collectable_item.COIN_ITEM)
             self.game.collectables.add(Collectable(coin_props))
-                
+        elif drop_choice == Item_code.HEALTH_KIT_CODE:
+            health_kit_props = Collectable_Props(self.rect.centerx, self.rect.centery - 20, Collectable_item.HEALTH_KIT_ITEM)
+            self.game.collectables.add(Collectable(health_kit_props))

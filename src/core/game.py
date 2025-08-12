@@ -56,6 +56,7 @@ class Game:
         self.collectables.add(Collectable(rifle_props))
         self.collectables.add(Collectable(minigun_props))
         
+        # THESE NEXT 2 LINES INVOKE THE BUBBLE TO THE LEFT WHEN YOU START THE GAME. WE NEED THEM FOR TESTING. THEY SHOULD *NOT* BE IN THE FINAL VERSION thanks
         bubble_props = Collectable_Props(40, 535, Collectable_item.BUBBLE_ITEM)
         self.collectables.add(Collectable(bubble_props))
 

@@ -70,6 +70,8 @@ class Player(Character):
                     game.effects.add(my_bubble)
                 if collectable.code == Item_code.COIN_CODE:
                     self.coins += 1
+                if collectable.code == Item_code.HEALTH_KIT_CODE:
+                    self.hp += 1
     
     def invincibility_track(self):
         if self.invincible == True:

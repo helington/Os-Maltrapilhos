@@ -24,6 +24,7 @@ class Collectable(pygame.sprite.Sprite):
         if self.code == Item_code.BUBBLE_CODE: self.image = "bubble.png"
         if self.code == Item_code.MINIGUN_CODE: self.image = "minigun.png"
         if self.code == Item_code.RIFLE_CODE: self.image = "rifle.png"
+        if self.code == Item_code.HEALTH_KIT_CODE: self.image = "health_kit.png"
 
     def move(self):
         oscilation_slowness = 100
