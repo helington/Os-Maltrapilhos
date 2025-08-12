@@ -99,13 +99,12 @@ class Game:
                         new_player = Player(player_info, 230, 400, True)
                         self.players.add(new_player)
                         self.health_bar.add(Healthbar(50, -50 + self.multiplayer_count * 50, True, new_player))
+                        self.health_bar.add(Money_hud(200, -50 + self.multiplayer_count * 50, new_player))
                 if event.key == pygame.K_x:
                     self.debug_count += 1
                     if self.debug_count == 5:
                         new_player = Player(Character_type.PLAYER_DEBUG.value, 230, 400, True)
                         self.players.add(new_player)
-                        
-                        self.health_bar.add(Money_hud(200, -50 + self.multiplayer_count * 50, new_player))
 
          
     def select_player(self):
