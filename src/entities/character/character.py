@@ -150,7 +150,6 @@ class Character(pygame.sprite.Sprite):
             self.alive = False
             self.hp = 0
 
-
     def handle_fall(self, world):
         self.apply_gravity()
         for tile in world.obstacle_list:

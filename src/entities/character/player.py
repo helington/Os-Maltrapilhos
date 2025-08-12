@@ -18,6 +18,7 @@ class Player(Character):
         self.coins = 0
         temp_list = []
         self.is_player2 = is_player2
+        self.last_tile_x = (WOLRD_CSV_COLLUNMS) * TILE_SIZE
         
         #sound effects
         pygame.mixer.set_num_channels(800)  # Add two channels for player sounds
@@ -56,6 +57,10 @@ class Player(Character):
                 self.gravity = -15   
 
     def check_collect_item(self, game):
+        
+        if self.action == Character_action.DEATH.value:
+            return
+        
         for collectable in game.collectables:
             if self.rect.colliderect(collectable.rect):
                 self.collect_fx.play()
@@ -76,9 +81,16 @@ class Player(Character):
             if pygame.time.get_ticks() >= self.expiration_date_bubble: 
                 self.invincible = False
 
+    def handle_transition(self, game,follow_player):
+        
+        if self.rect.x > 1130 and self is follow_player:
+            game.__init__()
+            game.world = game.world3
+    
     def update(self, game, follow_player):
         super().update(game, follow_player)
         self.handle_input()
+        self.handle_transition(game,follow_player)
         self.check_collect_item(game)
         self.invincibility_track()
 

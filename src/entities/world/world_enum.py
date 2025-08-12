@@ -7,4 +7,4 @@ class TILES_TYPE(Enum):
     WATER_DEEP = 10
     PLAYER = 15
     ENEMY = 16
-    
+    GATE = 20

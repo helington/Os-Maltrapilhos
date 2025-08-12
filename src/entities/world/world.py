@@ -15,13 +15,14 @@ from .world_enum import TILES_TYPE
 class World:
     """World representation class."""
 
-    def __init__(self, game):
+    def __init__(self, game,level=0):
         """Initilizates world attributes."""
 
         self.background = Background()
         self.obstacle_list = list()
         self.water_group = pygame.sprite.Group()
         self.images = []
+        self.level = level
 
         self.world_data = list()
         self.process_world_csv()
@@ -34,8 +35,8 @@ class World:
             row = [-1] * WOLRD_CSV_COLLUNMS
             self.world_data.append(row)
 
-        level0_path = path.join(LEVELS_PATH, "level0_data.csv")
-        with open(level0_path, newline="") as csvfile:
+        level_path = path.join(LEVELS_PATH, f"level{self.level}_data.csv")
+        with open(level_path, newline="") as csvfile:
             reader = csv.reader(csvfile, delimiter=",")
             for i, row in enumerate(reader):
                 for j, tile in enumerate(row):
@@ -63,7 +64,26 @@ class World:
                     elif tile == TILES_TYPE.ENEMY.value:
                         enemy = Enemy(Character_type.ENEMY.value, j * TILE_SIZE, i * TILE_SIZE)
                         game.enemies.add(enemy)
+        
 
+    def restart_level(self, game):
+        """Restart the current level by reloading the world data and resetting entities."""
+
+        self.obstacle_list.clear()
+        self.water_group.empty()
+        game.enemies.empty()
+        game.effects.empty()
+
+        # Reset player positions
+        for player in game.players:
+            player.rect.x = 230
+            player.rect.y = 400
+        
+        self.__init__(game)
+        self.process_world_csv()
+        self.process_data(game)
+
+    
     def is_ground(self, x, y):
         point_rect = pygame.Rect(x, y, 1, 1)
 

@@ -44,6 +44,8 @@ class Game:
         self.start_button.image = pygame.transform.scale(self.start_button.image, (200, 100))
 
         self.world = World(self)
+        self.world2 = World(self, 1)  # Example for a second level
+        self.world3 = World(self, 2)  # Example for a third level
         self.players = pygame.sprite.Group()
         player1 = Player(Character_type.PLAYER_1.value, 230, 600, False)
         self.players.add(player1)
