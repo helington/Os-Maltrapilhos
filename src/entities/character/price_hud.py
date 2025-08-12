@@ -29,4 +29,4 @@ class Price_hud (pygame.sprite.Sprite):
 
         W = self.text_surface.get_width()
         H = self.text_surface.get_height()
-        self.image.blit(self.text_surface, (self.scale[0]/2 - W/2, self.scale[0]/2 - H/2))
+        self.image.blit(self.text_surface, ((self.scale[0] + 2)/2 - W/2, (self.scale[0] + 4)/2 - H/2))

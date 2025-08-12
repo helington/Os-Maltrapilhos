@@ -16,7 +16,7 @@ class Money_hud (pygame.sprite.Sprite):
         self.x = x
         self.y = y
 
-        self.test_font = pygame.font.Font(None, 50)
+        self.test_font = pygame.font.Font(None, 40)
         
         self.image = path.join(COLLECTABLES_PATH, "coin.png")
         self.image = pygame.image.load(self.image).convert_alpha()
@@ -26,7 +26,7 @@ class Money_hud (pygame.sprite.Sprite):
 
 
     def update(self, game):
-        self.text_surface = self.test_font.render(str(self.player.coins), False, "Black")
+        self.text_surface = self.test_font.render(str(self.player.coins), False, "#172653")
         self.image.fill((0, 0, 0, 0))  
 
         self.image = path.join(COLLECTABLES_PATH, "coin.png")
@@ -35,6 +35,6 @@ class Money_hud (pygame.sprite.Sprite):
 
         W = self.text_surface.get_width()
         H = self.text_surface.get_height()
-        self.image.blit(self.text_surface, (50/2 - W/2, 50/2 - H/2))
+        self.image.blit(self.text_surface, ((50 + 2)/2 - W/2, (50 + 2)/2 - H/2))
 
         
