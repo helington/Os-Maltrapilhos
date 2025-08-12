@@ -12,7 +12,7 @@ class Enemy(Character):
         super().__init__(character_info, x, y)
         self.world_x = x
         self.world_y = y
-        self.vision = pygame.Rect(0, 0, 150, 20)
+        self.vision = pygame.Rect(0, 0, 400, 20)
 
     def update_moving(self, left, right):
         self.moving_left = left
@@ -38,7 +38,7 @@ class Enemy(Character):
         for player in players:
             # if player is in enemy field of view
             if player.alive and not some_target_in_vision:
-                if self.vision.y == player.rect.y:
+                if self.vision.colliderect(player):
                     self.update_action(Character_action.IDLE.value)
                     some_target_in_vision = True
                 else:
