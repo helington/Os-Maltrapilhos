@@ -7,19 +7,49 @@ from ...config.settings import TILE_SIZE
 
 
 class BossBullet(pygame.sprite.Sprite):
-    def __init__(self, pos_center: pygame.math.Vector2, velocity: pygame.math.Vector2, image: pygame.Surface):
+    def __init__(self, pos_center: pygame.math.Vector2, velocity: pygame.math.Vector2, image: pygame.Surface, damage=2, knockback=8):
         super().__init__()
-        # Use a cópia escalada do sprite do ataque do boss
         self.image = image
         self.rect = self.image.get_rect(center=(int(pos_center.x), int(pos_center.y)))
-        # Posição contínua para movimentação suave
         self.pos = pygame.math.Vector2(self.rect.center)
         self.vel = pygame.math.Vector2(velocity)
+        self.damage = damage
+        self.knockback = knockback
+
+        # 🔹 Define como projétil inimigo para não quebrar check_hurt()
+        self.team = "enemy"
 
     def update(self, game):
-        # Movimento
         self.pos += self.vel
         self.rect.center = (int(self.pos.x), int(self.pos.y))
+
+        # Colisão com players
+        if hasattr(game, "players"):
+            hits = pygame.sprite.spritecollide(self, game.players, False)
+            if hits:
+                knock_dir = pygame.math.Vector2(self.vel)
+                if knock_dir.length_squared() > 0:
+                    knock_dir = knock_dir.normalize()
+
+                for player in hits:
+                    if hasattr(player, "take_damage") and callable(player.take_damage):
+                        player.take_damage(self.damage)
+                    elif hasattr(player, "hp"):
+                        player.hp = max(0, player.hp - self.damage)
+
+                    # Knockback
+                    delta = knock_dir * self.knockback
+                    if hasattr(player, "vel"):
+                        player.vel.x += delta.x
+                        player.vel.y += delta.y
+
+                self.kill()
+                return
+
+        # Remove se sair da tela
+        surface = pygame.display.get_surface()
+        if surface and not surface.get_rect().colliderect(self.rect):
+            self.kill()
 
         # Elimina se sair da tela
         surface = pygame.display.get_surface()
@@ -38,7 +68,7 @@ class Boss(pygame.sprite.Sprite):
         self.image_open_raw = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_open.png")).convert_alpha()
 
         # Tamanhos padronizados
-        self._size = (TILE_SIZE * 6, TILE_SIZE * 7)
+        self._size = (TILE_SIZE * 4, TILE_SIZE * 5)
         self.image_closed = pygame.transform.scale(self.image_closed_raw, self._size)
         self.image_open = pygame.transform.scale(self.image_open_raw, self._size)
 
@@ -64,6 +94,8 @@ class Boss(pygame.sprite.Sprite):
         # Escala do projétil; ajuste se quiser maior/menor
         self.bullet_image = pygame.transform.scale(bullet_img_raw, (TILE_SIZE, TILE_SIZE))
         self.bullet_speed = 7.0
+        self.bullet_damage = 2
+        self.bullet_knockback = 8  # ajuste conforme desejar
 
         # Boca aberta por alguns frames após disparar
         self.open_frames_left = 0
@@ -130,7 +162,7 @@ class Boss(pygame.sprite.Sprite):
         vel = direction.normalize() * self.bullet_speed
 
         # Cria e adiciona o projétil
-        bullet = BossBullet(origin, vel, self.bullet_image)
+        bullet = BossBullet(origin, vel, self.bullet_image, damage=self.bullet_damage, knockback=self.bullet_knockback)
         self.bullet_group.add(bullet)
 
         # Troca sprite para boca aberta por alguns frames
