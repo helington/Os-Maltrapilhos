@@ -46,7 +46,28 @@ class World:
                 current_image = pygame.transform.scale(current_image, (TILE_SIZE * 2, TILE_SIZE * 2))
             else:
                 current_image = pygame.transform.scale(current_image, (TILE_SIZE, TILE_SIZE))
+            if i == 8:
+                current_image = self.fill_lab_floor(current_image)             
             self.tiles_image_list.append(current_image)
+
+    def fill_lab_floor(self, image):
+        green = [(149, 216, 54, 255), (77, 189, 39, 255), (10, 112, 48, 255)]
+        brown = [(182, 107, 58, 255), (103, 51, 45, 255), (216, 158, 88, 255)]
+        dark = (17, 24, 36, 255)
+        blue = (61, 140, 196, 255)
+        
+        image.lock()
+        
+        for y in range(image.get_height()):
+            for x in range(image.get_width()):
+                if image.get_at((x, y)) in green:
+                    image.set_at((x, y), blue)
+                if image.get_at((x, y)) in brown:
+                    image.set_at((x, y), dark)
+                    
+        image.unlock()
+        return image
+
 
     def process_world_csv(self):
         """Process the csv data containing information about the world creation of the current level."""
@@ -76,7 +97,7 @@ class World:
                     image_rectangle.y = i * TILE_SIZE
                     tile_data = (image, image_rectangle)
 
-                    if tile in [TILES_TYPE.FLOOR_GRASS.value, TILES_TYPE.FLOOR_DIRT.value, TILES_TYPE.FLOOR_BOSS_LEVEL.value, TILES_TYPE.BOSS_LAB_FLOOER.value]:
+                    if tile in [TILES_TYPE.FLOOR_GRASS.value, TILES_TYPE.FLOOR_DIRT.value, TILES_TYPE.BOSS_LAB_FLOOR.value]:
                         self.obstacle_list.append(tile_data)
                     elif tile in [TILES_TYPE.WATER_DEEP.value, TILES_TYPE.WATER_SURFACE.value]:
                         water = Water(image, j * TILE_SIZE, i * TILE_SIZE)
