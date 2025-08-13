@@ -5,13 +5,45 @@ from os import path
 from ...config.paths import GRAPHICS_PATH
 from ...config.settings import TILE_SIZE
 
+
+class BossBullet(pygame.sprite.Sprite):
+    def __init__(self, pos_center: pygame.math.Vector2, velocity: pygame.math.Vector2, image: pygame.Surface):
+        super().__init__()
+        # Use a cópia escalada do sprite do ataque do boss
+        self.image = image
+        self.rect = self.image.get_rect(center=(int(pos_center.x), int(pos_center.y)))
+        # Posição contínua para movimentação suave
+        self.pos = pygame.math.Vector2(self.rect.center)
+        self.vel = pygame.math.Vector2(velocity)
+
+    def update(self, game):
+        # Movimento
+        self.pos += self.vel
+        self.rect.center = (int(self.pos.x), int(self.pos.y))
+
+        # Elimina se sair da tela
+        surface = pygame.display.get_surface()
+        if not surface:
+            return
+        bounds = surface.get_rect()
+        if not bounds.colliderect(self.rect):
+            self.kill()
+
+
 class Boss(pygame.sprite.Sprite):
     def __init__(self, x, y, bullet_group):
         super().__init__()
-        # Sprites
-        self.image_closed = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_closed.png")).convert_alpha()
-        self.image_open = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_open.png")).convert_alpha()
-        self.image = pygame.transform.scale(self.image_closed, (TILE_SIZE * 6, TILE_SIZE * 7))
+        # Sprites base
+        self.image_closed_raw = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_closed.png")).convert_alpha()
+        self.image_open_raw = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_open.png")).convert_alpha()
+
+        # Tamanhos padronizados
+        self._size = (TILE_SIZE * 6, TILE_SIZE * 7)
+        self.image_closed = pygame.transform.scale(self.image_closed_raw, self._size)
+        self.image_open = pygame.transform.scale(self.image_open_raw, self._size)
+
+        # Sprite atual (fechado por padrão)
+        self.image = self.image_closed
 
         # Rect e posição em float
         self.rect = self.image.get_rect(topleft=(x, y))
@@ -23,11 +55,19 @@ class Boss(pygame.sprite.Sprite):
         self.change_dir_timer = 0
         self._pick_new_direction()
 
-        # Ataque (placeholder)
-        self.attack_cooldown = 60
-        self.attack_timer = 0
+        # Ataque
+        self.attack_cooldown = 60  # frames entre disparos
+        self.attack_timer = random.randint(20, self.attack_cooldown)  # variação inicial
         self.bullet_group = bullet_group
-        self.bullet_image = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_attack.png")).convert_alpha()
+
+        bullet_img_raw = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_attack.png")).convert_alpha()
+        # Escala do projétil; ajuste se quiser maior/menor
+        self.bullet_image = pygame.transform.scale(bullet_img_raw, (TILE_SIZE, TILE_SIZE))
+        self.bullet_speed = 7.0
+
+        # Boca aberta por alguns frames após disparar
+        self.open_frames_left = 0
+        self.open_duration = 8  # quantos frames a boca fica aberta após o tiro
 
     def _pick_new_direction(self):
         # Garante direção não-nula
@@ -69,7 +109,38 @@ class Boss(pygame.sprite.Sprite):
             # Pequena variação para evitar ficar “colado” na borda
             self._rotate_velocity(random.uniform(-math.pi / 6, math.pi / 6))
 
-    def update(self, *_):
+    def _try_attack(self, game):
+        # Regride o timer
+        if self.attack_timer > 0:
+            self.attack_timer -= 1
+            return
+
+        # Precisa de um alvo válido
+        target = getattr(game, "follow_player", None)
+        if not target or not hasattr(target, "rect"):
+            return
+
+        origin = pygame.math.Vector2(self.rect.center)
+        target_pos = pygame.math.Vector2(target.rect.center)
+        direction = target_pos - origin
+        if direction.length_squared() == 0:
+            # Evita divisão por zero
+            direction = pygame.math.Vector2(1, 0)
+
+        vel = direction.normalize() * self.bullet_speed
+
+        # Cria e adiciona o projétil
+        bullet = BossBullet(origin, vel, self.bullet_image)
+        self.bullet_group.add(bullet)
+
+        # Troca sprite para boca aberta por alguns frames
+        self.image = self.image_open
+        self.open_frames_left = self.open_duration
+
+        # Reinicia cooldown
+        self.attack_timer = self.attack_cooldown
+
+    def update(self, game):
         # Bounds reais da janela (mais seguro que constantes)
         surface = pygame.display.get_surface()
         if not surface:  # fallback defensivo
@@ -88,4 +159,11 @@ class Boss(pygame.sprite.Sprite):
         if self.change_dir_timer <= 0:
             self._pick_new_direction()
 
-        # (Opcional) lógica de ataque aqui usando self.attack_timer / cooldown
+        # Lógica de ataque
+        self._try_attack(game)
+
+        # Volta para sprite de boca fechada quando acabar a janela de ataque
+        if self.open_frames_left > 0:
+            self.open_frames_left -= 1
+            if self.open_frames_left == 0:
+                self.image = self.image_closed
