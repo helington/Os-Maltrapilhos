@@ -16,7 +16,7 @@ class Background:
             self.images = list()
             self.get_parellel_images()
         elif level == 1:
-            image_path = path.join(BACKGROUND_PATH, "boss_transition_fase.png")
+            image_path = path.join(BACKGROUND_PATH, "background_transition.png")
             self.image = pygame.image.load(image_path).convert_alpha()
             self.image = pygame.transform.scale(self.image, (SCREEN_WIDTH, SCREEN_HEIGHT))
         else:
