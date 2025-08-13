@@ -204,7 +204,7 @@ class Game:
             self.handle_events()
 
 
-            if self.are_all_players_died() and False:
+            if self.are_all_players_died():
                 for player in self.players: player.kill()
                 game_over_screen = pygame.image.load(path.join(MENUS_PATH, 'Game_Over.jpeg'))
                 game_over_screen = pygame.transform.scale(game_over_screen, (SCREEN_WIDTH, SCREEN_HEIGHT))
