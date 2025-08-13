@@ -22,6 +22,8 @@ class Character(pygame.sprite.Sprite):
         self.death_fx.set_volume(1.5)
         self.enemy_death_fx = pygame.mixer.Sound(path.join(SOUNDS_PATH, 'enemy_death.mp3'))
         self.enemy_death_fx.set_volume(0.05)
+        self.hurt_fx = pygame.mixer.Sound(path.join(SOUNDS_PATH, 'hurt.mp3'))
+        self.hurt_fx.set_volume(0.13)
         
         # render sprites
         self.index = 0
@@ -217,6 +219,7 @@ class Character(pygame.sprite.Sprite):
             if is_hit:
                 game.bullets.remove(bullet)
                 if self.invincible == False:
+                    self.hurt_fx.play()
                     self.hp -= bullet.damage
                 if self.hp <= 0:
                     self.action = Character_action.DEATH.value
