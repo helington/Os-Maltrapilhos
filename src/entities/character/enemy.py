@@ -90,10 +90,10 @@ class Enemy(Character):
         drop_choice = random.choices(drop_options, drop_weights, k=1)[0]
         if drop_choice == Item_code.BUBBLE_CODE:
             bubble_props = Collectable_Props(self.rect.centerx, self.rect.centery - 20, Collectable_item.BUBBLE_ITEM)
-            self.game.collectables.add(Collectable(bubble_props))
+            self.game.world.collectables.add(Collectable(bubble_props))
         elif drop_choice == Item_code.COIN_CODE:
             coin_props = Collectable_Props(self.rect.centerx, self.rect.centery - 20, Collectable_item.COIN_ITEM)
-            self.game.collectables.add(Collectable(coin_props))
+            self.game.world.collectables.add(Collectable(coin_props))
         elif drop_choice == Item_code.HEALTH_KIT_CODE:
             health_kit_props = Collectable_Props(self.rect.centerx, self.rect.centery - 20, Collectable_item.HEALTH_KIT_ITEM)
-            self.game.collectables.add(Collectable(health_kit_props))
+            self.game.world.collectables.add(Collectable(health_kit_props))

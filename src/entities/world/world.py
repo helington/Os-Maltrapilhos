@@ -21,6 +21,7 @@ class World:
         self.images = []
         self.level = level
         self.enemies = pygame.sprite.Group()
+        self.collectables = pygame.sprite.Group()
         self.tiles_image_list = list()
         self.screen_scroll = 0
         
@@ -74,6 +75,15 @@ class World:
                     elif tile in [TILES_TYPE.WATER_DEEP.value, TILES_TYPE.WATER_SURFACE.value]:
                         water = Water(image, j * TILE_SIZE, i * TILE_SIZE)
                         self.water_group.add(water)
+                    elif tile == TILES_TYPE.ENEMY.value:
+                        enemy = Enemy(Character_type.ENEMY.value, j * TILE_SIZE, i * TILE_SIZE)
+                        self.enemies.add(enemy)
+                    elif tile == TILES_TYPE.RIFLE.value:
+                        rifle = Collectable_Props(j * TILE_SIZE, i * TILE_SIZE, Collectable_item.RIFLE_ITEM)
+                        self.collectables.add(Collectable(rifle))
+                    elif tile == TILES_TYPE.MINIGUN.value:
+                        minigun = Collectable_Props(j * TILE_SIZE, i * TILE_SIZE, Collectable_item.MINIGUN_ITEM)
+                        self.collectables.add(Collectable(minigun))
                     elif tile == TILES_TYPE.ENEMY.value:
                         enemy = Enemy(Character_type.ENEMY.value, j * TILE_SIZE, i * TILE_SIZE)
                         self.enemies.add(enemy)

@@ -48,7 +48,6 @@ class Game:
     def initialize_groups_levels(self):
         self.bullets = pygame.sprite.Group()
         self.effects = pygame.sprite.Group()
-        self.collectables = pygame.sprite.Group()
         self.players = pygame.sprite.Group()
         self.health_bar = pygame.sprite.Group()
 
@@ -132,7 +131,7 @@ class Game:
         for enemy in self.world.enemies: enemy.update(self, None)
         for player in self.players: player.update(self, self.follow_player)
         self.health_bar.update(self)
-        self.collectables.update(self)
+        self.world.collectables.update(self)
         self.effects.update(self)
         self.world.water_group.update(self.world.screen_scroll)
 
@@ -141,7 +140,7 @@ class Game:
         self.world.draw(self.screen)
         self.players.draw(self.screen)
         self.health_bar.draw(self.screen)
-        self.collectables.draw(self.screen)
+        self.world.collectables.draw(self.screen)
         self.bullets.draw(self.screen)
         self.world.enemies.draw(self.screen)
         self.effects.draw(self.screen)

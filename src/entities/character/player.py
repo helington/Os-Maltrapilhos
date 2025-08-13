@@ -59,10 +59,10 @@ class Player(Character):
                 self.gravity = -15   
 
     def check_collect_item(self, game):
-        for collectable in game.collectables:
+        for collectable in game.world.collectables:
             if self.rect.colliderect(collectable.rect):
                 self.collect_fx.play()
-                game.collectables.remove(collectable)
+                game.world.collectables.remove(collectable)
                 if collectable.type == Collectable_types.WEAPON:
                     self.weapon = collectable.item.value
                     self.ammo = collectable.value
@@ -93,7 +93,7 @@ class Player(Character):
         if keys[self.controll.buy] and self.coins >= 5 - game.multiplayer_count: 
             self.coins -= 5 - game.multiplayer_count
             health_kit_props = Collectable_Props(self.rect.centerx, self.rect.centery - 128, Collectable_item.HEALTH_KIT_ITEM) # 128 is an arbitrary amount by which the medikit spawns above the player!
-            game.collectables.add(Collectable(health_kit_props))
+            game.world.collectables.add(Collectable(health_kit_props))
 
     def update(self, game, follow_player):
         super().update(game, follow_player)
