@@ -3,7 +3,7 @@ import random
 import math
 from os import path
 from ...config.paths import GRAPHICS_PATH
-from ...config.settings import TILE_SIZE
+from ...config.settings import TILE_SIZE, BOSS_MAX_HP
 from ..entities_enum import Character_action, Team
 
 class Boss(pygame.sprite.Sprite):
@@ -38,7 +38,7 @@ class Boss(pygame.sprite.Sprite):
         self.team = Team.ENEMY
         self.alive = True
 
-        self.hp = 10
+        self.hp = BOSS_MAX_HP
 
         # Ataque (placeholder)
         self.attack_cooldown = 60
@@ -133,6 +133,12 @@ class Boss(pygame.sprite.Sprite):
                 game.win = True
             else:
                 self.image = self.images_destruction[self.index]
+
+    def draw_boss_health_bar(self, screen, x, y, width, height):
+        ratio = self.hp / BOSS_MAX_HP
+        pygame.draw.rect(screen, (255, 0, 0), (x, y, width, height))
+        pygame.draw.rect(screen, (0, 255, 0), (x, y, width * ratio, height))
+        pygame.draw.rect(screen, (255, 255, 255), (x, y, width, height), 2)
 
     def update(self, game, *_):
         # Bounds reais da janela (mais seguro que constantes)

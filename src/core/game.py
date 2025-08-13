@@ -151,8 +151,11 @@ class Game:
             else:
                 self.update()
                 self.draw()
+                if self.boss:
+                    self.boss.sprite.draw_boss_health_bar(self.screen, 400, 50, 400, 25)
             
             self.handle_events()
+
 
             if self.are_all_players_died():
                 for player in self.players: player.kill()
