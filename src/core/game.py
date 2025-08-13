@@ -28,8 +28,6 @@ class Game:
         self.multiplayer_count = 1
         self.debug_count = 0
 
-        self.boss = pygame.sprite.GroupSingle()
-        self.boss.add(Boss(0, 0))
 
         self.tiles_image_list = list()
         self.get_tiles_images()
@@ -42,6 +40,9 @@ class Game:
         self.enemies = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
         self.effects = pygame.sprite.Group() # this group currently exists for the bubble effect
+
+        self.boss = pygame.sprite.GroupSingle()
+        self.boss.add(Boss(0, 0, self.bullets))
 
         self.main_menu_img = pygame.image.load(path.join(MENUS_PATH, 'Main_Menu.jpeg'))
         self.main_menu_img = pygame.transform.scale(self.main_menu_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -119,6 +120,8 @@ class Game:
         self.collectables.update(self)
         self.effects.update(self)
         self.world.water_group.update(self.screen_scroll)
+
+        self.boss.update(self)
 
     def draw(self):
         """Draws the current game state to the screen."""
