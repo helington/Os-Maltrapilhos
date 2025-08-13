@@ -93,7 +93,7 @@ class Boss(pygame.sprite.Sprite):
         self._last_touch = {}
 
     # --------- Boca (mantendo a função que já existia) ---------
-    def open_mouth(self, duration: int | None = None):
+    def open_mouth(self, duration = None):
         """Abre a boca, trocando para boss_open.png e inicia um timer opcional."""
         self.open = 1
         self.mouth_open_timer = duration if duration is not None else self.mouth_open_duration
