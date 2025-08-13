@@ -70,13 +70,13 @@ class Enemy(Character):
     
     def update(self, game, follow_player):
         self.game = game # i believe this is needed for dropping loot
-        self.rect.x += game.screen_scroll
+        self.rect.x += game.world.screen_scroll
 
         if self.action == Character_action.DEATH.value:
             self.update_animation()
             if self.index == len(self.animation_list[self.action]) - 1:
                 self.drop_loot()
-                game.enemies.remove(self)
+                game.world.enemies.remove(self)
             return
 
         super().update(game, follow_player)
@@ -90,10 +90,10 @@ class Enemy(Character):
         drop_choice = random.choices(drop_options, drop_weights, k=1)[0]
         if drop_choice == Item_code.BUBBLE_CODE:
             bubble_props = Collectable_Props(self.rect.centerx, self.rect.centery - 20, Collectable_item.BUBBLE_ITEM)
-            self.game.collectables.add(Collectable(bubble_props))
+            self.game.world.collectables.add(Collectable(bubble_props))
         elif drop_choice == Item_code.COIN_CODE:
             coin_props = Collectable_Props(self.rect.centerx, self.rect.centery - 20, Collectable_item.COIN_ITEM)
-            self.game.collectables.add(Collectable(coin_props))
+            self.game.world.collectables.add(Collectable(coin_props))
         elif drop_choice == Item_code.HEALTH_KIT_CODE:
             health_kit_props = Collectable_Props(self.rect.centerx, self.rect.centery - 20, Collectable_item.HEALTH_KIT_ITEM)
-            self.game.collectables.add(Collectable(health_kit_props))
+            self.game.world.collectables.add(Collectable(health_kit_props))

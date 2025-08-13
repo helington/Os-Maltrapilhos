@@ -15,6 +15,8 @@ Relátorio de Desenvolvimento do jogo **Rambinho: O Último Soldado**, feito par
     </tr>
 </table>
 
+## Divisão da equipe
+
 ## Estrutura do projeto
 
 O projeto segue uma arquitetura modular, separando responsabilidades em diferentes pacotes:
@@ -42,29 +44,72 @@ Rambinho/
 ```
 
 ## Bibliotecas e ferramentas utilizadas
-- [ PyGame ]( https://www.pygame.org/news ): Biblioteca principal para o desenvolvimento do jogo.
-- OS: Biblioteca usada para acessar as sprites e artes do jogo.
-- Pathlib: Biblioteca usada como auxiliar para encontrar o diretório das sprites e artes do jogo.
-- Enum: Biblioteca usada para criar grupos de classes, facilitando a legibilidade e interpretação do código, evitando a criaçãod e números mágicos
-- CSV: Biblioteca usada para leitura do arquivo da fase atual.
-- Math: Biblioteca usada para criação do movimento de flutuação dos itens coletáveis.
-- Random: Biblioteca usada para definir a movimentação dos inimigos.
-- Piskel: Ferramenta usada para criação das sprites do jogo.
-- Itch.io: Ferramenta usada para arte do background do jogo.
+
+- [PyGame](https://www.pygame.org/news): Biblioteca principal para o desenvolvimento do jogo.
+- [OS](https://docs.python.org/3/library/os.html): Biblioteca usada para acessar as sprites e artes do jogo.
+- [Pathlib](https://docs.python.org/3/library/pathlib.html): Biblioteca usada como auxiliar para encontrar o diretório das sprites e artes do jogo.
+- [Enum](https://docs.python.org/3/library/enum.html): Biblioteca usada para criar grupos de classes, facilitando a legibilidade e interpretação do código, evitando a criação de números mágicos.
+- [CSV](https://docs.python.org/3/library/csv.html): Biblioteca usada para leitura do arquivo da fase atual.
+- [Math](https://docs.python.org/3/library/math.html): Biblioteca usada para criação do movimento de flutuação dos itens coletáveis.
+- [Random](https://docs.python.org/3/library/random.html): Biblioteca usada para definir a movimentação dos inimigos.
+- [Piskel](https://www.piskelapp.com/): Ferramenta usada para criação das sprites do jogo.
+- [Itch.io](https://itch.io/): Ferramenta usada para arte do background do jogo.
 
 ## Conceitos utilizados
+### Programação Orientada a Objetos
+- **Classes e Objetos** → Cada entidade (personagem, inimigo, projétil, item, barra de vida) é representada como uma classe.
 
-## Desafios e erros
+- **Herança** → Algumas classes de entidades compartilham comportamentos herdando de uma classe base. Um exemplo é a classe *`Character`* serve como classe base para a criação das classes *`Enemy`* e *`Player`*.
+
+- **Encapsulamento** → Uso de atributos e métodos específicos de cada classe para esconder detalhes de implementação. Usado principalmente nas classes dentro da pasta *`src/entities/`*, onde cada entidade mantém seus próprios atributos e métodos para controlar estado e comportamento, sem expor diretamente a lógica interna.
+
+- **Polimorfismo** → Métodos com o mesmo nome, mas comportamentos diferentes para cada tipo de entidade. O método *`draw()`*, por exemplo, também existe em várias classes, mas cada uma desenha um elemento diferente na tela.
+
+### Modularização
+- Exemplo: Toda a pasta *`src/`* é organizada em pacotes:
+    - *`config/`* → Configurações.
+    - *`core/`* → Lógica principal (*`game.py`*, *`utils.py`*).
+    - *`entities/`* → Todas as entidades do jogo.
+    - *`world/`* → Elementos de cenário.
+
+### Estrutura de Dados
+- **Listas** →
+    - Armazenamento de grupos de sprites em *`entities_enum.py`*.
+- **Dicionários** →
+    - Para formulação de props, classe intermediária, para instância de classe com muitos atributos e lógica grande (Ex.:*`bullet_props`*, *`character_props`*, (*`props.dict_.update`*))
+- **Tuplas** →
+    - Coordenadas *`(x, y)`* usadas em *`bullet_props.py`* e posicionamento de sprites.
+
+### Controle de Fluxo
+- Laços de repetição → *`for`* e *`while`* para atualização de jogo (loop principal).
+- Condicionais → *`if`*, *`elif`*, *`else`* para decisões de jogo (ex.: colisões, fim da vida).
+- Loops infinitos controlados → O game loop principal que roda até a condição de saída.
+
+### Funções e Procedimentos
+- Uso de funções para dividir lógicas complexas em partes menores.
+- Parâmetros e valores de retorno para modularidade.
+
+### Manipulação de Arquivos e Recursos
+- Carregamento de imagens, sons e outros assets usando *`os`* e *`pathlib`*.
+- Configuração de caminhos em *`config/paths.py`* para portabilidade.
+
+### Boas Práticas
+- Separação de responsabilidades → Cada módulo cuida de uma parte específica.
+- Reuso de código → Funções e classes reutilizadas em várias partes do jogo.
+- Controle de versão com Git → Organização e histórico de alterações.
+
+## Desafios, erros e aprendizados
+### Desafios
 
 ## Capturas de tela
 
 <table>
     <tr>
-        <td align="center"><img src="https://snipboard.io/YuPDxO.jpg" width="800px"/><br /><sub><b>Tela de Início</b></sub></a><br/</td>
-        <td align="center"><img src="https://snipboard.io/iZA83F.jpg" width="800px"/><br /><sub><b>Tela do Jogo em Andamento (Um Jogador)</b></sub></a><br/></td></tr>
+        <td align="center"><img src="https://snipboard.io/YuPDxO.jpg" width="1200px"/><br /><sub><b>Tela de Início</b></sub></a><br/</td>
+        <td align="center"><img src="https://snipboard.io/iZA83F.jpg" width="1200px"/><br /><sub><b>Tela do Jogo em Andamento (Um Jogador)</b></sub></a><br/></td></tr>
     <tr>
-        <td align="center"><img src="https://snipboard.io/h0RAzd.jpg" width="800px"/><br /><sub><b>Tela do Jogo em Andamento (Quatro Jogadores)</b></sub></a><br/></td>
-        <td align="center"><img src="https://snipboard.io/QNPYO4.jpg" width="800px"/><br /><sub><b>Tela do Jogo em Andamento (Jogador Nadando)</b></sub></a><br/></td>
+        <td align="center"><img src="https://snipboard.io/h0RAzd.jpg" width="1200px"/><br /><sub><b>Tela do Jogo em Andamento (Quatro Jogadores)</b></sub></a><br/></td>
+        <td align="center"><img src="https://snipboard.io/QNPYO4.jpg" width="1200px"/><br /><sub><b>Tela do Jogo em Andamento (Jogador Nadando)</b></sub></a><br/></td>
     </tr>
 </table>
 

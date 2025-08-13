@@ -35,6 +35,6 @@ class Collectable(pygame.sprite.Sprite):
         self.rect.y = self.y + offset
 
     def update(self, game):
-        self.rect.x += game.screen_scroll
+        self.rect.x += game.world.screen_scroll
         self.move()
 

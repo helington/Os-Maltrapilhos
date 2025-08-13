@@ -1,6 +1,8 @@
 import pygame
 from pygame import mixer
 from os import path
+
+from ..world import World
 from .character import Character
 from ...config.settings import *
 from ...config.paths import *
@@ -57,10 +59,10 @@ class Player(Character):
                 self.gravity = -15   
 
     def check_collect_item(self, game):
-        for collectable in game.collectables:
+        for collectable in game.world.collectables:
             if self.rect.colliderect(collectable.rect):
                 self.collect_fx.play()
-                game.collectables.remove(collectable)
+                game.world.collectables.remove(collectable)
                 if collectable.type == Collectable_types.WEAPON:
                     self.weapon = collectable.item.value
                     self.ammo = collectable.value
@@ -79,17 +81,22 @@ class Player(Character):
             if pygame.time.get_ticks() >= self.expiration_date_bubble: 
                 self.invincible = False
 
+    def handle_transition(self, game, follow_player):    
+        if self.rect.x > 1130 and self is follow_player:
+            game.load_next_level()
+
     def purchase(self, game):
         # O preço do medkit é 5 - o número de jogadores, um magic number
         keys = pygame.key.get_pressed()
-        if keys[self.controll.buy] and self.coins >= 5 - game.multiplayer_count: 
+        if keys[self.controll.buy] and self.coins >= 5 - game.multiplayer_count:
             self.coins -= 5 - game.multiplayer_count
             health_kit_props = Collectable_Props(self.rect.centerx, self.rect.centery - 128, Collectable_item.HEALTH_KIT_ITEM) # 128 is an arbitrary amount by which the medikit spawns above the player!
-            game.collectables.add(Collectable(health_kit_props))
+            game.world.collectables.add(Collectable(health_kit_props))
 
     def update(self, game, follow_player):
         super().update(game, follow_player)
         self.handle_input()
+        self.handle_transition(game,follow_player)
         self.check_collect_item(game)
         self.invincibility_track()
         self.purchase(game)
@@ -100,4 +107,4 @@ class Player(Character):
             is_on_border
         )
         if not should_be_dragged_by_scroll and self is not follow_player:
-            self.rect.x += game.screen_scroll
+            self.rect.x += game.world.screen_scroll
