@@ -54,16 +54,46 @@ Rambinho/
 
 ## Conceitos utilizados
 ### Programação Orientada a Objetos
-**Classes e Objetos** → Cada entidade (personagem, inimigo, projétil, item, barra de vida) é representada como uma classe.
+- **Classes e Objetos** → Cada entidade (personagem, inimigo, projétil, item, barra de vida) é representada como uma classe.
 
-**Herança** → Algumas classes de entidades compartilham comportamentos herdando de uma classe base. Um exemplo é a classe *Character* serve como classe base para a criação das classes *Enemy* e *Player*.
+- **Herança** → Algumas classes de entidades compartilham comportamentos herdando de uma classe base. Um exemplo é a classe *Character* serve como classe base para a criação das classes *Enemy* e *Player*.
 
-**Encapsulamento** → Uso de atributos e métodos específicos de cada classe para esconder detalhes de implementação. Usado principalmente nas classes dentro da pasta *src/entities/*, onde cada entidade mantém seus próprios atributos e métodos para controlar estado e comportamento, sem expor diretamente a lógica interna.
+- **Encapsulamento** → Uso de atributos e métodos específicos de cada classe para esconder detalhes de implementação. Usado principalmente nas classes dentro da pasta *src/entities/*, onde cada entidade mantém seus próprios atributos e métodos para controlar estado e comportamento, sem expor diretamente a lógica interna.
 
-**Polimorfismo** → Métodos com o mesmo nome, mas comportamentos diferentes para cada tipo de entidade. O método *draw()*, por exemplo, também existe em várias classes, mas cada uma desenha um elemento diferente na tela.
+- **Polimorfismo** → Métodos com o mesmo nome, mas comportamentos diferentes para cada tipo de entidade. O método *draw()*, por exemplo, também existe em várias classes, mas cada uma desenha um elemento diferente na tela.
 
 ### Modularização
+- Exemplo: Toda a pasta *src/* é organizada em pacotes:
+    - *config/* → Configurações.
+    - *core/* → Lógica principal (*game.py*, *utils.py*).
+    - *entities/* → Todas as entidades do jogo.
+    - *world/* → Elementos de cenário.
 
+### Estrutura de Dados
+- **Listas** →
+    - Armazenamento de grupos de sprites em *entities_enum.py*.
+- **Dicionários** →
+    - Para formulação de props, classe intermediária, para instância de classe com muitos atributos e lógica grande (Ex.:*bullet_props*, *character_props*, (*props.*dict*_.update*))
+- **Tuplas** →
+    - Coordenadas (x, y) usadas em *bullet_props.py* e posicionamento de sprites.
+
+### Controle de Fluxo
+- Laços de repetição → *for* e *while* para atualização de jogo (loop principal).
+- Condicionais → *if*, *elif*, *else* para decisões de jogo (ex.: colisões, fim da vida).
+- Loops infinitos controlados → O game loop principal que roda até a condição de saída.
+
+### Funções e Procedimentos
+- Uso de funções para dividir lógicas complexas em partes menores.
+- Parâmetros e valores de retorno para modularidade.
+
+### Manipulação de Arquivos e Recursos
+- Carregamento de imagens, sons e outros assets usando *os* e *pathlib*.
+- Configuração de caminhos em *config/paths.py* para portabilidade.
+
+### Boas Práticas
+- Separação de responsabilidades → Cada módulo cuida de uma parte específica.
+- Reuso de código → Funções e classes reutilizadas em várias partes do jogo.
+- Controle de versão com Git → Organização e histórico de alterações.
 
 ## Desafios e erros
 
