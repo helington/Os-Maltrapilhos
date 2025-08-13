@@ -53,6 +53,17 @@ Rambinho/
 - [Itch.io](https://itch.io/): Ferramenta usada para arte do background do jogo.
 
 ## Conceitos utilizados
+### Programação Orientada a Objetos
+**Classes e Objetos** → Cada entidade (personagem, inimigo, projétil, item, barra de vida) é representada como uma classe.
+
+**Herança** → Algumas classes de entidades compartilham comportamentos herdando de uma classe base. Um exemplo é a classe *Character* serve como classe base para a criação das classes *Enemy* e *Player*.
+
+**Encapsulamento** → Uso de atributos e métodos específicos de cada classe para esconder detalhes de implementação. Usado principalmente nas classes dentro da pasta *src/entities/*, onde cada entidade mantém seus próprios atributos e métodos para controlar estado e comportamento, sem expor diretamente a lógica interna.
+
+**Polimorfismo** → Métodos com o mesmo nome, mas comportamentos diferentes para cada tipo de entidade. O método *draw()*, por exemplo, também existe em várias classes, mas cada uma desenha um elemento diferente na tela.
+
+### Modularização
+
 
 ## Desafios e erros
 
