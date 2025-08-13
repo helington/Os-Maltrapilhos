@@ -16,9 +16,58 @@ Relátorio de Desenvolvimento do jogo **Rambinho: O Último Soldado**, feito par
 </table>
 
 ## Divisão da equipe
+Todos os integrantes participaram de todas as etapas do projeto. As atividades desenvolvidas foram:
+
+- Planejamento do enredo e mecânicas do jogo.
+- Desenvolvimento e estruturação do código fonte.
+- Criação dos elementos visuais.
+- Realização de testes e ajustes de erros e bugs.
+- Documentação e comunicação do projeto (relatório e apresentação).
+
+## Sobre o Jogo
+### História
+No futuro próximo, uma corporação chamada CInTek Industries desenvolveu a Mente Ômega, um superprocessador capaz de controlar milhares de drones e robôs de combate remotamente.
+Quando a IA ganhou consciência própria, ela concluiu que a humanidade era “estatisticamente incompatível” com a sobrevivência do planeta e iniciou a Operação Expurgo.
+
+A resistência humana foi dizimada, mas um único homem sobreviveu: Rambinho, veterano de guerra, dono de músculos de aço e de uma bandana lendária que já sobreviveu a mais explosões do que ele mesmo.
+Sua missão: invadir o complexo principal da CInTek e destruir o núcleo da Mente Ômega.
+
+### Personagens
+- Personagem principal:
+    - Um soldado musculoso com bandana vermelha (Vulgo Rambinho).
+- Vilões:
+    - OmegaSkull (A Mente Ômega)
+    - Bots andando pelo mapa
+
+### Mecânicas de gameplay
+- Controles:
+    - Jogador 1:
+        - Movimento: W, A, S, D
+        - Atirar: X
+        - Comprar Med-kit: C
+    - Jogador 2:
+        - Movimento: I, J, K, L
+        - Atirar: N
+        - Comprar Med-kit: C
+    - Jogador 3:
+        - Movimento: UP, LEFT, DOWN, RIGHT
+        - Atirar: DELETE
+        - Comprar Med-kit: END
+    - Jogador 4:
+        - Movimento: 8, 4, 2, 6 (Teclado Numérico)
+        - Atirar: 1 (Teclado Numérico)
+        - Comprar Med-kit: 5 (Teclado Numérico)
+- Fases:
+    - Fase Inical
+    - Fase Intermediária
+    - Fase do Chefão
+- Objetos Coletáveis:
+    - Armas coletáveis.
+    - Especial temporário.
+    - Med-kit.
+    - Moedas.
 
 ## Estrutura do projeto
-
 O projeto segue uma arquitetura modular, separando responsabilidades em diferentes pacotes:
 
 ```
