@@ -8,3 +8,4 @@ class TILES_TYPE(Enum):
     PLAYER = 15
     ENEMY = 16
     GATE = 20
+    ELSE = -1

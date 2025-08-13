@@ -13,29 +13,32 @@ from ...config.paths import *
 from .world_enum import TILES_TYPE
 
 class World:
-    """World representation class."""
-
-    def __init__(self, game,level=0):
-        """Initilizates world attributes."""
-
+    def __init__(self, level=0):
         self.background = Background()
         self.obstacle_list = list()
         self.water_group = pygame.sprite.Group()
         self.images = []
         self.level = level
-        self.initialize_by_level(game)
+        self.enemies = pygame.sprite.Group()
+        self.tiles_image_list = list()
+        self.screen_scroll = 0
         
         self.world_data = list()
         self.process_world_csv()
-        self.process_data(game)
+        self.get_tiles_images()
+        self.process_data()
 
-    def initialize_by_level(self, game):
-        if self.level == 0:
-            self.enemies = game.enemies
-        if self.level == 1:
-            self.enemies = game.enemies2
-        if self.level == 2:
-            self.enemies = game.enemies3
+    def get_tiles_images(self):
+        for i in range(TILE_TYPES):
+            current_image_path = path.join(TILES_PATH, f"{i}.png")
+            current_image = pygame.image.load(current_image_path)
+            if i == TILES_TYPE.PLAYER:
+                pass
+            elif i == TILES_TYPE.ENEMY:
+                current_image = pygame.transform.scale(current_image, (TILE_SIZE * 2, TILE_SIZE * 2))
+            else:
+                current_image = pygame.transform.scale(current_image, (TILE_SIZE, TILE_SIZE))
+            self.tiles_image_list.append(current_image)
 
     def process_world_csv(self):
         """Process the csv data containing information about the world creation of the current level."""
@@ -51,15 +54,15 @@ class World:
                 for j, tile in enumerate(row):
                     self.world_data[i][j] = int(tile)
 
-    def process_data(self, game):
+    def process_data(self):
         """Process the data matriz containing information about the wolrd creation of the current level."""
 
         self.level_length = len(self.world_data[0])
 
         for i, row in enumerate(self.world_data):
             for j, tile in enumerate(row):
-                if tile >= TILES_TYPE.FLOOR_GRASS.value: # = 0
-                    image = game.tiles_image_list[tile]
+                if tile >= TILES_TYPE.FLOOR_GRASS.value:
+                    image = self.tiles_image_list[tile]
                     image_rectangle = image.get_rect()
                     image_rectangle.x = j * TILE_SIZE
                     image_rectangle.y = i * TILE_SIZE
@@ -73,24 +76,6 @@ class World:
                     elif tile == TILES_TYPE.ENEMY.value:
                         enemy = Enemy(Character_type.ENEMY.value, j * TILE_SIZE, i * TILE_SIZE)
                         self.enemies.add(enemy)
-        
-
-    def restart_level(self, game):
-        """Restart the current level by reloading the world data and resetting entities."""
-
-        self.obstacle_list.clear()
-        self.water_group.empty()
-        game.enemies.empty()
-        game.effects.empty()
-
-        # Reset player positions
-        for player in game.players:
-            player.rect.x = 230
-            player.rect.y = 400
-        
-        self.__init__(game)
-        self.process_world_csv()
-        self.process_data(game)
 
     
     def is_ground(self, x, y):
@@ -102,12 +87,12 @@ class World:
             
         return False
 
-    def draw(self, screen, game):
+    def draw(self, screen):
         """Draw the world into game screen."""
 
-        self.background.draw(screen, game.screen_scroll)
+        self.background.draw(screen, self.screen_scroll)
         self.water_group.draw(screen)
         
         for tile in self.obstacle_list:
-            tile[1][0] += game.screen_scroll
+            tile[1][0] += self.screen_scroll
             screen.blit(tile[0], tile[1])

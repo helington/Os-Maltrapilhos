@@ -1,6 +1,8 @@
 import pygame
 from pygame import mixer
 from os import path
+
+from ..world import World
 from .character import Character
 from ...config.settings import *
 from ...config.paths import *
@@ -79,11 +81,9 @@ class Player(Character):
             if pygame.time.get_ticks() >= self.expiration_date_bubble: 
                 self.invincible = False
 
-    def handle_transition(self, game,follow_player):    
+    def handle_transition(self, game, follow_player):    
         if self.rect.x > 1130 and self is follow_player:
-            # game.__init__()
-            game.world = game.world3
-            game.enemies = game.enemies3
+            game.load_next_level()
     
 
 
@@ -109,4 +109,4 @@ class Player(Character):
             is_on_border
         )
         if not should_be_dragged_by_scroll and self is not follow_player:
-            self.rect.x += game.screen_scroll
+            self.rect.x += game.world.screen_scroll

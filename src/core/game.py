@@ -19,11 +19,11 @@ class Game:
         pygame.init()
         mixer.init()
         pygame.display.set_caption(GAME_NAME)
-
+        self.level = 0
         self.initialize_config_vars()
         self.initialize_assets()
         self.initialize_groups_levels()
-
+        self.get_tiles_images()
 
     def initialize_config_vars(self):
         self.clock = pygame.time.Clock()
@@ -32,8 +32,6 @@ class Game:
         self.start_game = False
         self.multiplayer_count = 1
         self.debug_count = 0
-        self.tiles_image_list = list()
-        self.get_tiles_images()
 
     def initialize_assets(self):
         self.main_menu_img = pygame.image.load(path.join(MENUS_PATH, 'Main_Menu.jpeg'))
@@ -45,18 +43,9 @@ class Game:
         mixer.music.play(-1,0.0,5000)  # -1 means loop indefinitely
 
     def initialize_groups_levels(self):
-        self.enemies = pygame.sprite.Group()
-        self.enemies2 = pygame.sprite.Group()
-        self.enemies3 = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
-        self.bullets2 = pygame.sprite.Group()
-        self.bullets3 = pygame.sprite.Group()
-        self.effects = pygame.sprite.Group() # this group currently exists for the bubble effect
-        self.effects2 = pygame.sprite.Group() # this group currently exists for the bubble effect
-        self.effects3 = pygame.sprite.Group() # this group currently exists for the bubble effect
+        self.effects = pygame.sprite.Group()
         self.collectables = pygame.sprite.Group()
-        self.collectables2 = pygame.sprite.Group()
-        self.collectables3 = pygame.sprite.Group()
         self.players = pygame.sprite.Group()
         self.health_bar = pygame.sprite.Group()
 
@@ -65,56 +54,30 @@ class Game:
         self.health_bar.add(Healthbar(10, 0, False, player1))
         
         # levels
-        self.world = World(self, 0)
-        self.world2 = World(self, 1)  # Example for a second level
-        self.world3 = World(self, 2)  # Example for a third level
+        self.world = World(self.level)
 
-        self.screen_scroll = 0
+        self.world.screen_scroll = 0
 
-    def reload(self, previous_game):
-        """Initializates pygame and the game attributes."""
-        self.multiplayer_count = previous_game.multiplayer_count
-        self.debug_count = 0
-
-        self.tiles_image_list = list()
-        self.get_tiles_images()
-
-        # load background music
-        mixer.music.load(path.join(SOUNDS_PATH, 'bgm.mp3'))
-        mixer.music.set_volume(0.10)
-        mixer.music.play(-1,0.0,5000)  # -1 means loop indefinitely
-
-        self.enemies = pygame.sprite.Group()
-        self.bullets = pygame.sprite.Group()
-        self.effects = pygame.sprite.Group() # this group currently exists for the bubble effect
-
-        self.players = pygame.sprite.Group()
-        count = 0
-        for player in previous_game.players:
-            count += 1
-            player_info = self.select_player(count)
-            to_add_player = Player(player_info, 00, 000, True)
-            to_add_player.is_player2 = player.is_player2
-            to_add_player.hp = player.hp
-            to_add_player.coins = player.coins
-            to_add_player.weapon = player.weapon
-            to_add_player.ammo = player.ammo
-            self.players.add(player)
-
-        self.collectables = pygame.sprite.Group()
-        self.screen_scroll = 0
+    def load_next_level(self):
+        self.world = World(self.world.level + 1)
+        for player in self.players:
+            player.rect.x = 230
+            player.rect.y = 600
+        self.level += 1
 
     def get_follow_player(self): 
+        if hasattr(self, 'follow_player'):
+            previous = self.follow_player
+        else: previous = None
         for player in self.players:
             if player.hp > 0:
                 self.follow_player = player
-                #self.screen_scroll = self.follow_player.rect.centerx - SCREEN_WIDTH // 2
+                if previous is not self.follow_player:
+                    player.rect.x -= 30
                 return 
         self.follow_player = None
 
     def get_tiles_images(self):
-        """Get all images of tiles and transform them in surfaces, and then put them into 'tiles_image_list' variable."""
-
         for i in range(TILE_TYPES):
             current_image_path = path.join(TILES_PATH, f"{i}.png")
             current_image = pygame.image.load(current_image_path)
@@ -124,7 +87,6 @@ class Game:
                 current_image = pygame.transform.scale(current_image, (TILE_SIZE * 2, TILE_SIZE * 2))
             else:
                 current_image = pygame.transform.scale(current_image, (TILE_SIZE, TILE_SIZE))
-            self.tiles_image_list.append(current_image)
 
     def handle_events(self):
         """Processes all Pygame events."""
@@ -134,7 +96,7 @@ class Game:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
-                if event.key == pygame.K_m:
+                if event.key == pygame.K_1:
                     # todo block respawn
                     if self.multiplayer_count < 4: 
                         self.multiplayer_count += 1
@@ -142,7 +104,7 @@ class Game:
                         new_player = Player(player_info, 230, 400, True)
                         self.players.add(new_player)
                         self.health_bar.add(Healthbar(10, -80 + self.multiplayer_count * 80, True, new_player))
-                if event.key == pygame.K_x:
+                if event.key == pygame.K_2:
                     self.debug_count += 1
                     if self.debug_count == 5:
                         new_player = Player(Character_type.PLAYER_DEBUG.value, 230, 400, True)
@@ -158,21 +120,21 @@ class Game:
         """Updates all entities of the game."""
         self.get_follow_player()
         self.bullets.update(self)
-        for enemy in self.enemies: enemy.update(self, None)
+        for enemy in self.world.enemies: enemy.update(self, None)
         for player in self.players: player.update(self, self.follow_player)
         self.health_bar.update(self)
         self.collectables.update(self)
         self.effects.update(self)
-        self.world.water_group.update(self.screen_scroll)
+        self.world.water_group.update(self.world.screen_scroll)
 
     def draw(self):
         """Draws the current game state to the screen."""
-        self.world.draw(self.screen, self)
+        self.world.draw(self.screen)
         self.players.draw(self.screen)
         self.health_bar.draw(self.screen)
         self.collectables.draw(self.screen)
         self.bullets.draw(self.screen)
-        self.enemies.draw(self.screen)
+        self.world.enemies.draw(self.screen)
         self.effects.draw(self.screen)
 
     def are_all_players_died(self):
@@ -194,7 +156,7 @@ class Game:
             
             self.handle_events()
 
-            if self.are_all_players_died() and False:
+            if self.are_all_players_died():
                 for player in self.players: player.kill()
                 game_over_screen = pygame.image.load(path.join(MENUS_PATH, 'Game_Over.jpeg'))
                 game_over_screen = pygame.transform.scale(game_over_screen, (SCREEN_WIDTH, SCREEN_HEIGHT))

@@ -70,13 +70,13 @@ class Enemy(Character):
     
     def update(self, game, follow_player):
         self.game = game # i believe this is needed for dropping loot
-        self.rect.x += game.screen_scroll
+        self.rect.x += game.world.screen_scroll
 
         if self.action == Character_action.DEATH.value:
             self.update_animation()
             if self.index == len(self.animation_list[self.action]) - 1:
                 self.drop_loot()
-                game.enemies.remove(self)
+                game.world.enemies.remove(self)
             return
 
         super().update(game, follow_player)
