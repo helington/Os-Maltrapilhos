@@ -2,104 +2,31 @@ import pygame
 import random
 import math
 from os import path
-from ...config.paths import GRAPHICS_PATH
+from ...config.paths import BOSS_DEATH_PATH, BOSS_MOUTH_PATH, BOSS_ATTACK_PATH
 from ...config.settings import TILE_SIZE, BOSS_MAX_HP
 from ..entities_enum import Character_action, Team
-
-
-class BossBullet(pygame.sprite.Sprite):
-    def __init__(
-        self,
-        pos_center: pygame.math.Vector2,
-        velocity: pygame.math.Vector2,
-        frames: list[pygame.Surface],
-        damage=2,
-        knockback=8,
-        frame_duration=4  # frames por quadro de animação da bala
-    ):
-        super().__init__()
-        # Animação
-        self.frames = frames
-        self.frame_duration = frame_duration
-        self.frame_index = 0
-        self.frame_timer = self.frame_duration
-
-        # Sprite inicial
-        self.image = self.frames[self.frame_index]
-        self.rect = self.image.get_rect(center=(int(pos_center.x), int(pos_center.y)))
-
-        # Movimento e combate
-        self.pos = pygame.math.Vector2(self.rect.center)
-        self.vel = pygame.math.Vector2(velocity)
-        self.damage = damage
-        self.knockback = knockback
-        self.team = Team.ENEMY
-
-    def _animate(self):
-        self.frame_timer -= 1
-        if self.frame_timer <= 0:
-            self.frame_index = (self.frame_index + 1) % len(self.frames)
-            self.frame_timer = self.frame_duration
-            center = self.rect.center
-            self.image = self.frames[self.frame_index]
-            self.rect = self.image.get_rect(center=center)
-
-    def update(self, game):
-        # Movimento
-        self.pos += self.vel
-        self._animate()
-        self.rect.center = (int(self.pos.x), int(self.pos.y))
-
-        # Colisão com players
-        if hasattr(game, "players"):
-            hits = pygame.sprite.spritecollide(self, game.players, False)
-            if hits:
-                knock_dir = pygame.math.Vector2(self.vel)
-                if knock_dir.length_squared() > 0:
-                    knock_dir = knock_dir.normalize()
-
-                for player in hits:
-                    if hasattr(player, "take_damage") and callable(player.take_damage):
-                        player.take_damage(self.damage)
-                    elif hasattr(player, "hp"):
-                        player.hp = max(0, player.hp - self.damage)
-
-                    # Knockback
-                    delta = knock_dir * self.knockback
-                    if hasattr(player, "vel"):
-                        player.vel.x += delta.x
-                        player.vel.y += delta.y
-
-                self.kill()
-                return
-
-        # Remove se sair da tela
-        surface = pygame.display.get_surface()
-        if not surface:
-            return
-        if not surface.get_rect().colliderect(self.rect):
-            self.kill()
-
+from .boss_bullet import BossBullet
 
 class Boss(pygame.sprite.Sprite):
     def __init__(self, x, y, bullet_group):
         super().__init__()
-        # Sprites
-        self.image_closed = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_closed.png")).convert_alpha()
-        self.image_open = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_open.png")).convert_alpha()
+        # Basic informations
         self.images = list()
         self.hurted = 0
         self.open = 0
         self.hurting_time = pygame.time.get_ticks()
         self.hurting_time_cooldown = 300
+
         # Sprites base do boss
-        image_closed_raw = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_closed.png")).convert_alpha()
-        image_open_raw = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_open.png")).convert_alpha()
+        image_closed_raw_path = path.join(BOSS_MOUTH_PATH, "closed.png")
+        image_open_raw_path = path.join(BOSS_MOUTH_PATH, "open.png")
+        image_closed_raw = pygame.image.load(image_closed_raw_path).convert_alpha()
+        image_open_raw = pygame.image.load(image_open_raw_path).convert_alpha()
 
         # Sprites da bala (3 frames)
-        bullet0_raw = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_attack0.png")).convert_alpha()
-        bullet1_raw = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_attack1.png")).convert_alpha()
-        bullet2_raw = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_attack2.png")).convert_alpha()
+        bullet0_raw = pygame.image.load(path.join(BOSS_ATTACK_PATH, "0.png")).convert_alpha()
+        bullet1_raw = pygame.image.load(path.join(BOSS_ATTACK_PATH, "1.png")).convert_alpha()
+        bullet2_raw = pygame.image.load(path.join(BOSS_ATTACK_PATH, "2.png")).convert_alpha()
 
         # Tamanho do boss e da bala
         self._size = (TILE_SIZE * 4, TILE_SIZE * 5)
@@ -144,7 +71,6 @@ class Boss(pygame.sprite.Sprite):
 
         self.hp = BOSS_MAX_HP
 
-        # Ataque (placeholder)
         # Ataque
         self.attack_cooldown = 60
         self.attack_timer = random.randint(20, self.attack_cooldown)
@@ -176,11 +102,10 @@ class Boss(pygame.sprite.Sprite):
         """Fecha a boca, voltando para boss_closed.png."""
         self.open = 0
         self.mouth_open_timer = 0
-    # -----------------------------------------------------------
 
     def load_death_animation_list(self):
         for i in range(6):
-            image_path = path.join(GRAPHICS_PATH, "boss", "destruction", f"{i}.png")
+            image_path = path.join(BOSS_DEATH_PATH, f"{i}.png")
             image = pygame.image.load(image_path).convert_alpha()
             image = pygame.transform.scale(image, (TILE_SIZE * 4, TILE_SIZE * 5))
             self.images_destruction.append(image)
@@ -220,14 +145,11 @@ class Boss(pygame.sprite.Sprite):
             self._rotate_velocity(random.uniform(-math.pi / 6, math.pi / 6))
 
     def get_hurted_boss_image(self, image):
-        # Faz uma cópia da imagem original para não alterar o original
         hurt_image = image.copy().convert_alpha()
 
-        # Cria uma superfície vermelha com transparência
         red_tint = pygame.Surface(hurt_image.get_size(), pygame.SRCALPHA)
         red_tint.fill((50, 0, 0, 0))  # 100 = intensidade da transparência
 
-        # Aplica o vermelho em cima da imagem
         hurt_image.blit(red_tint, (0, 0), special_flags=pygame.BLEND_RGBA_ADD)
 
         return hurt_image
@@ -364,11 +286,11 @@ class Boss(pygame.sprite.Sprite):
             if self.mouth_open_timer > 0:
                 self.mouth_open_timer -= 1
                 # Garante que a imagem esteja aberta durante o timer
-                if self.image is not self.image_open:
+                if self.image not in self.images[1]:
                     self.open = 1
             else:
                 # Fecha a boca quando o timer acaba
-                if self.image is not self.image_closed:
+                if self.image not in self.images[0]:
                     self.open = 0
 
             self.image = self.images[self.open][self.hurted]
