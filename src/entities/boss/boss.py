@@ -4,6 +4,7 @@ import math
 from os import path
 from ...config.paths import GRAPHICS_PATH
 from ...config.settings import TILE_SIZE
+from ..entities_enum import Character_action, Team
 
 class Boss(pygame.sprite.Sprite):
     def __init__(self, x, y, bullet_group):
@@ -11,7 +12,13 @@ class Boss(pygame.sprite.Sprite):
         # Sprites
         self.image_closed = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_closed.png")).convert_alpha()
         self.image_open = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_open.png")).convert_alpha()
-        self.image = pygame.transform.scale(self.image_closed, (TILE_SIZE * 6, TILE_SIZE * 7))
+        self.images = list()
+        self.images.append(pygame.transform.scale(self.image_closed, (TILE_SIZE * 4, TILE_SIZE * 5)))
+        self.images.append(self.get_hurted_boss_image(self.images[0]))
+        self.hurted = 0
+        self.hurting_time = pygame.time.get_ticks()
+        self.hurting_time_cooldown = 300
+        self.image = self.images[self.hurted]
 
         # Rect e posição em float
         self.rect = self.image.get_rect(topleft=(x, y))
@@ -23,11 +30,28 @@ class Boss(pygame.sprite.Sprite):
         self.change_dir_timer = 0
         self._pick_new_direction()
 
+        self.images_destruction = list()
+        self.load_death_animation_list()
+        self.index = 0
+        self.update_time = pygame.time.get_ticks()
+
+        self.team = Team.ENEMY
+        self.alive = True
+
+        self.hp = 10
+
         # Ataque (placeholder)
         self.attack_cooldown = 60
         self.attack_timer = 0
         self.bullet_group = bullet_group
         self.bullet_image = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_attack.png")).convert_alpha()
+
+    def load_death_animation_list(self):
+        for i in range(6):
+            image_path = path.join(GRAPHICS_PATH, "boss", "destruction", f"{i}.png")
+            image = pygame.image.load(image_path).convert_alpha()
+            image = pygame.transform.scale(image, (TILE_SIZE * 4, TILE_SIZE * 5))
+            self.images_destruction.append(image)
 
     def _pick_new_direction(self):
         # Garante direção não-nula
@@ -69,7 +93,48 @@ class Boss(pygame.sprite.Sprite):
             # Pequena variação para evitar ficar “colado” na borda
             self._rotate_velocity(random.uniform(-math.pi / 6, math.pi / 6))
 
-    def update(self, *_):
+    def get_hurted_boss_image(self, image):
+        # Faz uma cópia da imagem original para não alterar o original
+        hurt_image = image.copy().convert_alpha()
+
+        # Cria uma superfície vermelha com transparência
+        red_tint = pygame.Surface(hurt_image.get_size(), pygame.SRCALPHA)
+        red_tint.fill((50, 0, 0, 0))  # 100 = intensidade da transparência
+
+        # Aplica o vermelho em cima da imagem
+        hurt_image.blit(red_tint, (0, 0), special_flags=pygame.BLEND_RGBA_ADD)
+
+        return hurt_image
+
+    def check_hurt(self, game):
+        for bullet in game.bullets:
+            is_hit = (
+                self.rect.colliderect(bullet.rect) and
+                bullet.team != self.team
+            )
+            if is_hit:
+                self.hurted = 1
+                self.hurting_time = pygame.time.get_ticks()
+                game.bullets.remove(bullet)
+                self.hp -= bullet.damage
+
+                if self.hp <= 0:
+                    self.alive = False
+
+    def death_animation(self, game):
+        animation_cooldown = 250
+        
+        #check if enough time has passed since the last update
+        if pygame.time.get_ticks() - self.update_time > animation_cooldown:
+            self.index += 1
+            self.update_time = pygame.time.get_ticks()
+            if self.index >= len(self.images_destruction):
+                self.kill()
+                game.win = True
+            else:
+                self.image = self.images_destruction[self.index]
+
+    def update(self, game, *_):
         # Bounds reais da janela (mais seguro que constantes)
         surface = pygame.display.get_surface()
         if not surface:  # fallback defensivo
@@ -77,8 +142,9 @@ class Boss(pygame.sprite.Sprite):
         bounds = surface.get_rect()
 
         # Movimento contínuo
-        self.pos += self.vel * self.speed
-        self.rect.topleft = (int(self.pos.x), int(self.pos.y))
+        if self.alive:
+            self.pos += self.vel * self.speed
+            self.rect.topleft = (int(self.pos.x), int(self.pos.y))
 
         # Limites da tela + rebate
         self._keep_inside_bounds(bounds)
@@ -87,5 +153,15 @@ class Boss(pygame.sprite.Sprite):
         self.change_dir_timer -= 1
         if self.change_dir_timer <= 0:
             self._pick_new_direction()
+
+        if not self.alive:
+            self.death_animation(game)
+        else:
+            if self.hurted:
+                if pygame.time.get_ticks() - self.hurting_time > self.hurting_time_cooldown:
+                    self.hurted = 0
+
+            self.check_hurt(game)
+            self.image = self.images[self.hurted]
 
         # (Opcional) lógica de ataque aqui usando self.attack_timer / cooldown

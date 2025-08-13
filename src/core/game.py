@@ -27,6 +27,7 @@ class Game:
         self.start_game = False
         self.multiplayer_count = 1
         self.debug_count = 0
+        self.win = False
 
 
         self.tiles_image_list = list()
@@ -158,6 +159,15 @@ class Game:
                 game_over_screen = pygame.image.load(path.join(MENUS_PATH, 'Game_Over.jpeg'))
                 game_over_screen = pygame.transform.scale(game_over_screen, (SCREEN_WIDTH, SCREEN_HEIGHT))
                 self.screen.blit(game_over_screen, (0, 0))
+                key = pygame.key.get_pressed()
+                if key[pygame.K_RETURN]:
+                    self.running = False
+            
+            if self.win:
+                for player in self.players: player.kill()
+                win_screen = pygame.image.load(path.join(MENUS_PATH, 'Win.png'))
+                win_screen = pygame.transform.scale(win_screen, (SCREEN_WIDTH, SCREEN_HEIGHT))
+                self.screen.blit(win_screen, (0, 0))
                 key = pygame.key.get_pressed()
                 if key[pygame.K_RETURN]:
                     self.running = False
