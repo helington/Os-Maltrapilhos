@@ -97,7 +97,7 @@ class World:
                     image_rectangle.y = i * TILE_SIZE
                     tile_data = (image, image_rectangle)
 
-                    if tile in [TILES_TYPE.FLOOR_GRASS.value, TILES_TYPE.FLOOR_DIRT.value, TILES_TYPE.BOSS_LAB_FLOOR.value]:
+                    if tile in [TILES_TYPE.FLOOR_GRASS.value, TILES_TYPE.FLOOR_DIRT.value, TILES_TYPE.BOSS_LAB_FLOOR.value, TILES_TYPE.BOSS_LAB_PLATFORM.value]:
                         self.obstacle_list.append(tile_data)
                     elif tile in [TILES_TYPE.WATER_DEEP.value, TILES_TYPE.WATER_SURFACE.value]:
                         water = Water(image, j * TILE_SIZE, i * TILE_SIZE)
