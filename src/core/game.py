@@ -162,10 +162,10 @@ class Game:
 
         # Atualizações normais
         self.world.bullets.update(self)
+        self.world.collectables.update(self)
         for enemy in self.world.enemies: enemy.update(self, None)
         for player in self.players: player.update(self, self.follow_player)
         self.health_bar.update(self)
-        self.world.collectables.update(self)
         self.effects.update(self)
         self.world.water_group.update(self.world.screen_scroll)
 
