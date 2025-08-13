@@ -133,7 +133,7 @@ class Character(pygame.sprite.Sprite):
         self.rect.y += self.dy
 
         # Check if it's time to scrolling the world
-        if self is follow_player and game.actual_level != 1:
+        if self is follow_player and game.actual_level == 0:
             game.screen_scroll = 0
             should_scroll = (
                 (self.rect.right > SCREEN_WIDTH - SCROLLING_THRESHOLD and self.direction == Direction.RIGHT and
