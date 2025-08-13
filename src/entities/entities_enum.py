@@ -25,15 +25,21 @@ class Item_code(Enum):
 
 class Collectable_types(Enum):
     WEAPON = 0
-    POWER_UP = 1 # please make the healing kit one of those, I know the name sucks but if you make another one of those types it will create clutter. and I am NOT fond of clutter
+    POWER_UP = 1 
     COIN = 2
+    HEALTH_KIT = 3
 
 class Collectable_item(Enum):
     RIFLE_ITEM = { "image": "rifle.png", "value": 15, "type": Collectable_types.WEAPON, "item": Weapon.RIFLE, "code": Item_code.RIFLE_CODE }
     MINIGUN_ITEM = { "image": "minigun.png", "value": 100, "type": Collectable_types.WEAPON, "item": Weapon.MINIGUN, "code": Item_code.MINIGUN_CODE }
     BUBBLE_ITEM = { "image": "bubble.png", "type": Collectable_types.POWER_UP, "item": { "value": 10 * 1000 }, "code": Item_code.BUBBLE_CODE}
     COIN_ITEM = { "image": "coin.png", "type": Collectable_types.COIN, "item": {}, "code": Item_code.COIN_CODE}
+    # guys im 99% percent sure our health kit breaks the geneva conventions
+    HEALTH_KIT_ITEM = { "image": "health_kit.png", "type": Collectable_types.HEALTH_KIT, "item": {}, "code": Item_code.HEALTH_KIT_CODE}
+    
 
+#class Price(Enum): # the string is the number of players, the int is medkit price when the number is that
+#    PRICE_LIST = [1, 3, 2 ,1]
 
 ##### CHARACTER ######
 # era pra tá em um arquivo separaldus quem quiser arrumar os imports só fazer :)
@@ -90,10 +96,10 @@ class Character_type_info():
 class Character_type(Enum):
     PLAYER_1 = Character_type_info(
         Character_images_info.PLAYER_1, Direction.RIGHT, Weapon.REGULAR.value,
-        PLAYER_SPEED, PLAYER_HP, 0, Team.ALLIES, Controll(pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_2, pygame.K_3), (231, 0, 68, 255))
+        PLAYER_SPEED, PLAYER_HP, 0, Team.ALLIES, Controll(pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_x, pygame.K_c), (231, 0, 68, 255))
     PLAYER_2 = Character_type_info(
         Character_images_info.PLAYER_1, Direction.RIGHT, Weapon.REGULAR.value,
-        PLAYER_SPEED, PLAYER_HP, 0, Team.ALLIES, Controll(pygame.K_i, pygame.K_k, pygame.K_j, pygame.K_l, pygame.K_8, pygame.K_9), (35, 191, 194, 255))
+        PLAYER_SPEED, PLAYER_HP, 0, Team.ALLIES, Controll(pygame.K_i, pygame.K_k, pygame.K_j, pygame.K_l, pygame.K_n, pygame.K_m), (35, 191, 194, 255))
     PLAYER_3 = Character_type_info(
         Character_images_info.PLAYER_1, Direction.RIGHT, Weapon.REGULAR.value,
         PLAYER_SPEED, PLAYER_HP, 0, Team.ALLIES,
@@ -105,7 +111,7 @@ class Character_type(Enum):
     PLAYER_DEBUG = Character_type_info(
         Character_images_info.PLAYER_1, Direction.RIGHT, Weapon.REGULAR.value,
         PLAYER_SPEED, 10_000, 0, Team.ALLIES,
-        Controll(pygame.K_i, pygame.K_k, pygame.K_j, pygame.K_l, pygame.K_8, pygame.K_9),(255, 255, 255, 255))
+        Controll(pygame.K_i, pygame.K_k, pygame.K_j, pygame.K_l, pygame.K_n, pygame.K_m),(255, 255, 255, 255))
     ENEMY = Character_type_info(
         Character_images_info.ENEMY, Direction.LEFT, Weapon.REGULAR.value,
         ENEMY_SPEED, ENEMY_HP, AI_DECISION_COOLDOWN, Team.ENEMY, Controll(pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d, pygame.K_c, pygame.K_c), ())

@@ -12,7 +12,7 @@ class Background:
         self.level = level
         self.scroll = 0
         
-        if level == 0:
+        if level < 2:
             self.images = list()
             self.get_parellel_images()
         else:
@@ -34,7 +34,7 @@ class Background:
         """Draw background applying the scrolling."""
         self.scroll -= game_screen_scroll
 
-        if self.level == 0:
+        if self.level < 2:
             for x in range (10):
                 speed = 0.5
                 for i in self.images:

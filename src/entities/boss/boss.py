@@ -155,7 +155,7 @@ class Boss(pygame.sprite.Sprite):
         return hurt_image
 
     def check_hurt(self, game):
-        for bullet in game.bullets:
+        for bullet in game.world.bullets:
             is_hit = (
                 self.rect.colliderect(bullet.rect) and
                 bullet.team != self.team
@@ -163,7 +163,7 @@ class Boss(pygame.sprite.Sprite):
             if is_hit:
                 self.hurted = 1
                 self.hurting_time = pygame.time.get_ticks()
-                game.bullets.remove(bullet)
+                game.world.bullets.remove(bullet)
                 self.hp -= bullet.damage
 
                 if self.hp <= 0:
