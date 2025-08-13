@@ -42,15 +42,15 @@ Rambinho/
 ```
 
 ## Bibliotecas e ferramentas utilizadas
-- [ PyGame ]( https://www.pygame.org/news ): Biblioteca principal para o desenvolvimento do jogo.
-- OS: Biblioteca usada para acessar as sprites e artes do jogo.
-- Pathlib: Biblioteca usada como auxiliar para encontrar o diretório das sprites e artes do jogo.
-- Enum: Biblioteca usada para criar grupos de classes, facilitando a legibilidade e interpretação do código, evitando a criaçãod e números mágicos
-- CSV: Biblioteca usada para leitura do arquivo da fase atual.
-- Math: Biblioteca usada para criação do movimento de flutuação dos itens coletáveis.
-- Random: Biblioteca usada para definir a movimentação dos inimigos.
-- Piskel: Ferramenta usada para criação das sprites do jogo.
-- Itch.io: Ferramenta usada para arte do background do jogo.
+- [PyGame](https://www.pygame.org/news): Biblioteca principal para o desenvolvimento do jogo.
+- [OS](https://docs.python.org/3/library/os.html): Biblioteca usada para acessar as sprites e artes do jogo.
+- [Pathlib](https://docs.python.org/3/library/pathlib.html): Biblioteca usada como auxiliar para encontrar o diretório das sprites e artes do jogo.
+- [Enum](https://docs.python.org/3/library/enum.html): Biblioteca usada para criar grupos de classes, facilitando a legibilidade e interpretação do código, evitando a criação de números mágicos.
+- [CSV](https://docs.python.org/3/library/csv.html): Biblioteca usada para leitura do arquivo da fase atual.
+- [Math](https://docs.python.org/3/library/math.html): Biblioteca usada para criação do movimento de flutuação dos itens coletáveis.
+- [Random](https://docs.python.org/3/library/random.html): Biblioteca usada para definir a movimentação dos inimigos.
+- [Piskel](https://www.piskelapp.com/): Ferramenta usada para criação das sprites do jogo.
+- [Itch.io](https://itch.io/): Ferramenta usada para arte do background do jogo.
 
 ## Conceitos utilizados
 
