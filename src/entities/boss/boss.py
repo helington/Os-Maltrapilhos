@@ -6,6 +6,81 @@ from ...config.paths import GRAPHICS_PATH
 from ...config.settings import TILE_SIZE, BOSS_MAX_HP
 from ..entities_enum import Character_action, Team
 
+
+class BossBullet(pygame.sprite.Sprite):
+    def __init__(
+        self,
+        pos_center: pygame.math.Vector2,
+        velocity: pygame.math.Vector2,
+        frames: list[pygame.Surface],
+        damage=2,
+        knockback=8,
+        frame_duration=4  # frames por quadro de animação da bala
+    ):
+        super().__init__()
+        # Animação
+        self.frames = frames
+        self.frame_duration = frame_duration
+        self.frame_index = 0
+        self.frame_timer = self.frame_duration
+
+        # Sprite inicial
+        self.image = self.frames[self.frame_index]
+        self.rect = self.image.get_rect(center=(int(pos_center.x), int(pos_center.y)))
+
+        # Movimento e combate
+        self.pos = pygame.math.Vector2(self.rect.center)
+        self.vel = pygame.math.Vector2(velocity)
+        self.damage = damage
+        self.knockback = knockback
+        self.team = Team.ENEMY
+
+    def _animate(self):
+        self.frame_timer -= 1
+        if self.frame_timer <= 0:
+            self.frame_index = (self.frame_index + 1) % len(self.frames)
+            self.frame_timer = self.frame_duration
+            center = self.rect.center
+            self.image = self.frames[self.frame_index]
+            self.rect = self.image.get_rect(center=center)
+
+    def update(self, game):
+        # Movimento
+        self.pos += self.vel
+        self._animate()
+        self.rect.center = (int(self.pos.x), int(self.pos.y))
+
+        # Colisão com players
+        if hasattr(game, "players"):
+            hits = pygame.sprite.spritecollide(self, game.players, False)
+            if hits:
+                knock_dir = pygame.math.Vector2(self.vel)
+                if knock_dir.length_squared() > 0:
+                    knock_dir = knock_dir.normalize()
+
+                for player in hits:
+                    if hasattr(player, "take_damage") and callable(player.take_damage):
+                        player.take_damage(self.damage)
+                    elif hasattr(player, "hp"):
+                        player.hp = max(0, player.hp - self.damage)
+
+                    # Knockback
+                    delta = knock_dir * self.knockback
+                    if hasattr(player, "vel"):
+                        player.vel.x += delta.x
+                        player.vel.y += delta.y
+
+                self.kill()
+                return
+
+        # Remove se sair da tela
+        surface = pygame.display.get_surface()
+        if not surface:
+            return
+        if not surface.get_rect().colliderect(self.rect):
+            self.kill()
+
+
 class Boss(pygame.sprite.Sprite):
     def __init__(self, x, y, bullet_group):
         super().__init__()
@@ -13,16 +88,45 @@ class Boss(pygame.sprite.Sprite):
         self.image_closed = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_closed.png")).convert_alpha()
         self.image_open = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_open.png")).convert_alpha()
         self.images = list()
-        self.images.append(pygame.transform.scale(self.image_closed, (TILE_SIZE * 4, TILE_SIZE * 5)))
-        self.images.append(self.get_hurted_boss_image(self.images[0]))
         self.hurted = 0
+        self.open = 0
         self.hurting_time = pygame.time.get_ticks()
         self.hurting_time_cooldown = 300
-        self.image = self.images[self.hurted]
+        # Sprites base do boss
+        image_closed_raw = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_closed.png")).convert_alpha()
+        image_open_raw = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_open.png")).convert_alpha()
 
-        # Rect e posição em float
+        # Sprites da bala (3 frames)
+        bullet0_raw = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_attack0.png")).convert_alpha()
+        bullet1_raw = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_attack1.png")).convert_alpha()
+        bullet2_raw = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_attack2.png")).convert_alpha()
+
+        # Tamanho do boss e da bala
+        self._size = (TILE_SIZE * 4, TILE_SIZE * 5)
+
+        self.images = list()
+
+        image_closed = pygame.transform.scale(image_closed_raw, self._size)
+        image_closed_hurted = self.get_hurted_boss_image(image_closed)
+        images_closed = [image_closed, image_closed_hurted]
+
+        image_open = pygame.transform.scale(image_open_raw, self._size)
+        image_open_hurted = self.get_hurted_boss_image(image_open)
+        images_open = [image_open, image_open_hurted]
+
+        self.images = [images_closed, images_open]
+
+        bullet_size = (TILE_SIZE, TILE_SIZE)
+        self.bullet_frames = [
+            pygame.transform.scale(bullet0_raw, bullet_size),
+            pygame.transform.scale(bullet1_raw, bullet_size),
+            pygame.transform.scale(bullet2_raw, bullet_size),
+        ]
+
+        # Sprite atual do boss
+        self.image = self.images[self.open][self.hurted]
         self.rect = self.image.get_rect(topleft=(x, y))
-        self.pos = pygame.math.Vector2(self.rect.topleft)  # posição contínua
+        self.pos = pygame.math.Vector2(self.rect.topleft)
 
         # Movimento
         self.speed = 2.5
@@ -41,10 +145,38 @@ class Boss(pygame.sprite.Sprite):
         self.hp = BOSS_MAX_HP
 
         # Ataque (placeholder)
+        # Ataque
         self.attack_cooldown = 60
-        self.attack_timer = 0
+        self.attack_timer = random.randint(20, self.attack_cooldown)
         self.bullet_group = bullet_group
-        self.bullet_image = pygame.image.load(path.join(GRAPHICS_PATH, "boss", "boss_attack.png")).convert_alpha()
+
+        # Propriedades do projétil
+        self.bullet_speed = 7.0
+        self.bullet_damage = 2
+        self.bullet_knockback = 8
+        self.bullet_frame_duration = 4  # velocidade da animação da bala
+
+        # Boca aberta ao atacar
+        self.mouth_open_duration = 18  # ticks que a boca fica aberta após atacar
+        self.mouth_open_timer = 0
+
+        # Contato
+        self.contact_damage = 2
+        self.contact_knockback = 8
+        self.touch_cooldown_ms = 500
+        self._last_touch = {}
+
+    # --------- Boca (mantendo a função que já existia) ---------
+    def open_mouth(self, duration: int | None = None):
+        """Abre a boca, trocando para boss_open.png e inicia um timer opcional."""
+        self.open = 1
+        self.mouth_open_timer = duration if duration is not None else self.mouth_open_duration
+
+    def close_mouth(self):
+        """Fecha a boca, voltando para boss_closed.png."""
+        self.open = 0
+        self.mouth_open_timer = 0
+    # -----------------------------------------------------------
 
     def load_death_animation_list(self):
         for i in range(6):
@@ -54,21 +186,17 @@ class Boss(pygame.sprite.Sprite):
             self.images_destruction.append(image)
 
     def _pick_new_direction(self):
-        # Garante direção não-nula
         angle = random.uniform(0, 2 * math.pi)
-        self.vel.from_polar((1, math.degrees(angle)))  # unit vector
+        self.vel.from_polar((1, math.degrees(angle)))
         self.change_dir_timer = random.randint(45, 150)
 
     def _rotate_velocity(self, delta_angle_rad):
-        # Rotaciona vetor de velocidade mantendo módulo 1
         angle = math.atan2(self.vel.y, self.vel.x) + delta_angle_rad
         self.vel.x = math.cos(angle)
         self.vel.y = math.sin(angle)
 
     def _keep_inside_bounds(self, bounds: pygame.Rect):
         bounced = False
-
-        # Usa rect atualizado para checar limites
         if self.rect.left < bounds.left:
             self.rect.left = bounds.left
             self.vel.x = abs(self.vel.x)
@@ -88,9 +216,7 @@ class Boss(pygame.sprite.Sprite):
             bounced = True
 
         if bounced:
-            # Atualiza pos float a partir do rect clamped
             self.pos.update(self.rect.topleft)
-            # Pequena variação para evitar ficar “colado” na borda
             self._rotate_velocity(random.uniform(-math.pi / 6, math.pi / 6))
 
     def get_hurted_boss_image(self, image):
@@ -140,10 +266,71 @@ class Boss(pygame.sprite.Sprite):
         pygame.draw.rect(screen, (0, 255, 0), (x, y, width * ratio, height))
         pygame.draw.rect(screen, (255, 255, 255), (x, y, width, height), 2)
 
-    def update(self, game, *_):
-        # Bounds reais da janela (mais seguro que constantes)
+    def _try_attack(self, game):
+        if self.attack_timer > 0:
+            self.attack_timer -= 1
+            return
+
+        target = getattr(game, "follow_player", None)
+        if not target or not hasattr(target, "rect"):
+            return
+
+        origin = pygame.math.Vector2(self.rect.center)
+        target_pos = pygame.math.Vector2(target.rect.center)
+        direction = target_pos - origin
+        if direction.length_squared() == 0:
+            direction = pygame.math.Vector2(1, 0)
+
+        vel = direction.normalize() * self.bullet_speed
+
+        # Abre a boca no momento do disparo
+        self.open_mouth()
+
+        # Cria bala animada (passa a lista de frames)
+        bullet = BossBullet(
+            origin,
+            vel,
+            self.bullet_frames,
+            damage=self.bullet_damage,
+            knockback=self.bullet_knockback,
+            frame_duration=self.bullet_frame_duration
+        )
+        self.bullet_group.add(bullet)
+
+        # Reinicia cooldown
+        self.attack_timer = self.attack_cooldown
+
+    def touch_damage_players(self, game):
+        now = pygame.time.get_ticks()
+        players = getattr(game, "players", [])
+        for player in players:
+            if not hasattr(player, "rect"):
+                continue
+            if hasattr(player, "hp") and player.hp <= 0:
+                continue
+            if not self.rect.colliderect(player.rect):
+                continue
+            last = self._last_touch.get(id(player), 0)
+            if now - last < self.touch_cooldown_ms:
+                continue
+            if hasattr(player, "take_damage") and callable(player.take_damage):
+                player.take_damage(self.contact_damage)
+            elif hasattr(player, "hp"):
+                player.hp = max(0, player.hp - self.contact_damage)
+            if hasattr(player, "vel"):
+                dx = player.rect.centerx - self.rect.centerx
+                dy = player.rect.centery - self.rect.centery
+                vec = pygame.math.Vector2(dx, dy)
+                if vec.length_squared() == 0:
+                    vec = pygame.math.Vector2(1, -0.5)
+                vec = vec.normalize() * self.contact_knockback
+                player.vel.x += vec.x
+                player.vel.y += vec.y
+            self._last_touch[id(player)] = now
+
+    def update(self, game):
         surface = pygame.display.get_surface()
-        if not surface:  # fallback defensivo
+        if not surface:
             return
         bounds = surface.get_rect()
 
@@ -151,11 +338,9 @@ class Boss(pygame.sprite.Sprite):
         if self.alive:
             self.pos += self.vel * self.speed
             self.rect.topleft = (int(self.pos.x), int(self.pos.y))
+            self._keep_inside_bounds(bounds)
 
-        # Limites da tela + rebate
-        self._keep_inside_bounds(bounds)
-
-        # Troca de direção aleatória
+        # Mudar direção às vezes
         self.change_dir_timer -= 1
         if self.change_dir_timer <= 0:
             self._pick_new_direction()
@@ -168,6 +353,23 @@ class Boss(pygame.sprite.Sprite):
                     self.hurted = 0
 
             self.check_hurt(game)
-            self.image = self.images[self.hurted]
 
-        # (Opcional) lógica de ataque aqui usando self.attack_timer / cooldown
+            # Tentar atacar
+            self._try_attack(game)
+
+            # Dano por contato
+            self.touch_damage_players(game)
+
+            # Timer da boca aberta
+            if self.mouth_open_timer > 0:
+                self.mouth_open_timer -= 1
+                # Garante que a imagem esteja aberta durante o timer
+                if self.image is not self.image_open:
+                    self.open = 1
+            else:
+                # Fecha a boca quando o timer acaba
+                if self.image is not self.image_closed:
+                    self.open = 0
+
+            self.image = self.images[self.open][self.hurted]
+            

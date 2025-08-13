@@ -11,6 +11,7 @@ from ..entities.world import TILES_TYPE
 from ..off_game_screens.button import Button
 from ..entities.character.health_bar import Healthbar
 from ..entities.boss.boss import Boss
+from ..config.paths import GRAPHICS_PATH
 
 class Game:
     """Main class for the game."""
@@ -112,11 +113,33 @@ class Game:
         if self.multiplayer_count == 4: return Character_type.PLAYER_4.value
 
     def update(self):
-        """Updates all entities of the game."""
         self.get_follow_player()
+
+        # 🔹 Se não existe follow_player ou ele morreu, mostra Game Over
+        if not self.follow_player or getattr(self.follow_player, "hp", 1) <= 0:
+            game_over_img = pygame.image.load(path.join(GRAPHICS_PATH, "off_game_screens", "Game_Over.jpeg"))
+            game_over_img = pygame.transform.scale(game_over_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
+            self.screen.blit(game_over_img, (0, 0))
+            pygame.display.update()
+
+            # Espera até o jogador apertar ENTER
+            waiting = True
+            while waiting:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        self.running = False
+                        waiting = False
+                    elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                        self.running = False
+                        waiting = False
+            return  # sai do update para não continuar o jogo
+
+        # Atualizações normais
         self.bullets.update(self)
-        for enemy in self.enemies: enemy.update(self, None)
-        for player in self.players: player.update(self, self.follow_player)
+        for enemy in self.enemies:
+            enemy.update(self, None)
+        for player in self.players:
+            player.update(self, self.follow_player)
         self.health_bar.update(self)
         self.collectables.update(self)
         self.effects.update(self)
