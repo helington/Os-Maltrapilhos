@@ -6,6 +6,7 @@ from .background import Background
 from .water import Water
 
 from ..character.enemy import Enemy
+from ..collectable import Collectable, Collectable_item, Collectable_Props
 from ..entities_enum import Character_type
 
 from ...config.settings import *

@@ -25,15 +25,21 @@ class Item_code(Enum):
 
 class Collectable_types(Enum):
     WEAPON = 0
-    POWER_UP = 1 # please make the healing kit one of those, I know the name sucks but if you make another one of those types it will create clutter. and I am NOT fond of clutter
+    POWER_UP = 1 
     COIN = 2
+    HEALTH_KIT = 3
 
 class Collectable_item(Enum):
     RIFLE_ITEM = { "image": "rifle.png", "value": 15, "type": Collectable_types.WEAPON, "item": Weapon.RIFLE, "code": Item_code.RIFLE_CODE }
     MINIGUN_ITEM = { "image": "minigun.png", "value": 100, "type": Collectable_types.WEAPON, "item": Weapon.MINIGUN, "code": Item_code.MINIGUN_CODE }
     BUBBLE_ITEM = { "image": "bubble.png", "type": Collectable_types.POWER_UP, "item": { "value": 10 * 1000 }, "code": Item_code.BUBBLE_CODE}
     COIN_ITEM = { "image": "coin.png", "type": Collectable_types.COIN, "item": {}, "code": Item_code.COIN_CODE}
+    # guys im 99% percent sure our health kit breaks the geneva conventions
+    HEALTH_KIT_ITEM = { "image": "health_kit.png", "type": Collectable_types.HEALTH_KIT, "item": {}, "code": Item_code.HEALTH_KIT_CODE}
+    
 
+#class Price(Enum): # the string is the number of players, the int is medkit price when the number is that
+#    PRICE_LIST = [1, 3, 2 ,1]
 
 ##### CHARACTER ######
 # era pra tá em um arquivo separaldus quem quiser arrumar os imports só fazer :)

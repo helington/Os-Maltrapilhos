@@ -10,6 +10,9 @@ from ..entities.collectable.collectable import Collectable, Collectable_Props
 from ..entities.world import TILES_TYPE
 from ..off_game_screens.button import Button
 from ..entities.character.health_bar import Healthbar
+from ..entities.character.price_hud import Price_hud
+from ..entities.character.faces_hud import Faces_hud
+from ..entities.character.money_hud import Money_hud
 
 class Game:
     """Main class for the game."""
@@ -50,8 +53,11 @@ class Game:
         self.health_bar = pygame.sprite.Group()
 
         player1 = Player(Character_type.PLAYER_1.value, 230, 600, False)
+        self.health_bar.add(Healthbar(50, -50 + self.multiplayer_count * 50, True, player1))
+        self.health_bar.add(Money_hud(200, -50 + self.multiplayer_count * 50, player1))
+        self.health_bar.add(Price_hud())
+        self.health_bar.add(Faces_hud())
         self.players.add(player1)
-        self.health_bar.add(Healthbar(10, 0, False, player1))
         
         # levels
         self.world = World(self.level)
@@ -59,6 +65,7 @@ class Game:
         self.world.screen_scroll = 0
 
     def load_next_level(self):
+        if self.level >= 2: return 
         self.world = World(self.world.level + 1)
         for player in self.players:
             player.rect.x = 230
@@ -73,8 +80,9 @@ class Game:
             if player.hp > 0:
                 self.follow_player = player
                 if previous is not self.follow_player:
-                    player.rect.x -= 30
-                return 
+                    if player.rect.x > 1120:
+                        player.rect.x -= 30
+                return
         self.follow_player = None
 
     def get_tiles_images(self):
@@ -103,13 +111,14 @@ class Game:
                         player_info = self.select_player(self.multiplayer_count)
                         new_player = Player(player_info, 230, 400, True)
                         self.players.add(new_player)
-                        self.health_bar.add(Healthbar(10, -80 + self.multiplayer_count * 80, True, new_player))
+                        self.health_bar.add(Healthbar(50, -50 + self.multiplayer_count * 50, True, new_player))
+                        self.health_bar.add(Money_hud(200, -50 + self.multiplayer_count * 50, new_player))
                 if event.key == pygame.K_2:
                     self.debug_count += 1
                     if self.debug_count == 5:
                         new_player = Player(Character_type.PLAYER_DEBUG.value, 230, 400, True)
                         self.players.add(new_player)
-                        
+
     def select_player(self, player_i):
         if player_i == 1: return Character_type.PLAYER_1.value
         if player_i == 2: return Character_type.PLAYER_2.value

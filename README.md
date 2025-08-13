@@ -17,6 +17,8 @@ Relátorio de Desenvolvimento do jogo **Rambinho: O Último Soldado**, feito par
 
 ## Estrutura do projeto
 
+O projeto segue uma arquitetura modular, separando responsabilidades em diferentes pacotes:
+
 ```
 Rambinho/
 ├── assets/                # Recursos do jogo
@@ -40,13 +42,31 @@ Rambinho/
 ```
 
 ## Bibliotecas e ferramentas utilizadas
-- [ PyGame ]( https://www.pygame.org/news ): Biblioteca principal para o desenvolvimento do jogo.
+- [PyGame](https://www.pygame.org/news): Biblioteca principal para o desenvolvimento do jogo.
+- [OS](https://docs.python.org/3/library/os.html): Biblioteca usada para acessar as sprites e artes do jogo.
+- [Pathlib](https://docs.python.org/3/library/pathlib.html): Biblioteca usada como auxiliar para encontrar o diretório das sprites e artes do jogo.
+- [Enum](https://docs.python.org/3/library/enum.html): Biblioteca usada para criar grupos de classes, facilitando a legibilidade e interpretação do código, evitando a criação de números mágicos.
+- [CSV](https://docs.python.org/3/library/csv.html): Biblioteca usada para leitura do arquivo da fase atual.
+- [Math](https://docs.python.org/3/library/math.html): Biblioteca usada para criação do movimento de flutuação dos itens coletáveis.
+- [Random](https://docs.python.org/3/library/random.html): Biblioteca usada para definir a movimentação dos inimigos.
+- [Piskel](https://www.piskelapp.com/): Ferramenta usada para criação das sprites do jogo.
+- [Itch.io](https://itch.io/): Ferramenta usada para arte do background do jogo.
 
 ## Conceitos utilizados
 
 ## Desafios e erros
 
 ## Capturas de tela
+
+<table>
+    <tr>
+        <td align="center"><img src="https://snipboard.io/YuPDxO.jpg" width="1200px"/><br /><sub><b>Tela de Início</b></sub></a><br/</td>
+        <td align="center"><img src="https://snipboard.io/iZA83F.jpg" width="1200px"/><br /><sub><b>Tela do Jogo em Andamento (Um Jogador)</b></sub></a><br/></td></tr>
+    <tr>
+        <td align="center"><img src="https://snipboard.io/h0RAzd.jpg" width="1200px"/><br /><sub><b>Tela do Jogo em Andamento (Quatro Jogadores)</b></sub></a><br/></td>
+        <td align="center"><img src="https://snipboard.io/QNPYO4.jpg" width="1200px"/><br /><sub><b>Tela do Jogo em Andamento (Jogador Nadando)</b></sub></a><br/></td>
+    </tr>
+</table>
 
 ## Como instalar e rodar o jogo
 
