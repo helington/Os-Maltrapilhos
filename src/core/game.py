@@ -24,6 +24,8 @@ class Game:
         pygame.init()
         mixer.init()
         pygame.display.set_caption(GAME_NAME)
+        icon = pygame.image.load(path.join(MENUS_PATH, 'icon_game.png'))
+        pygame.display.set_icon(icon)
         self.level = 0
         self.initialize_config_vars()
         self.initialize_assets()
