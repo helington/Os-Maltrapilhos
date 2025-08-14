@@ -78,12 +78,15 @@ class Game:
         self.world.screen_scroll = 0
 
     def load_next_level(self):
-        if self.level > 2: return 
+        if self.level >= 2: return 
         self.level += 1
+        new_players = pygame.sprite.Group()
         self.world = World(self.level)
         for player in self.players:
             player.rect.x = 230
-            player.rect.y = 600
+            player.rect.y = 200
+            new_players.add(player)
+        self.players = new_players
 
     def get_follow_player(self): 
         if hasattr(self, 'follow_player'):

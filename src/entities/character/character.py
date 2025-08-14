@@ -3,7 +3,7 @@ from os import path
 
 from ...config.settings import *
 from ...config.paths import SOUNDS_PATH
-from ..entities_enum import Direction, Character_action, Images_info, Team, Weapon
+from ..entities_enum import Direction, Character_action, Team, Weapon
 from ..bullet import Bullet_props, Bullet
 from .character_props import Character_Props
 
@@ -218,7 +218,25 @@ class Character(pygame.sprite.Sprite):
                         self.death_fx.play()
                     else:
                         self.enemy_death_fx.play()
-                        
+        
+        boss_fight = hasattr(game.world.boss.sprite, 'last_touch')
+        if not boss_fight:
+            return
+        collide_with_boss = self.rect.colliderect(game.world.boss.sprite.rect)
+        last_contact = game.world.boss.sprite.last_touch.get(id(self), 0)
+        collide_cooldown_passed = pygame.time.get_ticks() - last_contact > game.world.boss.sprite.touch_cooldown_ms
+        if collide_with_boss and collide_cooldown_passed:
+            game.world.boss.sprite.last_touch[id(self)] = pygame.time.get_ticks()
+            self.hp -= 2
+            if self.hp <= 0 and self.alive:
+                self.action = Character_action.DEATH.value
+                self.moving_left = False
+                self.moving_right = False
+                self.update_time = pygame.time.get_ticks()
+                if self.team == Team.ALLIES:
+                    self.death_fx.play()
+                else:
+                    self.enemy_death_fx.play()
 
     def update(self, game, follow_player):
         self.shoot(game)

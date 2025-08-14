@@ -90,7 +90,7 @@ class Boss(pygame.sprite.Sprite):
         self.contact_damage = 2
         self.contact_knockback = 8
         self.touch_cooldown_ms = 500
-        self._last_touch = {}
+        self.last_touch = {}
 
     # --------- Boca (mantendo a função que já existia) ---------
     def open_mouth(self, duration = None):
@@ -232,7 +232,7 @@ class Boss(pygame.sprite.Sprite):
                 continue
             if not self.rect.colliderect(player.rect):
                 continue
-            last = self._last_touch.get(id(player), 0)
+            last = self.last_touch.get(id(player), 0)
             if now - last < self.touch_cooldown_ms:
                 continue
             if hasattr(player, "take_damage") and callable(player.take_damage):
@@ -248,7 +248,7 @@ class Boss(pygame.sprite.Sprite):
                 vec = vec.normalize() * self.contact_knockback
                 player.vel.x += vec.x
                 player.vel.y += vec.y
-            self._last_touch[id(player)] = now
+            self.last_touch[id(player)] = now
 
     def update(self, game):
         surface = pygame.display.get_surface()
@@ -280,7 +280,7 @@ class Boss(pygame.sprite.Sprite):
             self._try_attack(game)
 
             # Dano por contato
-            self.touch_damage_players(game)
+            #self.touch_damage_players(game)
 
             # Timer da boca aberta
             if self.mouth_open_timer > 0:

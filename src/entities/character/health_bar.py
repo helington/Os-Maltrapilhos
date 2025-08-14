@@ -37,5 +37,4 @@ class Healthbar(pygame.sprite.Sprite):
         self.images = images_list
 
     def update(self, game):
-        #super().update()
         self.update_heart()

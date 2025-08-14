@@ -14,7 +14,7 @@ class Enemy(Character):
         self.world_y = y
         self.vision = pygame.Rect(0, 0, 400, 20)
         self.weapon = self.weapon.copy()
-        self.weapon["cooldown"] = 2000
+        self.weapon["cooldown"] = 1500
 
     def update_moving(self, move_left, move_right):
         self.moving_left = move_left

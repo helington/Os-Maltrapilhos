@@ -1,6 +1,6 @@
 import pygame
 
-from ..entities_enum import Team
+from ..entities_enum import Character_action, Team
 
 class BossBullet(pygame.sprite.Sprite):
     def __init__(
@@ -40,35 +40,10 @@ class BossBullet(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(center=center)
 
     def update(self, game):
-        # Movimento
         self.pos += self.vel
         self._animate()
         self.rect.center = (int(self.pos.x), int(self.pos.y))
 
-        # Colisão com players
-        if hasattr(game, "players"):
-            hits = pygame.sprite.spritecollide(self, game.players, False)
-            if hits:
-                knock_dir = pygame.math.Vector2(self.vel)
-                if knock_dir.length_squared() > 0:
-                    knock_dir = knock_dir.normalize()
-
-                for player in hits:
-                    if hasattr(player, "take_damage") and callable(player.take_damage):
-                        player.take_damage(self.damage)
-                    elif hasattr(player, "hp"):
-                        player.hp = max(0, player.hp - self.damage)
-
-                    # Knockback
-                    delta = knock_dir * self.knockback
-                    if hasattr(player, "vel"):
-                        player.vel.x += delta.x
-                        player.vel.y += delta.y
-
-                self.kill()
-                return
-
-        # Remove se sair da tela
         surface = pygame.display.get_surface()
         if not surface:
             return
