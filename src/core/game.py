@@ -54,11 +54,27 @@ class Game:
     def initialize_assets(self):
         self.main_menu_img = pygame.image.load(path.join(MENUS_PATH, 'Main_Menu.jpeg'))
         self.main_menu_img = pygame.transform.scale(self.main_menu_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.start_button = Button(SCREEN_WIDTH //2 - 100, 500, pygame.image.load(path.join(BUTTONS_PATH, 'Default.png')))
-        self.start_button.image = pygame.transform.scale(self.start_button.image, (200, 100))
+        self.start_button = Button(SCREEN_WIDTH //2 - 100, 420, pygame.image.load(path.join(BUTTONS_PATH, 'Default.png')))
+        self.start_button.image = pygame.transform.scale(self.start_button.image, (200, 200))
         mixer.music.load(path.join(SOUNDS_PATH, 'bgm.mp3'))
         mixer.music.set_volume(0.10)
         mixer.music.play(-1,0.0,5000)  # -1 means loop indefinitely
+
+        # Imagem de Game Over pré-carregada
+        self.game_over_img = pygame.image.load(path.join(MENUS_PATH, 'Game_Over.jpeg'))
+        self.game_over_img = pygame.transform.scale(self.game_over_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
+
+        # Botões
+        restart_img = pygame.image.load(path.join(BUTTONS_PATH, 'restart.png'))
+        exit_img = pygame.image.load(path.join(BUTTONS_PATH, 'exit.png'))
+
+        restart_img = pygame.transform.scale(restart_img, (200, 200))
+        exit_img = pygame.transform.scale(exit_img, (200, 200))
+
+        cx = SCREEN_WIDTH // 2
+        y = 420
+        self.restart_button = Button(cx - 220, y, restart_img)
+        self.exit_button = Button(cx + 20, y, exit_img)
 
     def initialize_groups_levels(self):
         self.effects = pygame.sprite.Group()
@@ -87,6 +103,20 @@ class Game:
             player.rect.y = 200
             new_players.add(player)
         self.players = new_players
+
+    def reset_game(self, reset_level=False):
+        """Reseta o estado do jogo sem fechar a aplicação."""
+        self.win = False
+        self.multiplayer_count = 1
+
+        if reset_level:
+            self.level = 0  # reinicia do nível inicial
+
+        self.initialize_groups_levels()
+        self.start_game = True
+
+        if hasattr(self.world, "screen_scroll"):
+            self.world.screen_scroll = 0
 
     def get_follow_player(self): 
         if hasattr(self, 'follow_player'):
@@ -189,22 +219,45 @@ class Game:
 
 
             if self.are_all_players_died():
-                for player in self.players: player.kill()
-                game_over_screen = pygame.image.load(path.join(MENUS_PATH, 'Game_Over.jpeg'))
-                game_over_screen = pygame.transform.scale(game_over_screen, (SCREEN_WIDTH, SCREEN_HEIGHT))
-                self.screen.blit(game_over_screen, (0, 0))
+                for player in self.players:
+                    player.kill()
+
+                # Fundo Game Over pré-carregado
+                self.screen.blit(self.game_over_img, (0, 0))
+
+                # Botões
+                if self.restart_button.draw(self.screen, selected=False):
+                    self.reset_game(reset_level=True)  # sempre recomeça do nível 0
+
+                if self.exit_button.draw(self.screen, selected=False):
+                    self.running = False
+
+                # Atalho: Enter = Restart (não sai do jogo)
                 key = pygame.key.get_pressed()
                 if key[pygame.K_RETURN]:
-                    self.running = False
+                    self.reset_game(reset_level=True)
             
             if self.win:
-                for player in self.players: player.kill()
+                for player in self.players:
+                    player.kill()
+
+                # Fundo Vitória (pré-carregado para otimizar, se quiser seguir a mesma ideia do game_over_img)
                 win_screen = pygame.image.load(path.join(MENUS_PATH, 'Win.png'))
                 win_screen = pygame.transform.scale(win_screen, (SCREEN_WIDTH, SCREEN_HEIGHT))
                 self.screen.blit(win_screen, (0, 0))
+
+                # Botão para jogar novamente
+                if self.restart_button.draw(self.screen, selected=False):
+                    self.reset_game(reset_level=True)  # volta ao nível inicial
+
+                # Botão para sair do jogo
+                if self.exit_button.draw(self.screen, selected=False):
+                    self.running = False
+
+                # Atalho: Enter = Restart
                 key = pygame.key.get_pressed()
                 if key[pygame.K_RETURN]:
-                    self.running = False
+                    self.reset_game(reset_level=True)
 
             pygame.display.update()
             self.clock.tick(FPS)
