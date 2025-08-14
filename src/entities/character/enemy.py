@@ -14,10 +14,10 @@ class Enemy(Character):
         self.world_y = y
         self.vision = pygame.Rect(0, 0, 400, 20)
 
-    def update_moving(self, left, right):
-        self.moving_left = left
-        self.moving_right = right
-
+    def update_moving(self, move_left, move_right):
+        self.moving_left = move_left
+        self.moving_right = move_right
+    
     def check_danger(self, world):
         direction_to_consider = 1 if self.direction == Direction.RIGHT else -1
 
@@ -38,12 +38,15 @@ class Enemy(Character):
         for player in players:
             # if player is in enemy field of view
             if player.alive and not some_target_in_vision:
-                if self.vision.colliderect(player):
+                if self.vision.colliderect(player) and self.hp > 0:
                     self.update_action(Character_action.IDLE.value)
                     some_target_in_vision = True
-                else:
+                elif not self.vision.colliderect(player) and self.hp > 0:
                     direction_vision = -75 if self.direction == Direction.LEFT else 75
                     self.vision.center = (self.rect.centerx + direction_vision, self.rect.centery)
+                
+                else:
+                    self.update_action(Character_action.DEATH.value)
             
         if some_target_in_vision:
             self.has_shot = True
@@ -78,11 +81,10 @@ class Enemy(Character):
                 self.drop_loot()
                 game.world.enemies.remove(self)
             return
-
-        super().update(game, follow_player)
-
-        self.ai_behavior(game.players.sprites(), game.world)
-        self.update_animation()
+        else:
+            super().update(game, follow_player)
+            self.ai_behavior(game.players.sprites(), game.world)
+        
 
     def drop_loot(self):
         drop_options = [Item_code.BUBBLE_CODE, Item_code.HEALTH_KIT_CODE, Item_code.COIN_CODE]

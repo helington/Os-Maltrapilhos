@@ -24,7 +24,7 @@ class Game:
         pygame.init()
         mixer.init()
         pygame.display.set_caption(GAME_NAME)
-        self.level = 2
+        self.level = 0
         self.initialize_config_vars()
         self.initialize_assets()
         self.initialize_groups_levels()

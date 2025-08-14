@@ -207,7 +207,9 @@ class Character(pygame.sprite.Sprite):
                 game.world.bullets.remove(bullet)
                 if not self.invincible:
                     self.hp -= bullet.damage
-                if self.hp <= 0:
+                    if self.team == Team.ALLIES:
+                        self.hurt_fx.play()
+                if self.hp <= 0 and self.alive:
                     self.action = Character_action.DEATH.value
                     self.moving_left = False
                     self.moving_right = False
@@ -216,6 +218,7 @@ class Character(pygame.sprite.Sprite):
                         self.death_fx.play()
                     else:
                         self.enemy_death_fx.play()
+                        
 
     def update(self, game, follow_player):
         self.shoot(game)
