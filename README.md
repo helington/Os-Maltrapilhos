@@ -7,23 +7,25 @@ Relátorio de Desenvolvimento do jogo **Rambinho: O Último Soldado**, feito par
 - [2. Estrutura do projeto](#estrutura)
 - [3. Bibliotecas e ferramentas utilizadas](#bibliotecas)
 - [4. Conceitos utilizados](#conceitos)
-- [6. Desafios enfrentados](#desafios)
-- [7. Capturas de tela](#capturas)
-- [8. Como instalar e rodar o jogo](#instalar)
+- [5. Desafios enfrentados](#desafios)
+- [6. Capturas de tela](#capturas)
+- [7. Como instalar e rodar o jogo](#instalar)
 
 <a id="equipe"></a>
 ## Equipe
 
-<table>
-    <tr>
-        <td align="center"><a href="https://github.com/helington"><img src="https://avatars.githubusercontent.com/u/78865806?v=4" width="100px"/><br /><sub><b>Helington Willamy</b></sub></a><br/</td>
-        <td align="center"><a href="https://github.com/GabrielNSB007"><img src="https://avatars.githubusercontent.com/u/154392376?v=4" width="100px"/><br /><sub><b>Gabriel Nóbrega</b></sub></a><br/></td>
-        <td align="center"><a href="https://github.com/luismiguuel"><img src="https://avatars.githubusercontent.com/u/224866738?v=4" width="100px"/><br /><sub><b>Luis Miguel</b></sub></a><br/></td>
-        <td align="center"><a href="https://github.com/vitorlins0"><img src="https://avatars.githubusercontent.com/u/224650528?v=4" width="100px"/><br /><sub><b>João Vitor</b></sub></a><br/></td>
-        <td align="center"><a href="https://github.com/Igor-a-Soares"><img src="https://avatars.githubusercontent.com/u/223944470?v=4" width="100px"/><br /><sub><b>Igor Soares</b></sub></a><br/></td>
-        <td align="center"><a href="https://github.com/AldusD"><img src="https://avatars.githubusercontent.com/u/98439753?v=4" width="100px"/><br /><sub><b>Aldus Daniel</b></sub></a><br/></td>
-    </tr>
-</table>
+<div align="center">
+    <table width="100%">
+        <tr>
+            <td align="center"><a href="https://github.com/helington"><img src="https://avatars.githubusercontent.com/u/78865806?v=4" width="100px"><br /><sub><b>Helington Willamy</b></sub></a><br/></td>
+            <td align="center"><a href="https://github.com/GabrielNSB007"><img src="https://avatars.githubusercontent.com/u/154392376?v=4" width="100px"><br /><sub><b>Gabriel Nóbrega</b></sub></a><br/></td>
+            <td align="center"><a href="https://github.com/luismiguuel"><img src="https://avatars.githubusercontent.com/u/224866738?v=4" width="100px"><br /><sub><b>Luis Miguel</b></sub></a><br/></td>
+            <td align="center"><a href="https://github.com/vitorlins0"><img src="https://avatars.githubusercontent.com/u/224650528?v=4" width="100px"><br /><sub><b>João Vitor</b></sub></a><br/></td>
+            <td align="center"><a href="https://github.com/Igor-a-Soares"><img src="https://avatars.githubusercontent.com/u/223944470?v=4" width="100px"><br /><sub><b>Igor Soares</b></sub></a><br/></td>
+            <td align="center"><a href="https://github.com/AldusD"><img src="https://avatars.githubusercontent.com/u/98439753?v=4" width="100px"><br /><sub><b>Aldus Daniel</b></sub></a><br/></td>
+        </tr>
+    </table>
+</div>
 
 ## Divisão da equipe
 
