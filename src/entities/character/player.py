@@ -21,6 +21,7 @@ class Player(Character):
         self.coins = 0
         temp_list = []
         self.is_player2 = is_player2
+        self.last_time_buy = 0
         
         #sound effects
         pygame.mixer.set_num_channels(800)  # Add two channels for player sounds
@@ -86,12 +87,15 @@ class Player(Character):
             game.load_next_level()
 
     def purchase(self, game):
-        # O preço do medkit é 5 - o número de jogadores, um magic number
         keys = pygame.key.get_pressed()
         if keys[self.controll.buy] and self.coins >= 5 - game.multiplayer_count:
-            self.coins -= 5 - game.multiplayer_count
-            health_kit_props = Collectable_Props(self.rect.centerx, self.rect.centery - 128, Collectable_item.HEALTH_KIT_ITEM) # 128 is an arbitrary amount by which the medikit spawns above the player!
-            game.world.collectables.add(Collectable(health_kit_props))
+            curr_time = pygame.time.get_ticks()
+            buy_cooldown_passed = (curr_time - self.last_time_buy) > 300
+            self.last_time_buy = curr_time
+            if buy_cooldown_passed:
+                self.coins -= 5 - game.multiplayer_count
+                health_kit_props = Collectable_Props(self.rect.centerx, self.rect.centery - 128, Collectable_item.HEALTH_KIT_ITEM) # 128 is an arbitrary amount by which the medikit spawns above the player!
+                game.world.collectables.add(Collectable(health_kit_props))
 
     def update(self, game, follow_player):
         super().update(game, follow_player)

@@ -79,11 +79,11 @@ class Game:
 
     def load_next_level(self):
         if self.level > 2: return 
-        self.world = World(self.world.level + 1)
+        self.level += 1
+        self.world = World(self.level)
         for player in self.players:
             player.rect.x = 230
             player.rect.y = 600
-        self.level += 1
 
     def get_follow_player(self): 
         if hasattr(self, 'follow_player'):
@@ -140,25 +140,6 @@ class Game:
 
     def update(self):
         self.get_follow_player()
-
-        # 🔹 Se não existe follow_player ou ele morreu, mostra Game Over
-        # if not self.follow_player or getattr(self.follow_player, "hp", 1) <= 0:
-        #     game_over_img = pygame.image.load(path.join(GRAPHICS_PATH, "off_game_screens", "Game_Over.jpeg"))
-        #     game_over_img = pygame.transform.scale(game_over_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
-        #     self.screen.blit(game_over_img, (0, 0))
-        #     pygame.display.update()
-
-        #     # Espera até o jogador apertar ENTER
-        #     waiting = True
-        #     while waiting:
-        #         for event in pygame.event.get():
-        #             if event.type == pygame.QUIT:
-        #                 self.running = False
-        #                 waiting = False
-        #             elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-        #                 self.running = False
-        #                 waiting = False
-        #     return  # sai do update para não continuar o jogo
 
         # Atualizações normais
         self.world.bullets.update(self)
