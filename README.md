@@ -2,6 +2,16 @@
 
 Relátorio de Desenvolvimento do jogo **Rambinho: O Último Soldado**, feito para a cadeira de Introdução a Programação do curso de Sistemas de Informação do CIn-UFPE no semestre 2025-01.
 
+## Índice
+- [1. Equipe](#equipe)
+- [2. Estrutura do projeto](#estrutura)
+- [3. Bibliotecas e ferramentas utilizadas](#bibliotecas)
+- [4. Conceitos utilizados](#conceitos)
+- [6. Desafios enfrentados](#desafios)
+- [7. Capturas de tela](#capturas)
+- [8. Como instalar e rodar o jogo](#instalar)
+
+<a id="equipe"></a>
 ## Equipe
 
 <table>
@@ -17,6 +27,7 @@ Relátorio de Desenvolvimento do jogo **Rambinho: O Último Soldado**, feito par
 
 ## Divisão da equipe
 
+<a id="estrutura"></a>
 ## Estrutura do projeto
 
 O projeto segue uma arquitetura modular, separando responsabilidades em diferentes pacotes:
@@ -42,7 +53,7 @@ Rambinho/
 ├── main.py                # Arquivo principal que inicia o jogo
 └── requirements.txt       # Dependências do projeto (bibliotecas usadas)
 ```
-
+<a id="bibliotecas"></a>
 ## Bibliotecas e ferramentas utilizadas
 
 - [PyGame](https://www.pygame.org/news): Biblioteca principal para o desenvolvimento do jogo.
@@ -55,6 +66,7 @@ Rambinho/
 - [Piskel](https://www.piskelapp.com/): Ferramenta usada para criação das sprites do jogo.
 - [Itch.io](https://itch.io/): Ferramenta usada para arte do background do jogo.
 
+<a id="conceitos"></a>
 ## Conceitos utilizados
 ### Programação Orientada a Objetos
 - **Classes e Objetos** → Cada entidade (personagem, inimigo, projétil, item, barra de vida) é representada como uma classe.
@@ -98,9 +110,11 @@ Rambinho/
 - Reuso de código → Funções e classes reutilizadas em várias partes do jogo.
 - Controle de versão com Git → Organização e histórico de alterações.
 
+<a id="desafios"></a>
 ## Desafios, erros e aprendizados
 ### Desafios
 
+<a id="capturas"></a>
 ## Capturas de tela
 
 <table>
@@ -113,6 +127,7 @@ Rambinho/
     </tr>
 </table>
 
+<a id="instalar"></a>
 ## Como instalar e rodar o jogo
 
 ### 1. Clone o repositório e entre no mesmo
