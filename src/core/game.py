@@ -239,8 +239,6 @@ class Game:
 
         self.world.boss.update(self)
 
-        print(self.players.sprites()[0].joystick.get_button(1))
-
     def draw(self):
         """Draws the current game state to the screen."""
         self.world.draw(self.screen)
