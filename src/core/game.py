@@ -24,6 +24,10 @@ class Game:
         pygame.init()
         mixer.init()
         pygame.display.set_caption(GAME_NAME)
+        pygame.joystick.init()
+    
+        self.joystick = list()
+
         self.level = 0
         self.initialize_config_vars()
         self.initialize_assets()
@@ -87,6 +91,7 @@ class Game:
         self.health_bar.add(Price_hud())
         self.health_bar.add(Faces_hud())
         self.players.add(player1)
+        self.players.sprites()[0].add_joystick(self.joystick[0])
         
         # levels
         self.world = World(self.level)
@@ -164,6 +169,14 @@ class Game:
                     if self.debug_count == 5:
                         new_player = Player(Character_type.PLAYER_DEBUG.value, 230, 400, True)
                         self.players.add(new_player)
+            # Joystick plugged in
+            if event.type == pygame.JOYDEVICEADDED:
+                js = pygame.joystick.Joystick(event.device_index)
+                js.init()
+                self.joystick.append(js)
+                self.players.sprites()[0].add_joystick(js)
+                print(f"Connected: {js.get_name()}")
+
 
     def select_player(self, player_i):
         if player_i == 1: return Character_type.PLAYER_1.value

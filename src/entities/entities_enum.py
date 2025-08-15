@@ -11,6 +11,10 @@ class Team(Enum):
     ALLIES = 0
     ENEMY = 1
 
+class Joystick(Enum):
+    Xbox = {"jump": 0, "shot": 2}
+    PS5 = {"jump": 1, "shot": 0}
+
 class Weapon(Enum):
     REGULAR = {"damage": 2, "speed": 10, "bullet_range": 700, "cooldown": 300, 'gun_type': 0}
     RIFLE = {"damage": 6, "speed": 12, "bullet_range": 1200, "cooldown": 450, 'gun_type': 1}

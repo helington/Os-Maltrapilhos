@@ -22,6 +22,7 @@ class Player(Character):
         temp_list = []
         self.is_player2 = is_player2
         self.last_time_buy = 0
+        self.joystick = None
         
         #sound effects
         pygame.mixer.set_num_channels(800)  # Add two channels for player sounds
@@ -35,25 +36,39 @@ class Player(Character):
         self.invincible = False 
         self.expiration_date_bubble = 0 #this is the time the last bubble was obtained in, in miliseconds
 
+    def add_joystick(self, joystick):
+        self.joystick = joystick
+
     def handle_input(self):
         self.moving_right = False
         self.moving_left = False
 
         keys = pygame.key.get_pressed()
+
+        joystick_x = 0
+        joystick_name = ""
         
+        if self.joystick is not None:
+            joystick_x = self.joystick.get_axis(0)
+
+            DEAD_ZONE = 0.2
+
+            if abs(joystick_x) < DEAD_ZONE:
+                joystick_x = 0
+
         if self.action != Character_action.DEATH.value:
-            if keys[self.controll.shoot]:
+            if (keys[self.controll.shoot] or self.joystick.get_button(2)):
                 self.has_shot = True
 
-            if keys[self.controll.left]:
+            if keys[self.controll.left] or joystick_x < 0:
                 self.update_action(Character_action.RUN.value)
                 self.moving_left = True
 
-            if keys[self.controll.right]:
+            if keys[self.controll.right] or joystick_x > 0:
                 self.update_action(Character_action.RUN.value)
                 self.moving_right = True
             
-            if keys[self.controll.up] and not self.jumping:
+            if (keys[self.controll.up] or self.joystick.get_button(0)) and not self.jumping:
                 self.jump_fx.play()
                 self.update_action(Character_action.JUMP.value)
                 self.jumping = True
