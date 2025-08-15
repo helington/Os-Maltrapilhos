@@ -194,19 +194,17 @@ Rambinho/
 
 ### **Maior erro**
 
-O maior erro foi o **alto acoplamento entre as classes `World` e `Game`**. Isso significa que as duas classes estavam excessivamente dependentes uma da outra. Uma mudança em uma delas, por menor que fosse, exigia alterações na outra, o que gerava um efeito cascata.
+O maior erro foi que duas partes importantes do nosso código (as classes *`World`* e *`Game`*) ficaram grudadas demais. Isso quer dizer que, para mexer em uma, a gente tinha que mexer na outra, o que gerava muitos problemas.
 
-**Como lidamos com ele:**
+Esse erro ficou claro na hora de juntar o trabalho de todo mundo (usando o Git). As junções de código davam muitos conflitos e eram muito difíceis de resolver.
 
-Esse problema se manifestou de forma mais evidente durante as integrações de código (git merges), que se tornaram mais complicadas do que o esperado. A cada nova funcionalidade, os conflitos de merge eram frequentes e difíceis de resolver. Para lidar com isso, a equipe dedicou um tempo para **refatorar o código**. O objetivo foi reduzir a dependência entre as classes, estabelecendo interfaces ou padrões de design que permitissem que elas se comunicassem de forma mais abstrata, sem estarem tão diretamente ligadas. Além disso, a equipe revisou e padronizou o fluxo de trabalho com Git, adotando práticas mais rigorosas para evitar merges complexos e garantir que as alterações fossem pequenas e focadas.
+Para consertar, nós paramos para 'arrumar' o código e 'soltar' as partes que estavam grudadas. O objetivo foi deixar elas mais independentes. Também organizamos melhor a forma como usamos o Git, criando regras mais claras para evitar bagunça.
 
 ### **Maior desafio**
 
-O maior desafio foi a **arquitetura inicial das classes e a transição de fase do projeto**. A tarefa de projetar as classes (definir suas responsabilidades, relações e interações) foi complexa, pois impactava diretamente a escalabilidade e a manutenção do sistema. Essa dificuldade foi intensificada durante a "transição de fase" (por exemplo, a passagem da prototipagem para o desenvolvimento completo), onde a arquitetura inicial se mostrou inadequada para as novas exigências, forçando um esforço extra para adaptação.
+O maior desafio foi no começo do projeto, na hora de planejar como o código seria montado. A forma como pensamos as coisas no início não funcionou bem quando o projeto começou a crescer e a ficar mais complexo.
 
-**Como lidamos com ele:**
-
-Para superar esse desafio, a equipe agiu em duas frentes. Primeiro, **dedicou tempo para um estudo aprofundado dos padrões de design de software**, buscando soluções que pudessem modularizar o projeto e diminuir o acoplamento. Em segundo lugar, a equipe optou por um processo de **refatoração progressiva**. Em vez de redesenhar todo o sistema de uma vez, eles identificaram os pontos mais críticos da arquitetura e os refatoraram em pequenos incrementos, garantindo que o sistema continuasse funcionando enquanto as melhorias eram implementadas. Isso permitiu que a transição de fase ocorresse de maneira mais controlada e com menos riscos.
+Para resolver, nós estudamos como outros projetos organizavam o código e decidimos consertar o nosso aos poucos, sem precisar começar tudo do zero. Fomos arrumando parte por parte para que o projeto pudesse continuar evoluindo.
 
 ### **Lições aprendidas**
 
