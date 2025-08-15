@@ -143,6 +143,7 @@ class Character(pygame.sprite.Sprite):
             self.dy = 0
             self.has_fallen = True
             self.alive = False
+            self.action = Character_action.DEATH.value
             self.hp = 0
 
     def handle_fall(self, world):

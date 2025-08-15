@@ -110,6 +110,7 @@ class Game:
             player.rect.x = 230
             player.rect.y = 200
             new_players.add(player)
+            print(player.alive)
         self.players = new_players
 
     def reset_game(self, reset_level=False):
