@@ -18,11 +18,53 @@ Relátorio de Desenvolvimento do jogo **Rambinho: O Último Soldado**, feito par
 ## Divisão da equipe
 Todos os integrantes participaram de todas as etapas do projeto. As atividades desenvolvidas foram:
 
-- Planejamento do enredo e mecânicas do jogo.
-- Desenvolvimento e estruturação do código fonte.
-- Criação dos elementos visuais.
-- Realização de testes e ajustes de erros e bugs.
-- Documentação e comunicação do projeto (relatório e apresentação).
+Divisão tarefas:
+
+Aldus:
+- Arquitetura de pacotes (Character, Collectables, entities_enum)
+- Multiplayer 4 jogadores
+- Sistema de tiro
+- Coletavel arma
+- Física da água
+- ⁠Maior auxiliar na utilização de Git/Github
+- Pt2 transição de fase
+
+Gabriel:
+- Pt1 transição de fase
+- Background
+- Animação dos inimigos e player
+- Correção bug de invencibilidade
+- ⁠Música e sons do jogo
+- ⁠Criação da tela de menu principal
+- ⁠Criação da tela de game over
+
+Igor:
+- Coletavel invencibilidade
+- ⁠Sistema de loot
+- ⁠Coletavel medkit
+- ⁠Sistema de compras
+- ⁠Hud (versão final, reatividade a: multiplayer, dinheiro, compras)
+- ⁠⁠Produção de alguns sprites
+
+Helington:
+- Esboço do relatório
+- ⁠Criação da primeira versão do personagem
+- Carregamento do mapa
+- Scroll seguindo jogador principal
+- ⁠Inteligência do inimigos
+- Boss pt2
+
+João:
+- Relatório
+- Slides
+- Medkit
+- Barra de vida pt1
+
+Miguel:
+- Produção de sprites pngs
+- ⁠Criação da funcionalidade de “Restart” do jogo
+- ⁠Criação da funcionalidade de “Exit” do jogo
+- Boss pt1
 
 ## Sobre o Jogo
 ### História
@@ -148,19 +190,29 @@ Rambinho/
 - Controle de versão com Git → Organização e histórico de alterações.
 
 ## Desafios, erros e aprendizados
-### Desafios
+---
 
-## Capturas de tela
+### **Maior erro**
 
-<table>
-    <tr>
-        <td align="center"><img src="https://snipboard.io/YuPDxO.jpg" width="1200px"/><br /><sub><b>Tela de Início</b></sub></a><br/</td>
-        <td align="center"><img src="https://snipboard.io/iZA83F.jpg" width="1200px"/><br /><sub><b>Tela do Jogo em Andamento (Um Jogador)</b></sub></a><br/></td></tr>
-    <tr>
-        <td align="center"><img src="https://snipboard.io/h0RAzd.jpg" width="1200px"/><br /><sub><b>Tela do Jogo em Andamento (Quatro Jogadores)</b></sub></a><br/></td>
-        <td align="center"><img src="https://snipboard.io/QNPYO4.jpg" width="1200px"/><br /><sub><b>Tela do Jogo em Andamento (Jogador Nadando)</b></sub></a><br/></td>
-    </tr>
-</table>
+O maior erro foi o **alto acoplamento entre as classes `World` e `Game`**. Isso significa que as duas classes estavam excessivamente dependentes uma da outra. Uma mudança em uma delas, por menor que fosse, exigia alterações na outra, o que gerava um efeito cascata.
+
+**Como lidamos com ele:**
+
+Esse problema se manifestou de forma mais evidente durante as integrações de código (git merges), que se tornaram mais complicadas do que o esperado. A cada nova funcionalidade, os conflitos de merge eram frequentes e difíceis de resolver. Para lidar com isso, a equipe dedicou um tempo para **refatorar o código**. O objetivo foi reduzir a dependência entre as classes, estabelecendo interfaces ou padrões de design que permitissem que elas se comunicassem de forma mais abstrata, sem estarem tão diretamente ligadas. Além disso, a equipe revisou e padronizou o fluxo de trabalho com Git, adotando práticas mais rigorosas para evitar merges complexos e garantir que as alterações fossem pequenas e focadas.
+
+### **Maior desafio**
+
+O maior desafio foi a **arquitetura inicial das classes e a transição de fase do projeto**. A tarefa de projetar as classes (definir suas responsabilidades, relações e interações) foi complexa, pois impactava diretamente a escalabilidade e a manutenção do sistema. Essa dificuldade foi intensificada durante a "transição de fase" (por exemplo, a passagem da prototipagem para o desenvolvimento completo), onde a arquitetura inicial se mostrou inadequada para as novas exigências, forçando um esforço extra para adaptação.
+
+**Como lidamos com ele:**
+
+Para superar esse desafio, a equipe agiu em duas frentes. Primeiro, **dedicou tempo para um estudo aprofundado dos padrões de design de software**, buscando soluções que pudessem modularizar o projeto e diminuir o acoplamento. Em segundo lugar, a equipe optou por um processo de **refatoração progressiva**. Em vez de redesenhar todo o sistema de uma vez, eles identificaram os pontos mais críticos da arquitetura e os refatoraram em pequenos incrementos, garantindo que o sistema continuasse funcionando enquanto as melhorias eram implementadas. Isso permitiu que a transição de fase ocorresse de maneira mais controlada e com menos riscos.
+
+### **Lições aprendidas**
+
+* **A importância do Planejamento e Design:** A principal lição foi a necessidade de investir mais tempo e esforço no **planejamento da arquitetura do software**. Um design bem pensado no início do projeto evita retrabalhos e problemas de manutenção no futuro.
+* **Gestão de Código (Git):** Aprendemos que um **fluxo de trabalho com Git bem definido e praticado por toda a equipe** é fundamental para a colaboração. A falha nos merges nos mostrou a importância de commits atômicos e da comunicação clara sobre as mudanças de código.
+* **Refatoração Contínua:** Descobrimos que a **refatoração não é uma tarefa opcional**, mas sim uma prática contínua para manter a saúde do código. É melhor corrigir pequenos problemas de design assim que eles aparecem do que esperar que eles se tornem grandes e complexos.
 
 ## Como instalar e rodar o jogo
 
