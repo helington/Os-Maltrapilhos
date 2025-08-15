@@ -26,7 +26,7 @@ class Game:
         pygame.display.set_caption(GAME_NAME)
         pygame.joystick.init()
     
-        self.joystick = list()
+        self.joysticks = dict()
 
         self.level = 0
         self.initialize_config_vars()
@@ -91,8 +91,11 @@ class Game:
         self.health_bar.add(Price_hud())
         self.health_bar.add(Faces_hud())
         self.players.add(player1)
-        self.players.sprites()[0].add_joystick(self.joystick[0])
-        
+
+        for joystick_id, joystick in self.joysticks.items():
+            if joystick["player"] == 0:
+                self.players.sprites()[0].joystick = joystick["joystick"]
+
         # levels
         self.world = World(self.level)
 
@@ -147,6 +150,25 @@ class Game:
             else:
                 current_image = pygame.transform.scale(current_image, (TILE_SIZE, TILE_SIZE))
 
+    def add_joystick_to_game(self, joystick):
+        player_count = 0
+
+        for player in self.players.sprites():
+            if player.joystick is None:
+                player.add_joystick(joystick)
+                
+                return True, player_count
+            player_count += 1
+            
+        return False, player_count
+    
+    def remove_joystick_to_game(self, player_index):
+        player_count = 0
+        for player in self.players.sprites():
+            if player_count == player_index:
+                player.joystick = None
+            player_count += 1
+
     def handle_events(self):
         """Processes all Pygame events."""
         for event in pygame.event.get():
@@ -161,7 +183,14 @@ class Game:
                         self.multiplayer_count += 1
                         player_info = self.select_player(self.multiplayer_count)
                         new_player = Player(player_info, 230, 400, True)
+
+                        for joystick_id, joystick in self.joysticks.items():
+                            if joystick["player"] == self.multiplayer_count - 1:
+                                new_player.joystick = joystick["joystick"]
+
                         self.players.add(new_player)
+
+
                         self.health_bar.add(Healthbar(50, -50 + self.multiplayer_count * 50, True, new_player))
                         self.health_bar.add(Money_hud(200, -50 + self.multiplayer_count * 50, new_player))
                 if event.key == pygame.K_2:
@@ -173,9 +202,21 @@ class Game:
             if event.type == pygame.JOYDEVICEADDED:
                 js = pygame.joystick.Joystick(event.device_index)
                 js.init()
-                self.joystick.append(js)
-                self.players.sprites()[0].add_joystick(js)
+                joystick_added, player = self.add_joystick_to_game(js)
+                self.joysticks[js.get_instance_id()] = {
+                    "joystick": js,
+                    "player": player
+                }
                 print(f"Connected: {js.get_name()}")
+                print(f"Controle adicionado: {js.get_instance_id()}")
+
+            if event.type == pygame.JOYDEVICEREMOVED:
+                joy_id = event.instance_id
+                joystick_dict = self.joysticks.pop(joy_id)
+                joystick = joystick_dict["joystick"]
+                player = joystick_dict["player"]
+                self.remove_joystick_to_game(player)
+                print(f"Controle removido: {joystick.get_name()} (ID: {joy_id})")
 
 
     def select_player(self, player_i):
@@ -197,6 +238,8 @@ class Game:
         self.world.water_group.update(self.world.screen_scroll)
 
         self.world.boss.update(self)
+
+        print(self.players.sprites()[0].joystick.get_button(1))
 
     def draw(self):
         """Draws the current game state to the screen."""
@@ -229,7 +272,6 @@ class Game:
                     self.world.boss.sprite.draw_boss_health_bar(self.screen, 400, 50, 400, 25)
             
             self.handle_events()
-
 
             if self.are_all_players_died():
                 for player in self.players:

@@ -44,35 +44,53 @@ class Player(Character):
         self.moving_left = False
 
         keys = pygame.key.get_pressed()
-
-        joystick_x = 0
-        joystick_name = ""
         
-        if self.joystick is not None:
-            joystick_x = self.joystick.get_axis(0)
-
-            DEAD_ZONE = 0.2
-
-            if abs(joystick_x) < DEAD_ZONE:
-                joystick_x = 0
-
         if self.action != Character_action.DEATH.value:
-            if (keys[self.controll.shoot] or self.joystick.get_button(2)):
-                self.has_shot = True
 
-            if keys[self.controll.left] or joystick_x < 0:
-                self.update_action(Character_action.RUN.value)
-                self.moving_left = True
+            # Controller movement
+            if self.joystick is not None:
+                joystick_x = self.joystick.get_axis(0)
 
-            if keys[self.controll.right] or joystick_x > 0:
-                self.update_action(Character_action.RUN.value)
-                self.moving_right = True
-            
-            if (keys[self.controll.up] or self.joystick.get_button(0)) and not self.jumping:
-                self.jump_fx.play()
-                self.update_action(Character_action.JUMP.value)
-                self.jumping = True
-                self.gravity = -15   
+                DEAD_ZONE = 0.2
+
+                if abs(joystick_x) < DEAD_ZONE:
+                    joystick_x = 0
+
+                if  self.joystick.get_button(2):
+                    self.has_shot = True
+
+                if joystick_x < 0:
+                    self.update_action(Character_action.RUN.value)
+                    self.moving_left = True
+
+                if joystick_x > 0:
+                    self.update_action(Character_action.RUN.value)
+                    self.moving_right = True
+                
+                if self.joystick.get_button(0) and not self.jumping:
+                    self.jump_fx.play()
+                    self.update_action(Character_action.JUMP.value)
+                    self.jumping = True 
+                    self.gravity = -15
+
+            # Keyboard movement
+            else:
+                if keys[self.controll.shoot]:
+                    self.has_shot = True
+
+                if keys[self.controll.left]:
+                    self.update_action(Character_action.RUN.value)
+                    self.moving_left = True
+
+                if keys[self.controll.right]:
+                    self.update_action(Character_action.RUN.value)
+                    self.moving_right = True
+                
+                if keys[self.controll.up] and not self.jumping:
+                    self.jump_fx.play()
+                    self.update_action(Character_action.JUMP.value)
+                    self.jumping = True 
+                    self.gravity = -15
 
     def check_collect_item(self, game):
         for collectable in game.world.collectables:
@@ -103,7 +121,16 @@ class Player(Character):
 
     def purchase(self, game):
         keys = pygame.key.get_pressed()
-        if keys[self.controll.buy] and self.coins >= 5 - game.multiplayer_count:
+
+        can_buy = False
+        if self.joystick is not None:
+            if self.joystick.get_button(1):
+                can_buy = True
+        else:
+            if keys[self.controll.buy]:
+                can_buy = True
+        
+        if can_buy and self.coins >= 5 - game.multiplayer_count:
             curr_time = pygame.time.get_ticks()
             buy_cooldown_passed = (curr_time - self.last_time_buy) > 300
             self.last_time_buy = curr_time
