@@ -28,6 +28,8 @@ class Game:
     
         self.joysticks = dict()
 
+        icon = pygame.image.load(path.join(MENUS_PATH, 'icon_game.png'))
+        pygame.display.set_icon(icon)
         self.level = 0
         self.initialize_config_vars()
         self.initialize_assets()

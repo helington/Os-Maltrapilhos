@@ -188,14 +188,22 @@ class Boss(pygame.sprite.Sprite):
         pygame.draw.rect(screen, (0, 255, 0), (x, y, width * ratio, height))
         pygame.draw.rect(screen, (255, 255, 255), (x, y, width, height), 2)
 
+
     def _try_attack(self, game):
         if self.attack_timer > 0:
             self.attack_timer -= 1
             return
 
-        target = getattr(game, "follow_player", None)
-        if not target or not hasattr(target, "rect"):
+        # Pega a lista de jogadores ativos (com vida > 0)
+        players_ativos = [
+            p for p in getattr(game, "players", [])
+            if hasattr(p, "rect") and getattr(p, "hp", 1) > 0
+        ]
+        if not players_ativos:
             return
+
+        # Escolhe aleatoriamente um jogador
+        target = random.choice(players_ativos)
 
         origin = pygame.math.Vector2(self.rect.center)
         target_pos = pygame.math.Vector2(target.rect.center)
