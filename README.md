@@ -16,9 +16,6 @@ Relátorio de Desenvolvimento do jogo **Rambinho: O Último Soldado**, feito par
 </table>
 
 ## Divisão da equipe
-Todos os integrantes participaram de todas as etapas do projeto. As atividades desenvolvidas foram:
-
-Divisão tarefas:
 
 Aldus:
 - Arquitetura de pacotes (Character, Collectables, entities_enum)
