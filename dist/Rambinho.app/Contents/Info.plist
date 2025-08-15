@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>Rambinho</string>
+	<key>CFBundleExecutable</key>
+	<string>Rambinho</string>
+	<key>CFBundleIconFile</key>
+	<string>generated-a24a3be7c2d6ae31330c8fd703387fe1df7b1e24686a3f280c19db24b4763c3a.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>Rambinho</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Rambinho</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.0.0</string>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+</dict>
+</plist>
