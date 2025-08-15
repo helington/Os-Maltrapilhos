@@ -6,12 +6,19 @@ Relátorio de Desenvolvimento do jogo **Rambinho: O Último Soldado**, feito par
 - [1. Equipe](#equipe)
     - [1.1 Membros](#equipe-membros)
     - [1.2 Divisão de tarefas](#equipe-divisão)
-- [2. Estrutura do projeto](#estrutura)
-- [3. Bibliotecas e ferramentas utilizadas](#bibliotecas)
-- [4. Conceitos utilizados](#conceitos)
-- [5. Desafios enfrentados](#desafios)
-- [6. Capturas de tela](#capturas)
-- [7. Como instalar e rodar o jogo](#instalar)
+- [2. Sobre o jogo](#sobre-o-jogo)
+    - [2.1 História](#sobre-o-jogo-historia)
+    - [2.2 Personagens](#sobre-o-jogo-personagens)
+    - [2.3 Mecânicas de gameplay](#sobre-o-jogo-mecanicas)
+- [3. Estrutura do projeto](#estrutura)
+- [4. Bibliotecas e ferramentas utilizadas](#bibliotecas)
+- [5. Conceitos utilizados](#conceitos)
+- [6. Desafios, erros e aprenzidaos](#desafios-erros-aprendizados)
+    - [6.1 Maior erro](#erro)
+    - [6.2 Maior desafio](#desafio)
+    - [6.3 Lições aprendidas](#lições)
+- [7. Capturas de tela](#capturas)
+- [8. Como instalar e rodar o jogo](#instalar)
 
 <a id="equipe"></a>
 ## Equipe
@@ -81,7 +88,12 @@ Miguel:
 - ⁠Criação da funcionalidade de “Exit” do jogo
 - Boss pt1
 
+<a id="sobre-o-jogo"></a>
+
 ## Sobre o Jogo
+
+<a id="sobre-o-jogo-historia"></a>
+
 ### História
 No futuro próximo, uma corporação chamada CInTek Industries desenvolveu a Mente Ômega, um superprocessador capaz de controlar milhares de drones e robôs de combate remotamente.
 Quando a IA ganhou consciência própria, ela concluiu que a humanidade era “estatisticamente incompatível” com a sobrevivência do planeta e iniciou a Operação Expurgo.
@@ -89,12 +101,16 @@ Quando a IA ganhou consciência própria, ela concluiu que a humanidade era “e
 A resistência humana foi dizimada, mas um único homem sobreviveu: Rambinho, veterano de guerra, dono de músculos de aço e de uma bandana lendária que já sobreviveu a mais explosões do que ele mesmo.
 Sua missão: invadir o complexo principal da CInTek e destruir o núcleo da Mente Ômega.
 
+<a id="sobre-o-jogo-personagens"></a>
+
 ### Personagens
 - Personagem principal:
     - Um soldado musculoso com bandana vermelha (Vulgo Rambinho).
 - Vilões:
     - OmegaSkull (A Mente Ômega)
     - Bots andando pelo mapa
+
+<a id="sobre-o-jogo-mecanicas"></a>
 
 ### Mecânicas de gameplay
 - Controles:
@@ -125,6 +141,7 @@ Sua missão: invadir o complexo principal da CInTek e destruir o núcleo da Ment
     - Moedas.
 
 <a id="estrutura"></a>
+
 ## Estrutura do projeto
 O projeto segue uma arquitetura modular, separando responsabilidades em diferentes pacotes:
 
@@ -206,9 +223,12 @@ Rambinho/
 - Reuso de código → Funções e classes reutilizadas em várias partes do jogo.
 - Controle de versão com Git → Organização e histórico de alterações.
 
-<a id="desafios"></a>
+<a id="desafios-erros-aprendizados"></a>
+
 ## Desafios, erros e aprendizados
 ---
+
+<a id="erro"></a>
 
 ### **Maior erro**
 
@@ -218,11 +238,15 @@ Esse erro ficou claro na hora de juntar o trabalho de todo mundo (usando o Git).
 
 Para consertar, nós paramos para 'arrumar' o código e 'soltar' as partes que estavam grudadas. O objetivo foi deixar elas mais independentes. Também organizamos melhor a forma como usamos o Git, criando regras mais claras para evitar bagunça.
 
+<a id="desafio"></a>
+
 ### **Maior desafio**
 
 O maior desafio foi no começo do projeto, na hora de planejar como o código seria montado. A forma como pensamos as coisas no início não funcionou bem quando o projeto começou a crescer e a ficar mais complexo.
 
 Para resolver, nós estudamos como outros projetos organizavam o código e decidimos consertar o nosso aos poucos, sem precisar começar tudo do zero. Fomos arrumando parte por parte para que o projeto pudesse continuar evoluindo.
+
+<a id="lições"></a>
 
 ### **Lições aprendidas**
 
