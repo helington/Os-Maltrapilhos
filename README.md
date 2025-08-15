@@ -149,6 +149,7 @@ O projeto segue uma arquitetura modular, separando responsabilidades em diferent
 Rambinho/
 ├── assets/                # Recursos do jogo
 │ ├── graphics/            # Imagens dos sprites e do mapa
+│ ├── sounds/              # Sons do jogo
 │ └── levels/              # Arquivos de nível
 ├── src/                   # Código-fonte do jogo
 │ ├── config/              # Arquivos de configuração
@@ -156,6 +157,7 @@ Rambinho/
 │ ├── entities/            # Entidades e personagens do jogo
 │ │ ├── bullet/            # Representação das balas
 │ │ ├── character/         # Representação dos personagens (Inimigos e o jogador)
+│ │ ├── boss/              # Representação do chefão
 │ │ ├── collectable/       # Representação dos coletáveis
 │ │ └── world/             # Representação do mundo de gameplay e seus elementos (Obstáculos, Background e etc)
 │ ├── off_game_screens/    # Telas de menu, game over, etc.
