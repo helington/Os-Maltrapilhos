@@ -212,11 +212,19 @@ Para resolver, nós estudamos como outros projetos organizavam o código e decid
 
 <table>
     <tr>
-        <td align="center"><img src="https://snipboard.io/YuPDxO.jpg" width="1200px"/><br /><sub><b>Tela de Início</b></sub></a><br/</td>
+        <td align="center"><img src="https://snipboard.io/NDJ0hw.jpg" width="1200px"/><br /><sub><b>Tela de Início</b></sub></a><br/</td>
         <td align="center"><img src="https://snipboard.io/iZA83F.jpg" width="1200px"/><br /><sub><b>Tela do Jogo em Andamento (Um Jogador)</b></sub></a><br/></td></tr>
     <tr>
         <td align="center"><img src="https://snipboard.io/h0RAzd.jpg" width="1200px"/><br /><sub><b>Tela do Jogo em Andamento (Quatro Jogadores)</b></sub></a><br/></td>
         <td align="center"><img src="https://snipboard.io/QNPYO4.jpg" width="1200px"/><br /><sub><b>Tela do Jogo em Andamento (Jogador Nadando)</b></sub></a><br/></td>
+    </tr>
+    <tr>
+        <td align="center"><img src="https://snipboard.io/pv3VIZ.jpg" width="1200px"/><br /><sub><b>Tela da Fase Intermediária</b></sub></a><br/></td>
+        <td align="center"><img src="https://snipboard.io/Gaw4By.jpg" width="1200px"/><br /><sub><b>Tela da Fase do Chefão </b></sub></a><br/></td>
+    </tr>
+    <tr>
+        <td align="center"><img src="https://snipboard.io/jQiBb0.jpg" width="1200px"/><br /><sub><b>Tela de Derrota</b></sub></a><br/></td>
+        <td align="center"><img src="https://snipboard.io/OQaAKp.jpg" width="1200px"/><br /><sub><b>Tela de Vitória</b></sub></a><br/></td>
     </tr>
 </table>
 
