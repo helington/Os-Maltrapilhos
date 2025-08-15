@@ -187,7 +187,6 @@ Rambinho/
 - Controle de versão com Git → Organização e histórico de alterações.
 
 ## Desafios, erros e aprendizados
----
 
 ### **Maior erro**
 
@@ -208,6 +207,18 @@ Para resolver, nós estudamos como outros projetos organizavam o código e decid
 * **A importância do Planejamento e Design:** A principal lição foi a necessidade de investir mais tempo e esforço no **planejamento da arquitetura do software**. Um design bem pensado no início do projeto evita retrabalhos e problemas de manutenção no futuro.
 * **Gestão de Código (Git):** Aprendemos que um **fluxo de trabalho com Git bem definido e praticado por toda a equipe** é fundamental para a colaboração. A falha nos merges nos mostrou a importância de commits atômicos e da comunicação clara sobre as mudanças de código.
 * **Refatoração Contínua:** Descobrimos que a **refatoração não é uma tarefa opcional**, mas sim uma prática contínua para manter a saúde do código. É melhor corrigir pequenos problemas de design assim que eles aparecem do que esperar que eles se tornem grandes e complexos.
+
+## Capturas de tela
+
+<table>
+    <tr>
+        <td align="center"><img src="https://snipboard.io/YuPDxO.jpg" width="1200px"/><br /><sub><b>Tela de Início</b></sub></a><br/</td>
+        <td align="center"><img src="https://snipboard.io/iZA83F.jpg" width="1200px"/><br /><sub><b>Tela do Jogo em Andamento (Um Jogador)</b></sub></a><br/></td></tr>
+    <tr>
+        <td align="center"><img src="https://snipboard.io/h0RAzd.jpg" width="1200px"/><br /><sub><b>Tela do Jogo em Andamento (Quatro Jogadores)</b></sub></a><br/></td>
+        <td align="center"><img src="https://snipboard.io/QNPYO4.jpg" width="1200px"/><br /><sub><b>Tela do Jogo em Andamento (Jogador Nadando)</b></sub></a><br/></td>
+    </tr>
+</table>
 
 ## Como instalar e rodar o jogo
 
